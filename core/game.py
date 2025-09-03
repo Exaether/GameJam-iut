@@ -1,50 +1,56 @@
 import pygame
 import sys
-from .settings import Param
-from .input_handler import InputHandler
+from .settings import Settings
 from .state_manager import StateManager, GameState
-
+from .event_controller import EventController
+from .gameplay import Gameplay
 
 class Game:
     def __init__(self):
         pygame.init()
         
-        self.params = Param()
-        
-        self.screen = pygame.display.set_mode((self.params.SCREEN_WIDTH, self.params.SCREEN_HEIGHT))
-        pygame.display.set_caption(self.params.GAME_TITLE)
-        
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT))
+        pygame.display.set_caption(self.settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
         
-        self.input_handler = InputHandler()
-        
-        self.state_manager = StateManager()
+        self.state_manager = StateManager(initial_state=GameState.PLAYING)
+        self.event_controller = EventController(self)
+        self.gameplay = Gameplay(self, self.event_controller)
         self.running = True
-            
-    def update_game(self):
-        # TODO: Implémenter la logique du jeu
-        pass
-        
-    def draw_game(self):
-        # TODO: Implémenter le rendu du jeu
-        pass
-        
-    def run(self):
-        state_manager = StateManager()
     
-        while True:
-                if state_manager.get_current_state() == GameState.GAME_OVER:
-                    pass
-                if state_manager.get_current_state() == GameState.WIN:
-                    pass
-                if state_manager.get_current_state() == GameState.PLAYING:
-                    Game().run()
-                if state_manager.get_current_state() == GameState.PAUSED:
-                    pass
-                if state_manager.get_current_state() == GameState.MENU:
-                    pass
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                pygame.display.update()
+    def run(self):
+        while self.running:
+            events = pygame.event.get()
+            
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.running = False
+            
+            self.event_controller.handle_events(events)
+            
+            dt = self.clock.tick(self.settings.FPS) / 1000.0
+            current_state = self.state_manager.get_current_state()
+            
+            if current_state == GameState.PLAYING:
+                self.gameplay.update(dt, events)
+                self.gameplay.draw(self.screen)
+            elif current_state == GameState.PAUSED:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.MENU:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.GAME_OVER:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.WIN:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.QUIT:
+                self.running = False
+            
+            pygame.display.flip()
+        
+        pygame.quit()
+        sys.exit()

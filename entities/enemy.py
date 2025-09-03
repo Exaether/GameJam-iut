@@ -10,6 +10,6 @@ class Enemy(pygame.sprite.Sprite):
         # TODO: Implementer la méthode update
         pass
         
-    def draw(self, screen):
+    def draw(self, _screen):
         # TODO: Implementer la méthode draw
         pass
