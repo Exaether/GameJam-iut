@@ -5,21 +5,23 @@ class Dungeon(pygame.sprite.Sprite) :
     Représente la carte principale du jeu
     La carte est capable de passer de la carte du donjon à la carte du souterrain
     '''
-    dungeonMap = pygame.image.load("../assets/map/dungeon.png")
-    subMap = pygame.image.load("../assets/map/.png")
+    dungeonMap = pygame.image.load("./assets/map/dungeon.png")
+    subMap = pygame.image.load("./assets/map/vents.png")
     dungeonMask = pygame.mask.Mask
     subMask = pygame.mask.Mask
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         self.image = Dungeon.dungeonMap
         self.mask = Dungeon.dungeonMask
         self.rect = self.image.get_rect()
+        self.rect.topleft = 0, 0
 
     def draw(self, screen : pygame.surface.Surface):
         '''
         Affiche la carte sur l'écran
         :param screen:
         '''
-        screen.blit(self.image, (0, 0))
+        screen.blit(self.image, self.rect)
 
     def switchMap(self):
         '''
@@ -28,3 +30,14 @@ class Dungeon(pygame.sprite.Sprite) :
         if self.image is Dungeon.dungeonMap :
             self.image = Dungeon.subMap
             self.mask = Dungeon.subMask
+        else:
+            self.image = Dungeon.dungeonMap
+            self.mask = Dungeon.dungeonMask
+
+    def move(self, x, y):
+        '''
+        Déplace le joueur su la carte
+        :param x: déplacement X
+        :param y: déplacement Y
+        '''
+        self.rect.move_ip(-x, -y)
