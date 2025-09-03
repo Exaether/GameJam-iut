@@ -1,58 +1,75 @@
 import pygame
 import sys
-
-from .settings import Param
-from .input_handler import InputHandler
+from .settings import Settings
 from .state_manager import StateManager, GameState
+from .event_controller import EventController
+from .gameplay import Gameplay
+from entities.enemyGroup import EnemyGroup
+from entities.enemy import Enemy
 from entities.loot import Loot
-
 
 class Game:
     def __init__(self):
         pygame.init()
         
-        self.params = Param()
-        
-        self.screen = pygame.display.set_mode((self.params.SCREEN_WIDTH, self.params.SCREEN_HEIGHT))
-        pygame.display.set_caption(self.params.GAME_TITLE)
-        
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT))
+        pygame.display.set_caption(self.settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
         
-        self.input_handler = InputHandler()
-        
-        self.state_manager = StateManager()
+        self.state_manager = StateManager(initial_state=GameState.PLAYING)
+        self.event_controller = EventController(self)
+        self.gameplay = Gameplay(self, self.event_controller)
         self.running = True
-
-        loot = Loot(self.params.SCREEN_WIDTH // 2, self.params.SCREEN_HEIGHT // 2)
-        self.loot_list = pygame.sprite.Group()
-        self.loot_list.add(loot)
-            
-    def update_game(self):
-        # TODO: Implémenter la logique du jeu
-        pass
-        
-    def draw_game(self):
-        # TODO: Implémenter le rendu du jeu
-        pass
-        
+    
     def run(self):
+
         state_manager = StateManager()
         state_manager.change_state(new_state=GameState.PLAYING)
-    
-        while True:
-                if state_manager.get_current_state() == GameState.GAME_OVER:
-                    pass
-                if state_manager.get_current_state() == GameState.WIN:
-                    pass
-                if state_manager.get_current_state() == GameState.PLAYING:
-                    
-                    self.loot_list.draw(self.screen)
-                if state_manager.get_current_state() == GameState.PAUSED:
-                    pass
-                if state_manager.get_current_state() == GameState.MENU:
-                    pass
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
+
+        guards_list = EnemyGroup()
+        guard = Enemy(0, 0, 200, 0)
+        guards_list.add(guard)
+
+        loot = Loot(self.params.SCREEN_WIDTH // 2, self.params.SCREEN_HEIGHT // 2)
+        loot_list = pygame.sprite.Group()
+        loot_list.add(loot)
+
+        while self.running:
+            events = pygame.event.get()
+            
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.running = False
+            
+            self.event_controller.handle_events(events)
+            
+            dt = self.clock.tick(self.settings.FPS) / 1000.0
+            current_state = self.state_manager.get_current_state()
+            
+            if current_state == GameState.PLAYING:
+                self.gameplay.update(dt, events)
+                self.gameplay.draw(self.screen)
+                guards_list.update()
+                guards_list.draw(self.screen)
+                loot_list.draw(self.screen)
                 pygame.display.update()
+            elif current_state == GameState.PAUSED:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.MENU:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.GAME_OVER:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.WIN:
+                # TODO: A réaliser
+                pass
+            elif current_state == GameState.QUIT:
+                self.running = False
+            
+            pygame.display.flip()
+        
+        pygame.quit()
+        sys.exit()
