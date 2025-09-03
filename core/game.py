@@ -31,7 +31,7 @@ class Game:
         guard = Enemy(0, 0, 200, 0)
         guards_list.add(guard)
 
-        loot = Loot(self.params.SCREEN_WIDTH // 2, self.params.SCREEN_HEIGHT // 2)
+        loot = Loot(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)  
         loot_list = pygame.sprite.Group()
         loot_list.add(loot)
 
