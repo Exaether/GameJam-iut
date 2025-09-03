@@ -4,6 +4,8 @@ from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .gameplay import Gameplay
+from entities.enemyGroup import EnemyGroup
+from entities.enemy import Enemy
 
 class Game:
     def __init__(self):
@@ -20,6 +22,11 @@ class Game:
         self.running = True
     
     def run(self):
+
+        guards_list = EnemyGroup()
+        guard = Enemy(0, 0, 200, 0)
+        guards_list.add(guard)
+
         while self.running:
             events = pygame.event.get()
             
@@ -35,6 +42,9 @@ class Game:
             if current_state == GameState.PLAYING:
                 self.gameplay.update(dt, events)
                 self.gameplay.draw(self.screen)
+                guards_list.update()
+                guards_list.draw(self.screen)
+                pygame.display.update()
             elif current_state == GameState.PAUSED:
                 # TODO: A réaliser
                 pass
