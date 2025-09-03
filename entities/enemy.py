@@ -1,6 +1,6 @@
 import pygame
 import math
-from core.settings import Param
+from core.settings import Settings 
 
 class Enemy(pygame.sprite.Sprite):
     
@@ -45,37 +45,37 @@ class Enemy(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (255, 0, 0, 50), self.detection_area)
 
     def update(self):
-        param = Param()
+        settings = Settings() 
         # Va vers les coordonnées target_x puis target_y
         if self.path == "go":
-            if not math.isclose(self.x, self.target_x, abs_tol=param.GUARD_SPEED):
+            if not math.isclose(self.x, self.target_x, abs_tol=settings.GUARD_SPEED):
                 if self.x < self.target_x:
-                    self.x += param.GUARD_SPEED
+                    self.x += settings.GUARD_SPEED
                     self.set_direction("right")
                 else:
-                    self.x -= param.GUARD_SPEED
+                    self.x -= settings.GUARD_SPEED
                     self.set_direction("left")
-            elif not math.isclose(self.y, self.target_y, abs_tol=param.GUARD_SPEED):
+            elif not math.isclose(self.y, self.target_y, abs_tol=settings.GUARD_SPEED):
                 if self.y < self.target_y:
-                    self.y += param.GUARD_SPEED
+                    self.y += settings.GUARD_SPEED
                 else:
-                    self.y -= param.GUARD_SPEED
+                    self.y -= settings.GUARD_SPEED
             else:
                 self.path = "back"
 
         # Reviens vers les coordonnées base_y puis base_x (refait donc le même chemin mais dans l'autre sens)
         elif self.path == "back":
-            if not math.isclose(self.y, self.base_y, abs_tol=param.GUARD_SPEED):
+            if not math.isclose(self.y, self.base_y, abs_tol=settings.GUARD_SPEED):
                 if self.y < self.base_y:
-                    self.y += param.GUARD_SPEED
+                    self.y += settings.GUARD_SPEED
                 else:
-                    self.y -= param.GUARD_SPEED
-            elif not math.isclose(self.x, self.base_x, abs_tol=param.GUARD_SPEED):
+                    self.y -= settings.GUARD_SPEED
+            elif not math.isclose(self.x, self.base_x, abs_tol=settings.GUARD_SPEED):
                 if self.x < self.base_x:
-                    self.x += param.GUARD_SPEED
+                    self.x += settings.GUARD_SPEED
                     self.set_direction("right")
                 else:
-                    self.x -= param.GUARD_SPEED
+                    self.x -= settings.GUARD_SPEED
                     self.set_direction("left")
             else:
                 self.path = "go"
