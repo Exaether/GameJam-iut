@@ -45,6 +45,7 @@ class Game:
                 if state_manager.get_current_state() == GameState.WIN:
                     pass
                 if state_manager.get_current_state() == GameState.PLAYING:
+                    
                     self.loot_list.draw(self.screen)
                 if state_manager.get_current_state() == GameState.PAUSED:
                     pass
