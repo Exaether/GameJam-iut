@@ -7,8 +7,10 @@ class Dungeon(pygame.sprite.Sprite) :
     '''
     dungeonMap = pygame.image.load("./assets/map/dungeon.png")
     subMap = pygame.image.load("./assets/map/vents.png")
-    dungeonMask = pygame.mask.Mask
-    subMask = pygame.mask.Mask
+    trapdoorsMap = pygame.image.load("./assets/map/trapdoors.png")
+    dungeonMask = pygame.mask.from_surface(dungeonMap)
+    subMask = pygame.mask.from_surface(subMap)
+    trapdoorsMask = pygame.mask.from_surface(trapdoorsMap)
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = Dungeon.dungeonMap
@@ -22,6 +24,7 @@ class Dungeon(pygame.sprite.Sprite) :
         :param screen:
         '''
         screen.blit(self.image, self.rect)
+        screen.blit(Dungeon.trapdoorsMap, self.rect)
 
     def switchMap(self):
         '''
