@@ -2,10 +2,10 @@ from enum import Enum
 
 class GameState(Enum):
     MENU = "menu"
-    PLAYING = "playing"
     PAUSED = "paused"
+    PLAYING = "playing"
     GAME_OVER = "game_over"
-    QUIT = "quit"
+    WIN = "win"
 
 class StateManager:
     
