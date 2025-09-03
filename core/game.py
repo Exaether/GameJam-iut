@@ -2,6 +2,7 @@ import pygame
 import sys
 from .settings import Param
 from .input_handler import InputHandler
+from .state_manager import StateManager, GameState
 
 
 class Game:
@@ -17,8 +18,8 @@ class Game:
         
         self.input_handler = InputHandler()
         
+        self.state_manager = StateManager()
         self.running = True
-        self.current_screen = "menu"
         
         self.font = pygame.font.Font(None, self.params.MENU_FONT_SIZE)
         
@@ -48,9 +49,9 @@ class Game:
             for button in self.menu_buttons:
                 if button["rect"].collidepoint(mouse_pos):
                     if button["action"] == "quit":
-                        self.running = False
+                        self.state_manager.change_state(GameState.QUIT)
                     elif button["action"] == "play":
-                        print("Bouton Jouer cliqué (pas encore implémenté)")
+                        self.state_manager.change_state(GameState.PLAYING)
                         
     def update_menu(self):
         self.handle_menu_input()
@@ -78,19 +79,24 @@ class Game:
         
     def draw_game(self):
         # TODO: Implémenter le rendu du jeu
-        self.screen.fill(self.params.GRAY)
+        pass
         
     def run(self):
         while self.running:
             events = pygame.event.get()
             
             if not self.input_handler.handle_events(events):
+                self.state_manager.change_state(GameState.QUIT)
+            
+            if self.state_manager.should_quit():
                 self.running = False
                 
-            if self.current_screen == "menu":
+            current_state = self.state_manager.get_current_state()
+            
+            if current_state == GameState.MENU:
                 self.update_menu()
                 self.draw_menu()
-            elif self.current_screen == "game":
+            elif current_state == GameState.PLAYING:
                 self.update_game()
                 self.draw_game()
                 
