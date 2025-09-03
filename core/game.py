@@ -1,8 +1,11 @@
 import pygame
 import sys
+
 from .settings import Param
 from .input_handler import InputHandler
 from .state_manager import StateManager, GameState
+from entities.enemyGroup import EnemyGroup
+from entities.enemy import Enemy
 
 
 class Game:
@@ -31,6 +34,10 @@ class Game:
         
     def run(self):
         state_manager = StateManager()
+
+        guards_list = EnemyGroup()
+        guard = Enemy(0, 0, 200, 0)
+        guards_list.add(guard)
     
         while True:
                 if state_manager.get_current_state() == GameState.GAME_OVER:
@@ -47,4 +54,6 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
+                guards_list.update()
+                guards_list.draw(self.screen)
                 pygame.display.update()

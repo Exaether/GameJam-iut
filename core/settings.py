@@ -16,4 +16,6 @@ class Param:
         self.MENU_BUTTON_HEIGHT = 60
         self.MENU_BUTTON_SPACING = 20
         
-        self.GAME_TITLE = "Mon Jeu" 
+        self.GAME_TITLE = "Mon Jeu"
+
+        self.GUARD_SPEED = 0.1
