@@ -45,7 +45,9 @@ class Game:
                 if state_manager.get_current_state() == GameState.WIN:
                     pass
                 if state_manager.get_current_state() == GameState.PLAYING:
-                    Game().run()
+                    guards_list.update()
+                    guards_list.draw(self.screen)
+                    pygame.display.update()
                 if state_manager.get_current_state() == GameState.PAUSED:
                     pass
                 if state_manager.get_current_state() == GameState.MENU:
@@ -54,6 +56,3 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-                guards_list.update()
-                guards_list.draw(self.screen)
-                pygame.display.update()
