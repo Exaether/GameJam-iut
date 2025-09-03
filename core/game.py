@@ -1,8 +1,10 @@
 import pygame
 import sys
+
 from .settings import Param
 from .input_handler import InputHandler
 from .state_manager import StateManager, GameState
+from entities.loot import Loot
 
 
 class Game:
@@ -20,6 +22,10 @@ class Game:
         
         self.state_manager = StateManager()
         self.running = True
+
+        loot = Loot(self.params.SCREEN_WIDTH // 2, self.params.SCREEN_HEIGHT // 2)
+        self.loot_list = pygame.sprite.Group()
+        self.loot_list.add(loot)
             
     def update_game(self):
         # TODO: Implémenter la logique du jeu
@@ -31,6 +37,7 @@ class Game:
         
     def run(self):
         state_manager = StateManager()
+        state_manager.change_state(new_state=GameState.PLAYING)
     
         while True:
                 if state_manager.get_current_state() == GameState.GAME_OVER:
@@ -38,7 +45,7 @@ class Game:
                 if state_manager.get_current_state() == GameState.WIN:
                     pass
                 if state_manager.get_current_state() == GameState.PLAYING:
-                    Game().run()
+                    self.loot_list.draw(self.screen)
                 if state_manager.get_current_state() == GameState.PAUSED:
                     pass
                 if state_manager.get_current_state() == GameState.MENU:
