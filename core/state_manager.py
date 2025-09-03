@@ -30,11 +30,8 @@ class StateManager:
         return self.previous_state
     
     def has_state_changed(self):
-        state_changed = False
+        state = False
         if self.state_changed:
             self.state_changed = False
-            state_changed = True
-        return state_changed
-    
-    def should_quit(self):
-        return self.current_state == GameState.QUIT 
+            state = True
+        return state
