@@ -1,12 +1,14 @@
 import pygame
 import math
 from core.settings import Settings 
+import os
 
 class Enemy(pygame.sprite.Sprite):
     
     def __init__(self, base_x=0, base_y=0, target_x=0, target_y=0):
         super().__init__()
-        self.sprite_sheet = pygame.image.load('assets/entities/enemy_sprite.png')
+        self.sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
+        self.sprite_sheet = pygame.image.load(self.sprite_path)   
         self.image = pygame.Surface([16, 16])
         self.get_image(0, 0)
         self.rect = self.image.get_rect()
