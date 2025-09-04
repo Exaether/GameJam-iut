@@ -6,7 +6,6 @@ from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
-from .menu import Menu
 from components import GameOverScreen
 
 class Game:

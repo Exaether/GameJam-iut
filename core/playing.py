@@ -26,7 +26,7 @@ class Playing:
         event_controller.set_player(self.player)
 
         self.guards_list = EnemyGroup()
-        guard = Enemy(100, 200, 500, 200)
+        guard = Enemy(250, 200, 100, 450, 100, 450, "square")
         self.guards_list.add(guard)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
@@ -51,13 +51,16 @@ class Playing:
                 self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
         self.pickup_effects.update(dt)
-        self.guards_list.update()
+        
+        # Mettre à jour les gardes avec les collisions
+        for guard in self.guards_list.sprites():
+            guard.update(self.map)
         
         # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
-                if guard.is_player_detected(self.player.rect, self.game.clock):
-                    self.game.state_manager.change_state(GameState.GAME_OVER)
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_over()
 
         if pygame.sprite.collide_mask(self.player, self.map):
             self.player.undo_move()
@@ -65,8 +68,8 @@ class Playing:
     def draw(self, screen):
         screen.fill(self.settings.BACKGROUND_COLOR)
         self.map.draw(screen)
-        self.player.draw(screen)
         
+        self.player.draw(screen)
         self.guards_list.draw(screen)
         self.item_list.draw(screen)
         self.pickup_effects.draw(screen)
