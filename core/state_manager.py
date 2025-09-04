@@ -4,7 +4,7 @@ class GameState(Enum):
     MENU = "menu"
     PAUSED = "paused"
     PLAYING = "playing"
-    GAME_OVER = "game_over"
+    LOSE = "lose"
     WIN = "win"
 
 class StateManager:
