@@ -34,6 +34,3 @@ class ItemPickupEffect:
             pickup_text = self.pickup_font.render("+1", True, (0, 255, 0))
             pickup_text.set_alpha(alpha)
             screen.blit(pickup_text, (anim['x'] - 10, anim['y'] - 10))
-    
-    def has_active_animations(self):
-        return len(self.animations) > 0 
