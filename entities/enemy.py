@@ -44,6 +44,9 @@ class Enemy(pygame.sprite.Sprite):
     def draw_detection_area(self, surface):
         pygame.draw.rect(surface, (255, 0, 0, 50), self.detection_area)
 
+    def is_detection_area_colliding(self, rect):
+        return self.detection_area.colliderect(rect)
+
     def update(self):
         settings = Settings() 
         # Va vers les coordonnées target_x puis target_y

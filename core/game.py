@@ -34,6 +34,7 @@ class Game:
         self.menu = Menu(self.game_text, [self.button_play, self.button_exit], "#505050")
 
     def play(self):
+        self.gameplay = Gameplay(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 
     def exit(self):
@@ -65,6 +66,11 @@ class Game:
                 self.gameplay.draw(self.screen)
                 guards_list.update()
                 guards_list.draw(self.screen)
+                # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
+                for guard in guards_list.sprites():
+                    if isinstance(guard, Enemy):
+                        if guard.is_detection_area_colliding(self.gameplay.player.rect):
+                            self.state_manager.change_state(GameState.MENU)
                 loot_list.draw(self.screen)
                 pygame.display.update()
             elif current_state == GameState.PAUSED:
