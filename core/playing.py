@@ -21,7 +21,7 @@ class Playing:
         event_controller.set_player(self.player)
         
         self.guards_list = EnemyGroup()
-        guard = Enemy(0, 0, 200, 0)
+        guard = Enemy(0, 100, 200, 0)
         self.guards_list.add(guard)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
@@ -51,7 +51,7 @@ class Playing:
         # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
-                if guard.is_detection_area_colliding(self.player.rect):
+                if guard.is_player_detected(self.player.rect):
                     self.game.state_manager.change_state(GameState.MENU)
     
     def draw(self, screen):
