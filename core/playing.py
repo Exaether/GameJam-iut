@@ -41,7 +41,7 @@ class Playing:
         collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
         
         for item in collided_items:
-            if item.pickable: 
+            if item.pickable:
                 self.player.items_collected += 1
                 self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
@@ -52,7 +52,7 @@ class Playing:
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
                 if guard.is_player_detected(self.player.rect, self.game.clock):
-                    self.game.state_manager.change_state(GameState.GAME_OVER)
+                    self.game.state_manager.change_state(GameState.LOSE)
     
     def draw(self, screen):
         screen.fill(self.settings.BACKGROUND_COLOR)

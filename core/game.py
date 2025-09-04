@@ -7,7 +7,7 @@ from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
 from .menu import Menu
-from components import GameOverScreen
+from components import GameLoseScreen, GameWinScreen
 
 class Game:
     def __init__(self):
@@ -20,38 +20,48 @@ class Game:
 
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
+        self.menu = Menu(self.settings, self)
         self.playing = Playing(self, self.event_controller)
         self.running = True
 
-        self.game_over_screen = None
-        self.menu = Menu(self.settings, self)
+        self.game_lose_screen = None
+        self.game_win_screen = None
 
     def play(self):
         self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 
-
     def retry_game(self):
         """Relance une nouvelle partie"""
-        self.game_over_screen = None
+        self.game_lose_screen = None
+        self.game_win_screen = None
         self.play()
         
     def back_to_menu(self):
         """Retourne au menu principal"""
-        self.game_over_screen = None
+        self.game_lose_screen = None
+        self.game_win_screen = None
         self.state_manager.change_state(GameState.MENU)
 
-    def trigger_game_over(self):
-        """Déclenche le Game Over avec le score final"""
-        final_score = self.playing.player.items_collected
-        self.game_over_screen = GameOverScreen(
+    def trigger_game_lose(self):
+        """Déclenche la défaite du jeu"""
+        self.game_lose_screen = GameLoseScreen(
             self.settings.SCREEN_WIDTH, 
+            self.settings.SCREEN_HEIGHT,
+            self.retry_game,
+            self.back_to_menu
+        )
+
+    def trigger_game_win(self):
+        """Déclenche la victoire du jeu"""
+        final_score = self.playing.player.items_collected
+        self.game_win_screen = GameWinScreen(
+            self.settings.SCREEN_WIDTH,
             self.settings.SCREEN_HEIGHT,
             final_score,
             self.retry_game,
             self.back_to_menu
         )
-        self.state_manager.change_state(GameState.GAME_OVER)
 
     def exit(self):
         self.running = False
@@ -77,16 +87,18 @@ class Game:
                 pass
             elif current_state == GameState.MENU:
                 self.menu.draw(self.screen)
-            elif current_state == GameState.GAME_OVER:
-
-                if self.game_over_screen:
-                    self.game_over_screen.draw(self.screen)
+            elif current_state == GameState.LOSE:
+                if self.game_lose_screen:
+                    self.game_lose_screen.draw(self.screen)
                 else:
-                    # Initialiser l'écran Game Over si c'est la première fois
-                    self.trigger_game_over()
+                    # Initialiser l'écran Game Lose à la première image
+                    self.trigger_game_lose()
             elif current_state == GameState.WIN:
-                # TODO: A réaliser
-                pass
+                if self.game_win_screen:
+                    self.game_win_screen.draw(self.screen)
+                else:
+                    # Initialiser l'écran Game Win à la première image
+                    self.trigger_game_win()
 
             pygame.display.update()
             pygame.display.flip()
