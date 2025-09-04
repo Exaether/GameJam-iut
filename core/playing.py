@@ -16,14 +16,14 @@ class Playing:
         self.screen = game.screen
         self.settings = game.settings
 
-        self.map = Dungeon("./assets/map/dungeon.png")
-        self.vents = Dungeon("./assets/map/vents.png")
+        self.map = Dungeon()
 
         center_x = self.settings.SCREEN_WIDTH // 2
         center_y = self.settings.SCREEN_HEIGHT // 2
         self.player = Player(center_x, center_y)
 
         event_controller.set_player(self.player)
+        event_controller.set_map(self.map)
 
         self.guards_list = EnemyGroup()
         guard = Enemy(250, 200, 100, 450, 100, 450, "square")
@@ -41,29 +41,30 @@ class Playing:
 
     def update(self, dt, events):
         self.player.update(dt)
-        
-        # Vérification des collisions entre le player et les items
-        collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
-        
-        for item in collided_items:
-            if item.pickable:
-                self.player.items_collected += 1
-                self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
-
-        self.pickup_effects.update(dt)
-
-        # Mettre à jour les gardes avec les collisions
-        for guard in self.guards_list.sprites():
-            guard.update(self.map)
-        
-        # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
-        for guard in self.guards_list.sprites():
-            if isinstance(guard, Enemy):
-                if guard.is_player_detected(self.player, self.game.clock):
-                    self.game.trigger_game_lose()
-
         if pygame.sprite.collide_mask(self.player, self.map):
             self.player.undo_move()
+
+        if self.map.layer == 1:
+            # Vérification des collisions entre le player et les items
+            collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
+
+            for item in collided_items:
+                if item.pickable:
+                    self.player.items_collected += 1
+                    self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
+
+            self.pickup_effects.update(dt)
+
+            # Mettre à jour les gardes avec les collisions
+            for guard in self.guards_list.sprites():
+                guard.update(self.map)
+
+            # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
+            for guard in self.guards_list.sprites():
+                if isinstance(guard, Enemy):
+                    if guard.is_player_detected(self.player, self.game.clock):
+                        self.game.trigger_game_lose()
+
 
     def draw(self, screen):
         camera = (-self.player.rect.centerx + screen.get_rect().centerx,
@@ -72,11 +73,12 @@ class Playing:
         self.map.draw(screen, camera)
         self.player.draw(screen, camera)
 
-        self.guards_list.draw(screen, camera)
-        #self.item_list.draw(screen)
-        for item in self.item_list.sprites():
-            item.draw(screen, camera)
-        self.pickup_effects.draw(screen, camera)
+        if self.map.layer == 1:
+            self.guards_list.draw(screen, camera)
+            #self.item_list.draw(screen)
+            for item in self.item_list.sprites():
+                item.draw(screen, camera)
+            self.pickup_effects.draw(screen, camera)
         
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))

@@ -5,9 +5,13 @@ class EventController:
     def __init__(self, game):
         self.game = game
         self.player = None
+        self.map = None
     
     def set_player(self, player):
         self.player = player
+
+    def set_map(self, map):
+        self.map = map
     
     def _get_buttons_for_state(self, game_state):
         """Retourne la liste des boutons pour un état de jeu donné"""
@@ -65,12 +69,13 @@ class EventController:
                 self.player.move(dx, dy)
             else:
                 self.player.idle()
-    
+
     def _handle_keydown(self, key, state):
         if state == GameState.PLAYING and self.player:
-            # TODO : à définir
-            pass
-        
+            if self.map.trapdoor_collide(self.player) and key == pygame.K_SPACE:
+                self.map.switch_map()
+
+
         elif state == GameState.MENU:
             # TODO : à définir
             pass
