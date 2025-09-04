@@ -20,7 +20,6 @@ class Game:
 
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
-        self.menu = Menu(self)
         self.playing = Playing(self, self.event_controller)
         self.running = True
 
