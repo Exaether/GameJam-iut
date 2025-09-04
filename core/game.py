@@ -6,8 +6,8 @@ from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
+from .menu import Menu
 from components import GameOverScreen
-
 
 class Game:
     def __init__(self):
@@ -25,13 +25,34 @@ class Game:
         self.running = True
 
         self.game_over_screen = None
+        self.menu = Menu(self.settings, self)
 
     def play(self):
         self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 
+
+    def retry_game(self):
+        """Relance une nouvelle partie"""
+        self.game_over_screen = None
+        self.play()
+        
     def back_to_menu(self):
+        """Retourne au menu principal"""
+        self.game_over_screen = None
         self.state_manager.change_state(GameState.MENU)
+
+    def trigger_game_over(self):
+        """Déclenche le Game Over avec le score final"""
+        final_score = self.playing.player.items_collected
+        self.game_over_screen = GameOverScreen(
+            self.settings.SCREEN_WIDTH, 
+            self.settings.SCREEN_HEIGHT,
+            final_score,
+            self.retry_game,
+            self.back_to_menu
+        )
+        self.state_manager.change_state(GameState.GAME_OVER)
 
     def exit(self):
         self.running = False
@@ -58,16 +79,12 @@ class Game:
             elif current_state == GameState.MENU:
                 self.menu.draw(self.screen)
             elif current_state == GameState.GAME_OVER:
-                final_score = self.playing.player.items_collected
 
-                self.game_over_screen = GameOverScreen(
-                    self.settings.SCREEN_WIDTH,
-                    self.settings.SCREEN_HEIGHT,
-                    final_score,
-                    self.play,
-                    self.back_to_menu
-                )
-                self.game_over_screen.draw(self.screen)
+                if self.game_over_screen:
+                    self.game_over_screen.draw(self.screen)
+                else:
+                    # Initialiser l'écran Game Over si c'est la première fois
+                    self.trigger_game_over()
             elif current_state == GameState.WIN:
                 # TODO: A réaliser
                 pass

@@ -1,49 +1,57 @@
 import pygame
-from components import Button, Text, MenuComponent
-
+from components.medieval_text import MedievalText
+from components.medieval_button import MedievalButton
+from components.menu_component import MenuComponent
 
 class Menu:
-    CENTER_Y_GAME_TEXT = 200
-
-    @staticmethod
-    def get_font_game_text() -> pygame.font.Font:
-        return pygame.font.Font(None, 75)
-
-    @staticmethod
-    def get_font_buttons() -> pygame.font.Font:
-        return pygame.font.Font(None, 40)
-
-    WIDTH_BUTTONS = 250
-    HEIGHT_BUTTONS = 80
-
-    TEXT_BUTTON_PLAY = "VOLER !"
-    CENTER_Y_PLAY_BUTTON = 400
-    BASE_COLOR_PLAY_BUTTON = "#909090"
-    HOVERING_COLOR_PLAY_BUTTON = "#707070"
-
-    TEXT_BUTTON_EXIT = "FUIR"
-    CENTER_Y_EXIT_BUTTON = 500
-    BASE_COLOR_EXIT_BUTTON = "#ff0000"
-    HOVERING_COLOR_EXIT_BUTTON = "#cc0000"
-
-    BACKGROUND_COLOR = "#505050"
-
-    def __init__(self, game):
+    
+    BACKGROUND_COLOR = "#2F1B14"
+    
+    def __init__(self, settings, game):
+        self.settings = settings
         self.game = game
-        self.game_text = Text(self.game.settings.SCREEN_WIDTH // 2, Menu.CENTER_Y_GAME_TEXT,
-                              self.game.settings.GAME_TITLE, Menu.get_font_game_text())
 
-        self.text_button_play = Text(0, 0, Menu.TEXT_BUTTON_PLAY, Menu.get_font_buttons())
-        self.button_play = Button(self.game.settings.SCREEN_WIDTH // 2, Menu.CENTER_Y_PLAY_BUTTON, Menu.WIDTH_BUTTONS,
-                                  Menu.HEIGHT_BUTTONS, self.text_button_play, Menu.BASE_COLOR_PLAY_BUTTON,
-                                  Menu.HOVERING_COLOR_PLAY_BUTTON, None, self.game.play)
+        self.game_text = MedievalText(
+            self.settings.SCREEN_WIDTH // 2, 200, 
+            self.settings.GAME_TITLE, 
+            pygame.font.Font(None, 75),
+            MedievalText.ROYAL_GOLD,
+            shadow_offset=4
+        )
 
-        self.text_button_exit = Text(0, 0, Menu.TEXT_BUTTON_EXIT, Menu.get_font_buttons())
-        self.button_exit = Button(self.game.settings.SCREEN_WIDTH // 2, Menu.CENTER_Y_EXIT_BUTTON, Menu.WIDTH_BUTTONS,
-                                  Menu.HEIGHT_BUTTONS, self.text_button_exit, Menu.BASE_COLOR_EXIT_BUTTON,
-                                  Menu.HOVERING_COLOR_EXIT_BUTTON, None, self.game.exit)
+        self.text_play = MedievalText(
+            0, 0, "VOLER !", 
+            pygame.font.Font(None, 40), 
+            MedievalText.PARCHMENT
+        )
+        self.button_play = MedievalButton(
+            self.settings.SCREEN_WIDTH // 2, 400, 250, 80, 
+            self.text_play, 
+            MedievalButton.DEEP_NAVY, 
+            MedievalButton.ROYAL_BLUE, 
+            self.game.play
+        )
 
-        self.menu = MenuComponent(self.game_text, [self.button_play, self.button_exit], Menu.BACKGROUND_COLOR)
+        # Bouton QUITTER avec style médiéval
+        self.text_exit = MedievalText(
+            0, 0, "FUIR", 
+            pygame.font.Font(None, 40), 
+            MedievalText.ROYAL_GOLD
+        )
+        self.button_exit = MedievalButton(
+            self.settings.SCREEN_WIDTH // 2, 500, 250, 80, 
+            self.text_exit, 
+            MedievalButton.CRIMSON_BASE, 
+            MedievalButton.CRIMSON_HOVER, 
+            self.game.exit
+        )
 
+        # Créer le menu avec le composant générique
+        self.menu_component = MenuComponent(
+            self.game_text, 
+            [self.button_play, self.button_exit], 
+            self.BACKGROUND_COLOR
+        )
+    
     def draw(self, screen):
-        self.menu.draw(screen)
+        self.menu_component.draw(screen)
