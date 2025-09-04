@@ -25,7 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.is_moving = False
         self.animation_frame = 0
         self.animation_timer = 0
-        self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE))
+        self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
+        self.prev_pos = self.rect.center
         
     def _load_sprite_sheet(self):
         sprite_path = os.path.join("assets", "entities", "player_sprite.png")
@@ -57,10 +58,11 @@ class Player(pygame.sprite.Sprite):
         # Normaliser la vitesse pour les mouvements diagonaux
         if dx != 0 and dy != 0:
             speed *= 0.707  # Approximativement 1/sqrt(2)
-        
+
+        self.prev_pos = self.rect.center
         self.rect.x += int(dx * speed)
         self.rect.y += int(dy * speed)
-        
+
         if dy < 0:
             self.direction = "up"
         elif dy > 0:
@@ -70,7 +72,10 @@ class Player(pygame.sprite.Sprite):
             self.direction = "left"
         elif dx > 0:
             self.direction = "right"
-            
+
+    def undo_move(self):
+        self.rect.center = self.prev_pos
+
     def idle(self):
         self.is_moving = False
 

@@ -6,7 +6,6 @@ from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
-from .menu import Menu
 from components import GameLoseScreen, GameWinScreen
 
 class Game:
@@ -46,7 +45,7 @@ class Game:
     def trigger_game_lose(self):
         """Déclenche la défaite du jeu"""
         self.game_lose_screen = GameLoseScreen(
-            self.settings.SCREEN_WIDTH, 
+            self.settings.SCREEN_WIDTH,
             self.settings.SCREEN_HEIGHT,
             self.retry_game,
             self.back_to_menu
