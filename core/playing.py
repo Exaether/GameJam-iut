@@ -37,19 +37,13 @@ class Playing:
     def update(self, dt, events):
         self.player.update(dt)
         
-        # Vérification des collisions entre le player et les items #TODO : a voir pour une classe collision ou une méthode natif de pygame
-        player_position = self.player.get_center()
-        items_to_remove = []
-
-        for item in self.item_list:
-            if item.player_on_item(player_position):
+        # Vérification des collisions entre le player et les items
+        collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
+        
+        for item in collided_items:
+            if item.pickable: 
                 self.player.items_collected += 1
-                items_to_remove.append(item)
                 self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
-
-        # Suppression des items collectés
-        for item in items_to_remove:
-            self.item_list.remove(item)
 
         self.pickup_effects.update(dt)
         self.guards_list.update()
