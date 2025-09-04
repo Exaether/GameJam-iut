@@ -30,11 +30,3 @@ class MedievalText:
         """Dessine d'abord l'ombre puis le texte"""
         surface.blit(self.shadow_surf, self.shadow_rect)
         surface.blit(self.text_surf, self.text_rect)
-        
-    def update_text(self, new_text: str):
-        """Met à jour le texte affiché"""
-        self.text = new_text
-        self.text_surf = self.font.render(new_text, True, self.color)
-        self.shadow_surf = self.font.render(new_text, True, self.BLACK_INK)
-        self.text_rect = self.text_surf.get_rect(center=(self.center_x, self.center_y))
-        self.shadow_rect = self.shadow_surf.get_rect(center=(self.center_x + self.shadow_offset, self.center_y + self.shadow_offset)) 

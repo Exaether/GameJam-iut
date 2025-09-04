@@ -9,6 +9,27 @@ class EventController:
     def set_player(self, player):
         self.player = player
     
+    def _get_buttons_for_state(self, game_state):
+        """Retourne la liste des boutons pour un état de jeu donné"""
+        buttons = []
+        if game_state == GameState.MENU:
+            buttons = [self.game.menu.button_play, self.game.menu.button_exit]
+        elif game_state == GameState.GAME_OVER and self.game.game_over_screen:
+            buttons = self.game.game_over_screen.buttons
+        return buttons
+    
+    def _handle_buttons_hover(self, mouse_pos, game_state):
+        """Gère le hover pour tous les boutons de l'état actuel"""
+        buttons = self._get_buttons_for_state(game_state)
+        for button in buttons:
+            button.check_hover(mouse_pos)
+    
+    def _handle_buttons_click(self, mouse_pos, game_state):
+        """Gère les clics pour tous les boutons de l'état actuel"""
+        buttons = self._get_buttons_for_state(game_state)
+        for button in buttons:
+            button.check_click(mouse_pos)
+    
     def handle_events(self, events):
         current_state = self.game.state_manager.get_current_state()
         
@@ -16,11 +37,9 @@ class EventController:
             if event.type == pygame.KEYDOWN:
                 self._handle_keydown(event.key, current_state)
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self._handle_mousedown(event.pos, event.button, current_state)
+                self._handle_mousedown(event.pos, current_state)
             elif event.type == pygame.MOUSEMOTION:
                 self._handle_mousemotion(event.pos, current_state)
-            self.game.button_play.handle_event(event)
-            self.game.button_exit.handle_event(event)
         
         if self.player and current_state == GameState.PLAYING:
             keys = pygame.key.get_pressed()
@@ -58,11 +77,12 @@ class EventController:
             # TODO : à définir
             pass
     
-    def _handle_mousedown(self, pos, button, state):
-        if state == GameState.MENU:
-            pass
+    def _handle_mousedown(self, pos, state):
+        """Gère les clics de souris pour tous les états"""
+        if state in [GameState.MENU, GameState.GAME_OVER]:
+            self._handle_buttons_click(pos, state)
 
     def _handle_mousemotion(self, pos, state):
-        if state == GameState.GAME_OVER and self.game.game_over_screen:
-            for game_button in self.game.game_over_screen.buttons:
-                game_button.check_hover(pos)
+        """Gère le mouvement de souris pour tous les états"""
+        if state in [GameState.MENU, GameState.GAME_OVER]:
+            self._handle_buttons_hover(pos, state)

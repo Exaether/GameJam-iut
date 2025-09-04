@@ -4,8 +4,6 @@ from .medieval_button import MedievalButton
 from .medieval_frame import MedievalFrame
 
 class GameOverScreen:
-    """Écran de Game Over avec style médiéval"""
-    
     TAVERN_BACKGROUND = "#2F1B14"
     
     def __init__(self, screen_width: int, screen_height: int, final_score: int, 
@@ -22,7 +20,6 @@ class GameOverScreen:
             border_width=6, shadow_offset=10
         )
         
-        # Polices médiévales
         title_font = pygame.font.Font(None, 85)
         subtitle_font = pygame.font.Font(None, 55) 
         button_font = pygame.font.Font(None, 42)
@@ -90,13 +87,12 @@ class GameOverScreen:
             return "Magnifique butin ! Le roi tremblent !"
 
     def draw(self, surface):
-        """Dessine l'écran de Game Over"""
         surface.fill(self.TAVERN_BACKGROUND)
         
         # Cadre de parchemin
         self.main_frame.draw(surface)
         
-        # Textes médiévales
+        # Textes
         self.title.draw(surface)
         self.score_text.draw(surface)
         self.encouragement_message_text.draw(surface)
@@ -105,7 +101,3 @@ class GameOverScreen:
         for button in self.buttons:
             button.draw(surface)
     
-    def handle_event(self, event):
-        """Gère les événements pour tous les boutons"""
-        for button in self.buttons:
-            button.handle_event(event)

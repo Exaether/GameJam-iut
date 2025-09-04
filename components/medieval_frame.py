@@ -1,8 +1,6 @@
 import pygame
 
 class MedievalFrame:
-    """Composant de cadre décoratif médiéval"""
-    
     PARCHMENT_BASE = "#E9C7A5"   
     PARCHMENT_DARK = "#D3BA9C"
     ROYAL_GOLD = "#D9BF77"
@@ -21,6 +19,7 @@ class MedievalFrame:
             x + shadow_offset, y + shadow_offset, 
             width, height
         )
+        # Rectangle pour le contenu
         self.inner_rect = pygame.Rect(
             x + border_width, y + border_width,
             width - (border_width * 2), height - (border_width * 2)
@@ -32,7 +31,6 @@ class MedievalFrame:
         )
     
     def draw(self, surface):
-        """Dessine le cadre médiéval"""
         pygame.draw.rect(surface, self.DEEP_SHADOW, self.shadow_rect)
         
         pygame.draw.rect(surface, self.PARCHMENT_BASE, self.rect)
@@ -43,13 +41,3 @@ class MedievalFrame:
         if self.border_width > 3:
             pygame.draw.rect(surface, self.NOBLE_BRONZE, self.inner_rect, 2)
         
-    
-    def get_content_rect(self):
-        """Retourne le rectangle intérieur pour positionner le contenu"""
-        padding = self.border_width + 8
-        return pygame.Rect(
-            self.rect.x + padding, 
-            self.rect.y + padding,
-            self.rect.width - (padding * 2), 
-            self.rect.height - (padding * 2)
-        ) 

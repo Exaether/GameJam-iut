@@ -2,8 +2,6 @@ import pygame
 from .medieval_text import MedievalText
 
 class MedievalButton:
-    """Bouton avec style médiéval"""
-    
     NOBLE_BROWN = "#7D5B3A"
     RICH_HOVER = "#A0522D"
     ROYAL_GOLD = "#D9BF77"
@@ -57,10 +55,8 @@ class MedievalButton:
         self.text.draw(surface)
 
     def check_hover(self, mouse_pos):
-        """Vérifie si la souris survole le bouton"""
         self.is_hovering = self.rect.collidepoint(mouse_pos)
 
     def check_click(self, mouse_pos):
-        """Vérifie si le bouton est cliqué et exécute l'action"""
         if self.rect.collidepoint(mouse_pos) and self.on_click_action:
             self.on_click_action()

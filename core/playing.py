@@ -1,4 +1,6 @@
 import pygame
+
+from entities.dungeon import Dungeon
 from entities.player import Player
 from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
@@ -12,16 +14,19 @@ class Playing:
     def __init__(self, game, event_controller):
         self.game = game
         self.screen = game.screen
-        self.settings = game.settings           
-        
+        self.settings = game.settings
+
+        self.map = Dungeon("./assets/map/dungeon.png")
+        self.vents = Dungeon("./assets/map/vents.png")
+
         center_x = self.settings.SCREEN_WIDTH // 2
         center_y = self.settings.SCREEN_HEIGHT // 2
         self.player = Player(center_x, center_y)
 
         event_controller.set_player(self.player)
-        
+
         self.guards_list = EnemyGroup()
-        guard = Enemy(100, 200, 500, 200)
+        guard = Enemy(250, 200, 100, 450, 100, 450, "square")
         self.guards_list.add(guard)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
@@ -33,7 +38,7 @@ class Playing:
         # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
-    
+
     def update(self, dt, events):
         self.player.update(dt)
         
@@ -46,18 +51,25 @@ class Playing:
                 self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
         self.pickup_effects.update(dt)
-        self.guards_list.update()
+        
+        # Mettre à jour les gardes avec les collisions
+        for guard in self.guards_list.sprites():
+            guard.update(self.map)
         
         # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
-                if guard.is_player_detected(self.player.rect, self.game.clock):
-                    self.game.state_manager.change_state(GameState.GAME_OVER)
-    
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_over()
+
+        if pygame.sprite.collide_mask(self.player, self.map):
+            self.player.undo_move()
+
     def draw(self, screen):
         screen.fill(self.settings.BACKGROUND_COLOR)
-        self.player.draw(screen)
+        self.map.draw(screen)
         
+        self.player.draw(screen)
         self.guards_list.draw(screen)
         self.item_list.draw(screen)
         self.pickup_effects.draw(screen)
