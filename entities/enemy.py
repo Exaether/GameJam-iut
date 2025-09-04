@@ -1,15 +1,15 @@
 import pygame
 import math
-from core.settings import Settings 
+from core.settings import Settings
 import os
 import random
 
 class Enemy(pygame.sprite.Sprite):
-
     SPRITE_SIZE = 16
     GUARD_SPEED = 1
     VISION_RANGE = 100
     VISION_ANGLE = 60
+    ANIMATION_TICK = 15
 
     def __init__(self, x_start, y_start, x_range_min, x_range_max, y_range_min, y_range_max, pattern_type="square"):
         super().__init__()
@@ -19,7 +19,9 @@ class Enemy(pygame.sprite.Sprite):
         self.get_image(0, 0)
         self.rect = self.image.get_rect()
         self.direction = "right"
-        
+        self.animation_tick = 0
+        self.animation_sprite = 0
+
         self.x = x_start
         self.y = y_start
         self.x_range_min = x_range_min
@@ -28,7 +30,7 @@ class Enemy(pygame.sprite.Sprite):
         self.y_range_max = y_range_max
         self.patrol_distance_x = random.randint(x_range_min, x_range_max)
         self.patrol_distance_y = random.randint(y_range_min, y_range_max)
-        
+
         # Définir les étapes de patrouille # TODO : a générer automatiquement pour des patterns différents
         self.patrol_steps = [
             {'direction': 'right', 'dx': 1, 'dy': 0},
@@ -38,18 +40,18 @@ class Enemy(pygame.sprite.Sprite):
         ]
         self.current_step_index = 0
         self.step_progress = 0
-        
+
         self.alertness = 0
         self.exclamation_mark = pygame.image.load('assets/other/exclamation_mark.png')
         self.image_exclamation_mark = pygame.Surface([16, 16])
         self.image_exclamation_mark.blit(self.exclamation_mark, (0, 0), (0, 0, 16, 16))
         self.image_exclamation_mark.set_colorkey([0, 0, 0])
-        
+
         # Pour les collisions avec les murs
         self.prev_x = self.x
         self.prev_y = self.y
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
-        
+
         # Surface et mask pour la zone de détection
         self.vision_surface = None
         self.vision_mask = None
@@ -61,21 +63,29 @@ class Enemy(pygame.sprite.Sprite):
         self.image.set_colorkey([0, 0, 0])
 
     def set_direction(self, direction="right"):
-        """Change la direction ou regarde l'entité"""
-        if direction == "right":
-            self.direction = "right"
-            self.get_image(0, 0)
-        elif direction == "left":
-            self.direction = "left"
-            self.get_image(16, 0)
-        elif direction == "down":
-            self.direction = "down"
-            self.get_image(0, 0)
-        elif direction == "up":
-            self.direction = "up"
-            self.get_image(16, 0)
-        else:
+        """Change la direction ou regarde l'entité et gère l'animation"""
+        if self.direction != direction:
             self.direction = direction
+            # Si la direction change, on bouge à la fin de l'animation pour que update_sprite soit directement appelé
+            self.animation_sprite = 3
+            self.animation_tick = self.ANIMATION_TICK - 1
+
+        # Faire progresser l'animation de déplacement du sprite
+        self.animation_tick += 1
+
+        if self.animation_tick == self.ANIMATION_TICK:
+            if self.animation_sprite == 3:
+                self.animation_sprite = 0
+            else:
+                self.animation_sprite += 1
+            self.animation_tick = 0
+            self.update_sprite()
+
+    def update_sprite(self):
+        if self.direction == "right" or self.direction == "down":
+            self.get_image(16 * self.animation_sprite, 0)
+        elif self.direction == "left" or self.direction == "up":
+            self.get_image(16 * self.animation_sprite, 16)
 
     def _create_vision_mask(self):
         """Crée le mask de collision pour la zone de vision"""
@@ -84,14 +94,14 @@ class Enemy(pygame.sprite.Sprite):
         vision_size = self.VISION_RANGE * 2
         self.vision_surface = pygame.Surface((vision_size, vision_size), pygame.SRCALPHA)
         self.vision_surface.fill((0, 0, 0, 0))
-        
+
         # Calculer les points du cône
         center_x = vision_size // 2
         center_y = vision_size // 2
-        
+
         vision_angle = self._get_vision_angle()
         half_cone_angle = math.radians(self.VISION_ANGLE / 2)
-        
+
         # Points du cône
         points = [(center_x, center_y)]
         for i in range(15):
@@ -99,10 +109,10 @@ class Enemy(pygame.sprite.Sprite):
             x = center_x + self.VISION_RANGE * math.cos(angle)
             y = center_y + self.VISION_RANGE * math.sin(angle)
             points.append((x, y))
-        
+
         # Dessiner le cône sur la surface
         pygame.draw.polygon(self.vision_surface, (255, 255, 255, 255), points)
-        
+
         # Créer le mask et le rect
         self.vision_mask = pygame.mask.from_surface(self.vision_surface)
         self.vision_rect = pygame.Rect(
@@ -124,13 +134,14 @@ class Enemy(pygame.sprite.Sprite):
     def is_player_in_vision(self, player):
         """Vérifie si le joueur est dans la zone de vision par collision"""
         if self.vision_mask and self.vision_rect:
-            
+
             # Calculer l'offset du joueur par rapport à la zone de vision
             offset_x = player.rect.x - self.vision_rect.x
             offset_y = player.rect.y - self.vision_rect.y
-            
+
             # Tester la collision entre le mask du joueur et celui de la zone de vision
             return self.vision_mask.overlap(player.mask, (offset_x, offset_y))
+        return None
 
     def draw_vision_cone(self, surface, camera):
         """Dessine le cône de vision de l'ennemi"""
@@ -141,10 +152,6 @@ class Enemy(pygame.sprite.Sprite):
             # Changer la couleur pour l'affichage (jaune transparent)
             display_surface.fill((255, 255, 0, 64), special_flags=pygame.BLEND_RGBA_MULT)
             surface.blit(display_surface, self.vision_rect.move(camera).topleft)
-
-    def draw_detection_area(self, surface):
-        """Dessine la zone de détection du garde"""
-        self.draw_vision_cone(surface)
 
     """
     Dessine un point d'exclamation au dessus du garde si le joueur est dans sa zone de détection
@@ -187,22 +194,22 @@ class Enemy(pygame.sprite.Sprite):
         # Sauvegarder la position actuelle
         self.prev_x = self.x
         self.prev_y = self.y
-        
+
         # Déterminer l'étape actuelle
         current_step = self.patrol_steps[self.current_step_index]
         dx = current_step['dx']
         dy = current_step['dy']
-        
+
         # Appliquer le mouvement
         self.x += dx * self.GUARD_SPEED
         self.y += dy * self.GUARD_SPEED
-        
+
         # Mettre à jour la direction
         self.set_direction(current_step['direction'])
-        
+
         # Mettre à jour le progrès de l'étape
         self.step_progress += self.GUARD_SPEED
-        
+
         # Vérifier si l'étape est terminée
         if self.step_progress >= self.patrol_distance_x or self.step_progress >= self.patrol_distance_y:
             self.current_step_index = (self.current_step_index + 1) % len(self.patrol_steps)
@@ -212,11 +219,11 @@ class Enemy(pygame.sprite.Sprite):
 
         # Mettre à jour la position du rect
         self.rect.topleft = (self.x, self.y)
-        
+
         # Vérifier les collisions avec les murs
         if dungeon_map and pygame.sprite.collide_mask(self, dungeon_map):
             self.undo_move()
             self.step_progress = self.patrol_distance_x
-        
+
         # Mettre à jour la zone de vision
         self._create_vision_mask()
