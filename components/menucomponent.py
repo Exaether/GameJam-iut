@@ -3,7 +3,7 @@ from .text import Text
 from .button import Button
 
 
-class Menu:
+class MenuComponent:
     def __init__(self, text: Text, buttons: list[Button], background_color):
         self.text = text
         self.buttons = buttons

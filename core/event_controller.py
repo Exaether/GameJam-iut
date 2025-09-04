@@ -19,8 +19,8 @@ class EventController:
                 self._handle_mousedown(event.pos, event.button, current_state)
             elif event.type == pygame.MOUSEMOTION:
                 self._handle_mousemotion(event.pos, current_state)
-            self.game.button_play.handle_event(event)
-            self.game.button_exit.handle_event(event)
+            self.game.menu.button_play.handle_event(event)
+            self.game.menu.button_exit.handle_event(event)
         
         if self.player and current_state == GameState.PLAYING:
             keys = pygame.key.get_pressed()
