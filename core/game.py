@@ -4,7 +4,7 @@ from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
-from components import Button, Text, Menu
+from components import Button, Text, Menu, GameOverScreen
 
 class Game:
     def __init__(self):
@@ -29,10 +29,17 @@ class Game:
         self.button_exit = Button(self.settings.SCREEN_WIDTH // 2, 500, 250, 80, self.text_exit, "#ff0000", "#cc0000", None, self.exit)
 
         self.menu = Menu(self.game_text, [self.button_play, self.button_exit], "#505050")
+        self.game_over_screen = None
 
     def play(self):
         self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
+
+    def retry_game(self):
+        self.play()
+        
+    def back_to_menu(self):
+        self.state_manager.change_state(GameState.MENU)
 
     def exit(self):
         self.running = False
@@ -58,10 +65,17 @@ class Game:
                 pass
             elif current_state == GameState.MENU:
                 self.menu.draw(self.screen)
-                pass
             elif current_state == GameState.GAME_OVER:
-                # TODO: A réaliser
-                pass
+                final_score = self.playing.player.items_collected
+
+                self.game_over_screen = GameOverScreen(
+                    self.settings.SCREEN_WIDTH, 
+                    self.settings.SCREEN_HEIGHT,
+                    final_score,
+                    self.retry_game,
+                    self.back_to_menu
+                )
+                self.game_over_screen.draw(self.screen)
             elif current_state == GameState.WIN:
                 # TODO: A réaliser
                 pass
