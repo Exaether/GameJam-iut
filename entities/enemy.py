@@ -72,12 +72,13 @@ class Enemy(pygame.sprite.Sprite):
             y = self.rect.top - self.image_exclamation_mark.get_height()
             surface.blit(self.image_exclamation_mark, (x, y))
 
-    def is_player_detected(self, player):
+    def is_player_detected(self, player, clock):
+        settings = Settings()
         if self.detection_area.colliderect(player):
-            self.alertness += 1
+            self.alertness += clock.tick(settings.FPS)
         else:
             self.alertness = 0
-        return self.alertness >= 30
+        return self.alertness >= 200 # temps en millisecondes avant que le joueur se fasse attraper
 
     def update(self):
         # Va vers les coordonnées target_x puis target_y
