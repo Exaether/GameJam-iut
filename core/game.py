@@ -7,6 +7,7 @@ from .gameplay import Gameplay
 from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.loot import Loot
+from components import Button, Text, Menu
 
 class Game:
     def __init__(self):
@@ -17,16 +18,28 @@ class Game:
         pygame.display.set_caption(self.settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
         
-        self.state_manager = StateManager(initial_state=GameState.PLAYING)
+        self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
         self.gameplay = Gameplay(self, self.event_controller)
         self.running = True
-    
+
+        self.game_text = Text(self.settings.SCREEN_WIDTH // 2, 200, self.settings.GAME_TITLE, pygame.font.Font(None, 75))
+
+        self.text_play = Text(0, 0, "VOLER !", pygame.font.Font(None, 40))
+        self.button_play = Button(self.settings.SCREEN_WIDTH // 2, 400, 250, 80, self.text_play, "#909090", "#707070", None, self.play)
+
+        self.text_exit = Text(0, 0, "FUIR", pygame.font.Font(None, 40))
+        self.button_exit = Button(self.settings.SCREEN_WIDTH // 2, 500, 250, 80, self.text_exit, "#ff0000", "#cc0000", None, self.exit)
+
+        self.menu = Menu(self.game_text, [self.button_play, self.button_exit], "#505050")
+
+    def play(self):
+        self.state_manager.change_state(GameState.PLAYING)
+
+    def exit(self):
+        self.running = False
+
     def run(self):
-
-        state_manager = StateManager()
-        state_manager.change_state(new_state=GameState.PLAYING)
-
         guards_list = EnemyGroup()
         guard = Enemy(0, 0, 200, 0)
         guards_list.add(guard)
@@ -58,7 +71,7 @@ class Game:
                 # TODO: A réaliser
                 pass
             elif current_state == GameState.MENU:
-                # TODO: A réaliser
+                self.menu.draw(self.screen)
                 pass
             elif current_state == GameState.GAME_OVER:
                 # TODO: A réaliser
@@ -66,8 +79,6 @@ class Game:
             elif current_state == GameState.WIN:
                 # TODO: A réaliser
                 pass
-            elif current_state == GameState.QUIT:
-                self.running = False
             
             pygame.display.flip()
         
