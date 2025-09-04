@@ -1,5 +1,10 @@
 import pygame
 from entities.player import Player
+from entities.enemyGroup import EnemyGroup
+from entities.enemy import Enemy
+from entities.item import Item
+from entities.item_pickup_effect import ItemPickupEffect
+from .state_manager import GameState
 
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
@@ -14,13 +19,60 @@ class Playing:
         self.player = Player(center_x, center_y)
 
         event_controller.set_player(self.player)
+        
+        self.guards_list = EnemyGroup()
+        guard = Enemy(0, 0, 200, 0)
+        self.guards_list.add(guard)
+
+        item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
+        item2 = Item(self.settings.SCREEN_WIDTH // 4, self.settings.SCREEN_HEIGHT // 4)
+        self.item_list = pygame.sprite.Group()
+        self.item_list.add(item)
+        self.item_list.add(item2)
+
+        # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
+        self.score_font = pygame.font.Font(None, 36)
+        self.pickup_effects = ItemPickupEffect()
     
     def update(self, dt, events):
         self.player.update(dt)
+        
+        # Vérification des collisions entre le player et les items #TODO : a voir pour une classe collision ou une méthode natif de pygame
+        player_position = self.player.get_center()
+        items_to_remove = []
+
+        for item in self.item_list:
+            if item.player_on_item(player_position):
+                self.player.items_collected += 1
+                items_to_remove.append(item)
+                self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
+
+        # Suppression des items collectés
+        for item in items_to_remove:
+            self.item_list.remove(item)
+
+        self.pickup_effects.update(dt)
+        self.guards_list.update()
+        
+        # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
+        for guard in self.guards_list.sprites():
+            if isinstance(guard, Enemy):
+                if guard.is_detection_area_colliding(self.player.rect):
+                    self.game.state_manager.change_state(GameState.MENU)
     
     def draw(self, screen):
         screen.fill(self.settings.BACKGROUND_COLOR)
         self.player.draw(screen)
+        
+        self.guards_list.draw(screen)
+        self.item_list.draw(screen)
+        self.pickup_effects.draw(screen)
+        
+        # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
+        score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))
+        score_rect = score_text.get_rect()
+        score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
+        screen.blit(score_text, score_rect)
         
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
