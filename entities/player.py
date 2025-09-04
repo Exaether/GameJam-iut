@@ -93,6 +93,3 @@ class Player(pygame.sprite.Sprite):
 
     def get_position(self):
         return self.rect.x, self.rect.y
-    
-    def get_center(self):
-        return self.rect.center
