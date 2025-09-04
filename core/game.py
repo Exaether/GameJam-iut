@@ -50,6 +50,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        self.state_manager.change_state(GameState.LOSE)
 
     def trigger_game_win(self):
         """Déclenche la victoire du jeu"""
@@ -61,6 +62,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        self.state_manager.change_state(GameState.WIN)
 
     def exit(self):
         self.running = False
