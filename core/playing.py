@@ -57,7 +57,7 @@ class Playing:
         # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
-                if guard.is_detection_area_colliding(self.player.rect):
+                if guard.is_player_detected(self.player.rect):
                     self.game.state_manager.change_state(GameState.MENU)
     
     def draw(self, screen):

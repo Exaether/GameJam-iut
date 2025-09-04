@@ -13,3 +13,4 @@ class EnemyGroup(pygame.sprite.Group):
         for enemy in self.sprites():
             if isinstance(enemy, Enemy):
                 enemy.draw_detection_area(surface)
+                enemy.draw_exclamation_mark(surface)
