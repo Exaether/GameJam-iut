@@ -21,7 +21,7 @@ class Playing:
         event_controller.set_player(self.player)
         
         self.guards_list = EnemyGroup()
-        guard = Enemy(0, 0, 200, 0)
+        guard = Enemy(0, 100, 200, 0)
         self.guards_list.add(guard)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)

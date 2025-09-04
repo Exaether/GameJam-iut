@@ -5,9 +5,9 @@ from core.settings import Settings
 class Enemy(pygame.sprite.Sprite):
 
     SPRITE_SIZE = 16
-    GUARD_SPEED = 0.1
-    COLLISION_AREA_WIDTH = 16
-    COLLISION_AREA_HEIGHT = 16
+    GUARD_SPEED = 1
+    COLLISION_AREA_WIDTH = 64
+    COLLISION_AREA_HEIGHT = 128
     
     def __init__(self, base_x=0, base_y=0, target_x=0, target_y=0):
         super().__init__()
@@ -23,7 +23,7 @@ class Enemy(pygame.sprite.Sprite):
         self.base_y = base_y
         self.target_x = target_x
         self.target_y = target_y
-        self.detection_area = pygame.rect.Rect(self.rect.left + self.SPRITE_SIZE, self.rect.top, self.COLLISION_AREA_WIDTH, self.COLLISION_AREA_HEIGHT)
+        self.detection_area = pygame.Rect(0, 0, 0, 0)
 
     """
     Récupère l'image souhaitée sur la feuille de sprite
@@ -45,6 +45,8 @@ class Enemy(pygame.sprite.Sprite):
             self.direction = "left"
             self.get_image(16, 0)
             self.rect = self.image.get_rect()
+        else:
+            self.direction = direction
 
     def draw_detection_area(self, surface):
         shape_surf = pygame.Surface(pygame.Rect(self.detection_area).size, pygame.SRCALPHA)
@@ -67,8 +69,10 @@ class Enemy(pygame.sprite.Sprite):
             elif not math.isclose(self.y, self.target_y, abs_tol=self.GUARD_SPEED):
                 if self.y < self.target_y:
                     self.y += self.GUARD_SPEED
+                    self.set_direction("down")
                 else:
                     self.y -= self.GUARD_SPEED
+                    self.set_direction("up")
             else:
                 self.path = "back"
 
@@ -77,8 +81,10 @@ class Enemy(pygame.sprite.Sprite):
             if not math.isclose(self.y, self.base_y, abs_tol=self.GUARD_SPEED):
                 if self.y < self.base_y:
                     self.y += self.GUARD_SPEED
+                    self.set_direction("down")
                 else:
                     self.y -= self.GUARD_SPEED
+                    self.set_direction("up")
             elif not math.isclose(self.x, self.base_x, abs_tol=self.GUARD_SPEED):
                 if self.x < self.base_x:
                     self.x += self.GUARD_SPEED
@@ -90,7 +96,24 @@ class Enemy(pygame.sprite.Sprite):
                 self.path = "go"
 
         self.rect.topleft = (self.x, self.y)
+
         if self.direction == "right":
-            self.detection_area = pygame.rect.Rect(self.rect.left + self.SPRITE_SIZE, self.rect.top, self.COLLISION_AREA_WIDTH, self.COLLISION_AREA_HEIGHT)
+            self.detection_area = pygame.Rect(self.rect.right,
+                                                   self.rect.top + self.SPRITE_SIZE/2 - self.COLLISION_AREA_HEIGHT/2,
+                                                   self.COLLISION_AREA_WIDTH,
+                                                   self.COLLISION_AREA_HEIGHT)
         elif self.direction == "left":
-            self.detection_area = pygame.rect.Rect(self.rect.left - self.SPRITE_SIZE, self.rect.top, self.COLLISION_AREA_WIDTH, self.COLLISION_AREA_HEIGHT)
+            self.detection_area = pygame.Rect(self.rect.left - self.COLLISION_AREA_WIDTH,
+                                                   self.rect.top + self.SPRITE_SIZE/2 - self.COLLISION_AREA_HEIGHT/2,
+                                                   self.COLLISION_AREA_WIDTH,
+                                                   self.COLLISION_AREA_HEIGHT)
+        elif self.direction == "down":
+            self.detection_area = pygame.Rect(self.rect.left + self.SPRITE_SIZE/2 - self.COLLISION_AREA_HEIGHT/2,
+                                                   self.rect.bottom,
+                                                   self.COLLISION_AREA_HEIGHT,
+                                                   self.COLLISION_AREA_WIDTH)
+        elif self.direction == "up":
+            self.detection_area = pygame.Rect(self.rect.left + self.SPRITE_SIZE / 2 - self.COLLISION_AREA_HEIGHT/2,
+                                              self.rect.top - self.COLLISION_AREA_WIDTH,
+                                              self.COLLISION_AREA_HEIGHT,
+                                              self.COLLISION_AREA_WIDTH)
