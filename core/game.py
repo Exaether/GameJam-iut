@@ -53,7 +53,6 @@ class Game:
             if current_state == GameState.PLAYING:
                 self.playing.update(dt, events)
                 self.playing.draw(self.screen)
-                pygame.display.update()
             elif current_state == GameState.PAUSED:
                 # TODO: A réaliser
                 pass
@@ -66,7 +65,8 @@ class Game:
             elif current_state == GameState.WIN:
                 # TODO: A réaliser
                 pass
-            
+
+            pygame.display.update()
             pygame.display.flip()
         
         pygame.quit()

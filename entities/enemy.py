@@ -42,7 +42,9 @@ class Enemy(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
 
     def draw_detection_area(self, surface):
-        pygame.draw.rect(surface, (255, 0, 0, 50), self.detection_area)
+        shape_surf = pygame.Surface(pygame.Rect(self.detection_area).size, pygame.SRCALPHA)
+        pygame.draw.rect(shape_surf, (255, 0, 0, 64), shape_surf.get_rect())
+        surface.blit(shape_surf, self.detection_area)
 
     def is_detection_area_colliding(self, rect):
         return self.detection_area.colliderect(rect)
