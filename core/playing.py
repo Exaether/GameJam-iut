@@ -1,8 +1,8 @@
 import pygame
 from entities.player import Player
 
-class Gameplay:
-    """Classe qui gère tout le gameplay, le core du jeu"""
+class Playing:
+    """Classe qui gère tout le jeu en cours, le core du jeu"""
     
     def __init__(self, game, event_controller):
         self.game = game

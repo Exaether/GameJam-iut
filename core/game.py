@@ -3,7 +3,7 @@ import sys
 from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
-from .gameplay import Gameplay
+from .playing import Playing
 from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.item import Item
@@ -21,7 +21,7 @@ class Game:
         
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
-        self.gameplay = Gameplay(self, self.event_controller)
+        self.playing = Playing(self, self.event_controller)
         self.running = True
 
         self.game_text = Text(self.settings.SCREEN_WIDTH // 2, 200, self.settings.GAME_TITLE, pygame.font.Font(None, 75))
@@ -35,7 +35,7 @@ class Game:
         self.menu = Menu(self.game_text, [self.button_play, self.button_exit], "#505050")
 
     def play(self):
-        self.gameplay = Gameplay(self, self.event_controller)
+        self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 
     def exit(self):
@@ -70,15 +70,15 @@ class Game:
             
             if current_state == GameState.PLAYING:
                 # TODO : A TOUT DEPLACER DANS LA CLASS GAMEPLAY qui sera renommé PLAYING
-                self.gameplay.update(dt, events)
+                self.playing.update(dt, events)
 
                 # Vérification des collisions entre le player et les items #TODO : a voir pour une classe collision
-                player_position = self.gameplay.player.get_center()
+                player_position = self.playing.player.get_center()
                 items_to_remove = []
 
                 for item in item_list:
                     if item.player_on_item(player_position):
-                        self.gameplay.player.items_collected += 1
+                        self.playing.player.items_collected += 1
                         items_to_remove.append(item)
                         pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
@@ -89,7 +89,7 @@ class Game:
                 # Mise à jour des effets de collecte
                 pickup_effects.update(dt)
 
-                self.gameplay.draw(self.screen)
+                self.playing.draw(self.screen)
                 guards_list.update()
                 guards_list.draw(self.screen)
                 item_list.draw(self.screen)
@@ -98,7 +98,7 @@ class Game:
                 pickup_effects.draw(self.screen)
 
                 # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
-                score_text = score_font.render(f"Items: {self.gameplay.player.items_collected}", True, (255, 255, 255))
+                score_text = score_font.render(f"Items: {self.playing.player.items_collected}", True, (255, 255, 255))
                 score_rect = score_text.get_rect()
                 score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
                 self.screen.blit(score_text, score_rect)
@@ -106,7 +106,7 @@ class Game:
                 # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
                 for guard in guards_list.sprites():
                     if isinstance(guard, Enemy):
-                        if guard.is_detection_area_colliding(self.gameplay.player.rect):
+                        if guard.is_detection_area_colliding(self.playing.player.rect):
                             self.state_manager.change_state(GameState.MENU)
                 pygame.display.update()
             elif current_state == GameState.PAUSED:
