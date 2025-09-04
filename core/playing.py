@@ -52,7 +52,7 @@ class Playing:
         for guard in self.guards_list.sprites():
             if isinstance(guard, Enemy):
                 if guard.is_player_detected(self.player.rect, self.game.clock):
-                    self.game.state_manager.change_state(GameState.MENU)
+                    self.game.state_manager.change_state(GameState.GAME_OVER)
     
     def draw(self, screen):
         screen.fill(self.settings.BACKGROUND_COLOR)
