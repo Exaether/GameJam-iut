@@ -55,6 +55,7 @@ class Player(pygame.sprite.Sprite):
         self.is_moving = True
         
         speed = self.speed
+        # TODO: Y a une méthode normalize dans la librairie math sinon
         # Normaliser la vitesse pour les mouvements diagonaux
         if dx != 0 and dy != 0:
             speed *= 0.707  # Approximativement 1/sqrt(2)

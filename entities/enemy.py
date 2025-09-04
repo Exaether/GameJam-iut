@@ -143,6 +143,12 @@ class Enemy(pygame.sprite.Sprite):
             return self.vision_mask.overlap(player.mask, (offset_x, offset_y))
         return None
 
+    def is_in_player_vision(self, player):
+        dx = self.x - player.get_position()[0]
+        dy = self.y - player.get_position()[1]
+        distance = dx**2 + dy**2
+        return distance <= 200**2
+
     def draw_vision_cone(self, surface, camera):
         """Dessine le cône de vision de l'ennemi"""
         if self.vision_surface and self.vision_rect:

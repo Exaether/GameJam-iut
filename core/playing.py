@@ -72,7 +72,7 @@ class Playing:
         self.map.draw(screen, camera)
         self.player.draw(screen, camera)
 
-        self.guards_list.draw(screen, camera)
+        self.guards_list.draw(screen, camera, self.player)
         #self.item_list.draw(screen)
         for item in self.item_list.sprites():
             item.draw(screen, camera)
@@ -83,7 +83,13 @@ class Playing:
         score_rect = score_text.get_rect()
         score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
         screen.blit(score_text, score_rect)
-        
+
+        # Vision mask
+        darkness = pygame.Surface((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT), pygame.SRCALPHA)
+        darkness.fill((0, 0, 0, 180))
+        pygame.draw.circle(darkness, (0, 0, 0, 0), (self.settings.SCREEN_WIDTH/2, self.settings.SCREEN_HEIGHT/2), 200)
+        screen.blit(darkness, (0, 0))
+
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
             
