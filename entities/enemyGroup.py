@@ -8,9 +8,9 @@ class EnemyGroup(pygame.sprite.Group):
                 raise TypeError("Seul le type Enemy peut être ajouté au groupe EnemyGroup.")
         super().add(*sprites)
 
-    def draw(self, surface, bgsurf = None, special_flags = 0):
-        super().draw(surface)
+    def draw(self, surface, camera, bgsurf = None, special_flags = 0):
         for enemy in self.sprites():
             if isinstance(enemy, Enemy):
-                enemy.draw_detection_area(surface)
-                enemy.draw_exclamation_mark(surface)
+                enemy.draw(surface, camera)
+                enemy.draw_detection_area(surface, camera)
+                enemy.draw_exclamation_mark(surface, camera)

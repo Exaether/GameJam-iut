@@ -26,11 +26,11 @@ class ItemPickupEffect:
                 remaining_animations.append(anim)
         self.animations = remaining_animations
     
-    def draw(self, screen):
+    def draw(self, screen, camera):
         """Dessine toutes les animations '+1' en cours"""
         for anim in self.animations:
             # Fade out progressif basé sur le timer
             alpha = int(255 * anim['timer'])
             pickup_text = self.pickup_font.render("+1", True, (0, 255, 0))
             pickup_text.set_alpha(alpha)
-            screen.blit(pickup_text, (anim['x'] - 10, anim['y'] - 10))
+            screen.blit(pickup_text, (anim['x'] - 10 + camera[0], anim['y'] - 10 + camera[1]))

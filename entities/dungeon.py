@@ -13,12 +13,12 @@ class Dungeon(pygame.sprite.Sprite) :
         self.rect.topleft = 100, 0
         self.prev_pos = self.rect.topleft
 
-    def draw(self, screen : pygame.surface.Surface):
+    def draw(self, screen : pygame.surface.Surface, camera):
         '''
         Affiche la carte sur l'écran
         :param screen:
         '''
-        screen.blit(self.image, self.rect)
+        screen.blit(self.image, self.rect.move(camera))
 
     def move(self, x, y):
         '''

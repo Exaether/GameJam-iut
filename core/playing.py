@@ -63,13 +63,17 @@ class Playing:
             self.player.undo_move()
 
     def draw(self, screen):
+        camera = (-self.player.rect.centerx + screen.get_rect().centerx,
+                  -self.player.rect.centery + screen.get_rect().centery)
         screen.fill(self.settings.BACKGROUND_COLOR)
-        self.map.draw(screen)
-        self.player.draw(screen)
+        self.map.draw(screen, camera)
+        self.player.draw(screen, camera)
         
-        self.guards_list.draw(screen)
-        self.item_list.draw(screen)
-        self.pickup_effects.draw(screen)
+        self.guards_list.draw(screen, camera)
+        #self.item_list.draw(screen)
+        for item in self.item_list.sprites():
+            item.draw(screen, camera)
+        self.pickup_effects.draw(screen, camera)
         
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))

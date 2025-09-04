@@ -88,13 +88,10 @@ class Player(pygame.sprite.Sprite):
         else:
             self.animation_frame = 0
     
-    def draw(self, screen, camera_x=0, camera_y=0):
+    def draw(self, screen, camera):
         current_sprite = self._get_current_sprite()
-        
-        if current_sprite:
-            draw_x = self.rect.x - camera_x
-            draw_y = self.rect.y - camera_y
-            screen.blit(current_sprite, (draw_x, draw_y))
+
+        screen.blit(current_sprite, self.rect.move(camera))
 
     def get_position(self):
         return self.rect.x, self.rect.y

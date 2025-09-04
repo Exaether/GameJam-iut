@@ -19,3 +19,6 @@ class Item(pygame.sprite.Sprite):
         self.item_height = self.image.get_height()
         self.rect = self.image.get_rect()
         self.rect.center = x, y
+
+    def draw(self, screen, camera):
+        screen.blit(self.image, self.rect.move(camera))

@@ -58,19 +58,19 @@ class Enemy(pygame.sprite.Sprite):
     """
     Dessine la zone de détection du garde
     """
-    def draw_detection_area(self, surface):
+    def draw_detection_area(self, surface, camera):
         shape_surf = pygame.Surface(pygame.Rect(self.detection_area).size, pygame.SRCALPHA)
         pygame.draw.rect(shape_surf, (255, 0, 0, 64), shape_surf.get_rect())
-        surface.blit(shape_surf, self.detection_area)
+        surface.blit(shape_surf, self.detection_area.move(camera))
 
     """
     Dessine un point d'exclamation au dessus du garde si le joueur est dans sa zone de détection
     """
-    def draw_exclamation_mark(self, surface):
+    def draw_exclamation_mark(self, surface, camera):
         if self.alertness> 0:
             x = self.rect.centerx - self.image_exclamation_mark.get_width()/2
             y = self.rect.top - self.image_exclamation_mark.get_height()
-            surface.blit(self.image_exclamation_mark, (x, y))
+            surface.blit(self.image_exclamation_mark, (x+camera[0], y+camera[1]))
 
     def is_player_detected(self, player, clock):
         settings = Settings()
@@ -141,3 +141,6 @@ class Enemy(pygame.sprite.Sprite):
                                                    self.rect.top - self.COLLISION_AREA_WIDTH,
                                                    self.COLLISION_AREA_HEIGHT,
                                                    self.COLLISION_AREA_WIDTH)
+
+    def draw(self, screen, camera):
+        screen.blit(self.image, self.rect.move(camera))
