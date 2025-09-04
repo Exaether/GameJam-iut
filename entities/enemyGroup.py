@@ -12,5 +12,5 @@ class EnemyGroup(pygame.sprite.Group):
         super().draw(surface)
         for enemy in self.sprites():
             if isinstance(enemy, Enemy):
-                enemy.draw_detection_area(surface)
+                enemy.draw_vision_cone(surface)
                 enemy.draw_exclamation_mark(surface)

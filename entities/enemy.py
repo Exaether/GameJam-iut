@@ -9,6 +9,7 @@ class Enemy(pygame.sprite.Sprite):
     GUARD_SPEED = 1
     VISION_RANGE = 100
     VISION_ANGLE = 60
+    ANIMATION_TICK = 15
 
     def __init__(self, x_start, y_start, x_range_min, x_range_max, y_range_min, y_range_max, pattern_type="square"):
         super().__init__()
@@ -18,6 +19,8 @@ class Enemy(pygame.sprite.Sprite):
         self.get_image(0, 0)
         self.rect = self.image.get_rect()
         self.direction = "right"
+        self.animation_tick = 0
+        self.animation_sprite = 0
 
         self.x = x_start
         self.y = y_start
@@ -60,21 +63,29 @@ class Enemy(pygame.sprite.Sprite):
         self.image.set_colorkey([0, 0, 0])
 
     def set_direction(self, direction="right"):
-        """Change la direction ou regarde l'entité"""
-        if direction == "right":
-            self.direction = "right"
-            self.get_image(0, 0)
-        elif direction == "left":
-            self.direction = "left"
-            self.get_image(16, 0)
-        elif direction == "down":
-            self.direction = "down"
-            self.get_image(0, 0)
-        elif direction == "up":
-            self.direction = "up"
-            self.get_image(16, 0)
-        else:
+        """Change la direction ou regarde l'entité et gère l'animation"""
+        if self.direction != direction:
             self.direction = direction
+            # Si la direction change, on bouge à la fin de l'animation pour que update_sprite soit directement appelé
+            self.animation_sprite = 3
+            self.animation_tick = self.ANIMATION_TICK - 1
+
+        # Faire progresser l'animation de déplacement du sprite
+        self.animation_tick += 1
+
+        if self.animation_tick == self.ANIMATION_TICK:
+            if self.animation_sprite == 3:
+                self.animation_sprite = 0
+            else:
+                self.animation_sprite += 1
+            self.animation_tick = 0
+            self.update_sprite()
+
+    def update_sprite(self):
+        if self.direction == "right" or self.direction == "down":
+            self.get_image(16 * self.animation_sprite, 0)
+        elif self.direction == "left" or self.direction == "up":
+            self.get_image(16 * self.animation_sprite, 16)
 
     def _create_vision_mask(self):
         """Crée le mask de collision pour la zone de vision"""
@@ -130,6 +141,7 @@ class Enemy(pygame.sprite.Sprite):
 
             # Tester la collision entre le mask du joueur et celui de la zone de vision
             return self.vision_mask.overlap(player.mask, (offset_x, offset_y))
+        return None
 
     def draw_vision_cone(self, surface):
         """Dessine le cône de vision de l'ennemi"""
@@ -140,10 +152,6 @@ class Enemy(pygame.sprite.Sprite):
             # Changer la couleur pour l'affichage (jaune transparent)
             display_surface.fill((255, 255, 0, 64), special_flags=pygame.BLEND_RGBA_MULT)
             surface.blit(display_surface, self.vision_rect.topleft)
-
-    def draw_detection_area(self, surface):
-        """Dessine la zone de détection du garde"""
-        self.draw_vision_cone(surface)
 
     """
     Dessine un point d'exclamation au dessus du garde si le joueur est dans sa zone de détection
