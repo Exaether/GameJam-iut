@@ -17,6 +17,8 @@ class EventController:
                 self._handle_keydown(event.key, current_state)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self._handle_mousedown(event.pos, event.button, current_state)
+            elif event.type == pygame.MOUSEMOTION:
+                self._handle_mousemotion(event.pos, current_state)
             self.game.button_play.handle_event(event)
             self.game.button_exit.handle_event(event)
         
@@ -59,3 +61,8 @@ class EventController:
     def _handle_mousedown(self, pos, button, state):
         if state == GameState.MENU:
             pass
+
+    def _handle_mousemotion(self, pos, state):
+        if state == GameState.GAME_OVER and self.game.game_over_screen:
+            for game_button in self.game.game_over_screen.buttons:
+                game_button.check_hover(pos)
