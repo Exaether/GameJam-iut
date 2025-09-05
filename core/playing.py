@@ -79,6 +79,7 @@ class Playing:
         screen.fill(self.settings.BACKGROUND_COLOR)
         self.map.draw(screen, camera)
         self.player.draw(screen, camera)
+        self.player.draw_spacebar(screen, camera, self.map)
 
         if self.map.layer == 1:
             self.guards_list.draw(screen, camera, self.player)
