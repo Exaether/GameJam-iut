@@ -10,7 +10,6 @@ class Player(pygame.sprite.Sprite):
     ANIMATION_SPEED = 0.2
     VISION_RANGE = 200
     VISION_ANGLE = 90
-    SPEED = 3
     
     DIRECTION_ROW = {
         "down": 0,
@@ -93,10 +92,11 @@ class Player(pygame.sprite.Sprite):
             self.animation_timer += dt
             if self.animation_timer >= self.ANIMATION_SPEED:
                 self.animation_frame = (self.animation_frame + 1) % self.ANIMATION_FRAMES
+                self.animation_timer = 0
         else:
             self.animation_frame = 0
-        self.animation_timer = 0
-        
+            self.animation_timer = 0
+    
         self.vision_service.update_circular_vision(self.rect, dungeon_map)
     
 

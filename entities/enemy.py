@@ -10,7 +10,6 @@ class Enemy(pygame.sprite.Sprite):
     GUARD_DEFAULT_SPEED = 1.8
     GUARD_SPEED_ON_DETECT = 2
     VISION_RANGE = 100
-    GUARD_SPEED = 1.8
     VISION_ANGLE = 60
     ANIMATION_TICK = 15
     SIZE_EXCLAMATION_MARK = 24
@@ -26,14 +25,14 @@ class Enemy(pygame.sprite.Sprite):
         self.__init_collision()
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
 
-    def __init_sprite(self):
+    def __init_sprite(self, pattern_type="square"):
         sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
         self.sprite_sheet = pygame.image.load(sprite_path)
         self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, (self.SPRITE_SIZE*4, self.SPRITE_SIZE*2))
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
-        self.__update_image(0, 0)    
+        self.__get_image()    
         self.rect = self.image.get_rect()
-        self.direction = "right"
+        self.direction = "left"
         self.animation_tick = 0
         self.animation_sprite = 0
         self.guard_speed = self.GUARD_DEFAULT_SPEED
@@ -48,11 +47,11 @@ class Enemy(pygame.sprite.Sprite):
         self.x_range_max = x_max
         self.y_range_min = y_min
         self.y_range_max = y_max
-        self.patrol_distance_x = self.__random_patrol_distance(self.x_range_min, self.x_range_max)
-        self.patrol_distance_y = self.__random_patrol_distance(self.y_range_min, self.y_range_max)
+        self.patrol_distance_x = random.randint(x_min, x_max)
+        self.patrol_distance_y = random.randint(y_min, y_max)
 
     def __init_patrol_steps(self, pattern_type):
-        if pattern_type == "square":    
+        if pattern_type == "square" or pattern_type == "fixe":    
             self.patrol_steps = [
                     {'direction': 'right', 'dx': 1, 'dy': 0},
                     {'direction': 'down', 'dx': 0, 'dy': 1},
@@ -72,34 +71,36 @@ class Enemy(pygame.sprite.Sprite):
         self.exclamation_mark = pygame.transform.scale(self.exclamation_mark, (self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
         self.image_exclamation_mark = pygame.Surface([self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK])
         self.image_exclamation_mark.blit(self.exclamation_mark, (0, 0), (0, 0, self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
-        #self.image_exclamation_mark.set_colorkey([0, 0, 0])
+        self.image_exclamation_mark.set_colorkey([0, 0, 0])
 
     def __init_collision(self):
         self.prev_x = self.x
         self.prev_y = self.y
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
 
-    def __random_patrol_distance(self, min_val, max_val):
-        return random.randint(min_val, max_val)
-
     def __update_image(self, x=0, y=0):
-        #TODO revoir le code pas sur que ça marche
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
-        if self.direction == "right" or self.direction == "down":
-            self.get_image(self.SPRITE_SIZE * self.animation_sprite, 0)
-        elif self.direction == "left" or self.direction == "up":
-            self.get_image(self.SPRITE_SIZE * self.animation_sprite, self.SPRITE_SIZE)
+        self.image.blit(self.sprite_sheet, (0,0), (x, y, self.SPRITE_SIZE, self.SPRITE_SIZE))
+        self.image.set_colorkey([0, 0, 0])
+
+    def __get_image(self, x=0, y=0):
+        self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
+        self.image.blit(self.sprite_sheet, (0, 0), (x, y, self.SPRITE_SIZE, self.SPRITE_SIZE))
+        self.image.set_colorkey([0, 0, 0])
 
     def __get_sprite_y(self):
         sprite_y = 0
         if self.direction in ("right", "down"):
             sprite_y = 0
         else:
-            sprite_y = 16
+            sprite_y = self.SPRITE_SIZE
         return sprite_y
 
     def __get_sprite_x(self):
-        return 16 * self.animation_sprite
+        return self.SPRITE_SIZE * self.animation_sprite
+
+    def __update_sprite(self):
+        self.__update_image(self.__get_sprite_x(), self.__get_sprite_y())
 
     def __advance_animation(self):
         if self.pattern_type == "square":
@@ -109,9 +110,9 @@ class Enemy(pygame.sprite.Sprite):
                 self.animation_tick = 0
                 self.__update_sprite()
 
-    def __update_sprite(self):
-        self.__update_image(self.__get_sprite_x(), self.__get_sprite_y())
-
+    def get_direction(self):
+        return self.direction
+    
     def set_direction(self, direction="right"):
         if self.direction != direction:
             self.direction = direction
@@ -161,12 +162,12 @@ class Enemy(pygame.sprite.Sprite):
         return self.patrol_steps[self.current_step_index]
 
     def __move(self, dx, dy):
-        self.x += dx * self.GUARD_SPEED
-        self.y += dy * self.GUARD_SPEED
+        self.x += dx * self.guard_speed
+        self.y += dy * self.guard_speed
 
     """Begin paterne action def"""
     def __update_patrol_progress(self):
-        self.step_progress += self.GUARD_SPEED
+        self.step_progress += self.guard_speed
 
     def __patrol_step_finished(self):
         return (self.step_progress >= self.patrol_distance_x or
@@ -175,12 +176,9 @@ class Enemy(pygame.sprite.Sprite):
     def __next_patrol_step(self):
         self.current_step_index = (self.current_step_index + 1) % len(self.patrol_steps)
         self.step_progress = 0
-        self.patrol_distance_x = self.__random_patrol_distance(self.x_range_min, self.x_range_max)
-        self.patrol_distance_y = self.__random_patrol_distance(self.y_range_min, self.y_range_max)
+        self.patrol_distance_x = random.randint(self.x_range_min, self.x_range_max)
+        self.patrol_distance_y = random.randint(self.y_range_min, self.y_range_max)
     """end paterne action def"""
-
-    def __update_rect_position(self):
-        self.rect.topleft = (self.x, self.y)
 
     def __handle_collision(self, dungeon_map):
         if dungeon_map and pygame.sprite.collide_mask(self, dungeon_map):
@@ -199,6 +197,6 @@ class Enemy(pygame.sprite.Sprite):
         if self.__patrol_step_finished():
             self.__next_patrol_step()
 
-        self.__update_rect_position()
+        self.rect.topleft = (self.x, self.y)
         self.__handle_collision(dungeon_map)
         self.vision_service.update_cone_vision(self.rect, self.direction, dungeon_map)

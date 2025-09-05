@@ -23,7 +23,7 @@ class Playing:
 
         self.guards_list = EnemyGroup()
         guard = Enemy(250, 200, 100, 450, 100, 450, "square")
-        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe")
+        guard2 = Enemy(2450, 326, 50, 50, 10, 10, "square")
         self.guards_list.add(guard)
         self.guards_list.add(guard2)
 
@@ -58,11 +58,11 @@ class Playing:
         if self.exit_door.rect.colliderect(self.player.rect):
             self.game.trigger_game_win()
 
-            # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
-            for guard in self.guards_list.sprites():
-                if isinstance(guard, Enemy):
-                    if guard.is_player_detected(self.player, self.game.clock):
-                        self.game.trigger_game_lose()
+        # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
+        for guard in self.guards_list.sprites():
+            if isinstance(guard, Enemy):
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_lose()
 
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
