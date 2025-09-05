@@ -1,11 +1,13 @@
+import math
+
 import pygame
 import os
 from entities.vision_service import VisionService
 
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16
-    SPEED_DEFAULT = 2
-    SPEED_SUBTERRAN = 4
+    SPEED_DEFAULT = 140
+    SPEED_SUBTERRAN = 280
     ANIMATION_FRAMES = 4
     ANIMATION_SPEED = 0.2
     VISION_RANGE = 200
@@ -69,18 +71,17 @@ class Player(pygame.sprite.Sprite):
             sprite_surface.blit(self.sprite_sheet, (0, 0), self._get_sprite_rect(self.direction, self.animation_frame))
         return sprite_surface
     
-    def move(self, dx, dy):
+    def move(self, map, dx, dy, dt):
         self.is_moving = True
-        
-        speed = self.speed
-        # TODO: Y a une méthode normalize dans la librairie math sinon
-        # Normaliser la vitesse pour les mouvements diagonaux
-        if dx != 0 and dy != 0:
-            speed *= 0.707  # Approximativement 1/sqrt(2)
 
         self.prev_pos = self.rect.center
-        self.rect.x += int(dx * speed)
-        self.rect.y += int(dy * speed)
+        self.rect.x += int(dx * self.speed * dt)
+        if pygame.sprite.collide_mask(self, map):
+            self.rect.x -= int(dx * self.speed * dt)
+
+        self.rect.y += int(dy * self.speed * dt)
+        if pygame.sprite.collide_mask(self, map):
+            self.rect.y -= int(dy * self.speed * dt)
 
         if dy < 0:
             self.direction = "up"
@@ -110,8 +111,8 @@ class Player(pygame.sprite.Sprite):
     
         self.vision_service.update_circular_vision(self.rect, dungeon_map)
 
-    def draw_spacebar(self, surface, camera, map):
-        if map.trapdoor_collide(self):
+    def draw_spacebar(self, surface, camera, map, exit_door):
+        if map.trapdoor_collide(self) or exit_door.rect.colliderect(self.rect):
             x = self.rect.centerx - self.spacebar_image.get_width() / 2
             y = self.rect.top - self.spacebar_image.get_height()
             surface.blit(self.spacebar_image, (x + camera[0], y + camera[1]))

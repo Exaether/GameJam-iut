@@ -23,6 +23,7 @@ class Playing:
 
         event_controller.set_player(self.player)
         event_controller.set_map(self.map)
+        event_controller.set_exit_door(self.exit_door)
 
         self.guards_list = EnemyGroup()
         self.guard_generator()
@@ -80,8 +81,6 @@ class Playing:
     def update(self, dt):
         self.player.update(dt, self.map)
         self.clock.update()
-        if pygame.sprite.collide_mask(self.player, self.map):
-            self.player.undo_move()
 
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
@@ -93,20 +92,19 @@ class Playing:
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
-                if isinstance(guard, Enemy):
-                    if guard.is_player_detected(self.player, self.game.clock):
-                        self.game.trigger_game_lose()
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_lose()
 
             self.pickup_effects.update(dt)
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN
 
-        if self.exit_door.rect.colliderect(self.player.rect):
-            self.game.trigger_game_win()
-
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
-            guard.update(self.map)
+            # update seulement les gardes proches
+            if abs(guard.rect.centerx - self.player.rect.centerx) < 350 or \
+                abs(guard.rect.centery - self.player.rect.centery) < 350:
+                guard.update(self.map)
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:
@@ -117,10 +115,10 @@ class Playing:
                   -self.player.rect.centery + screen.get_rect().centery)
         screen.fill(self.settings.BACKGROUND_COLOR)
         self.map.draw(screen, camera)
-        self.player.draw(screen, camera)
-        self.player.draw_spacebar(screen, camera, self.map)
+        self.player.draw_spacebar(screen, camera, self.map, self.exit_door)
 
         if self.map.layer == 1:
+            self.exit_door.draw(screen, camera)
             self.guards_list.draw(screen, camera, self.player)
             #self.item_list.draw(screen)
             for item in self.item_list.sprites():
@@ -129,6 +127,8 @@ class Playing:
             # Boussole
             if len(self.item_list) > 0:
                 self.compass.draw(screen)
+
+        self.player.draw(screen, camera)
 
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))

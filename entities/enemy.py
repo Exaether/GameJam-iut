@@ -150,12 +150,8 @@ class Enemy(pygame.sprite.Sprite):
     def is_player_in_vision(self, player):
         return self.vision_service.is_target_in_vision(player)
 
-    """Informe si le garde est dans la vision du joueur"""
-    def is_ennemy_in_player_vision(self, player):
-        px, py = player.get_position()
-        dx = self.x - px
-        dy = self.y - py
-        return dx**2 + dy**2 <= 200**2
+    def is_enemy_in_player_vision(self, player):
+        return player.vision_service.is_target_in_vision(self)
 
     def draw_vision_cone(self, surface, camera):
         self.vision_service.draw_vision_cone(surface, camera)
