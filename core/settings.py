@@ -1,7 +1,7 @@
 class Settings:
     def __init__(self):
-        self.GAME_TITLE = "Mon Jeu"
-        self.SCREEN_WIDTH = 1240
+        self.GAME_TITLE = "Le château sans portes"
+        self.SCREEN_WIDTH = 720
         self.SCREEN_HEIGHT = 720
         self.FPS = 60
         self.DEBUG_MODE = True
@@ -16,5 +16,3 @@ class Settings:
         self.MENU_FONT_SIZE = 48
         self.MENU_BUTTON_HEIGHT = 60
         self.MENU_BUTTON_SPACING = 20
-        
-        self.GAME_TITLE = "Mon Jeu"
