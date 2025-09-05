@@ -76,7 +76,7 @@ class Player(pygame.sprite.Sprite):
         # TODO: Y a une méthode normalize dans la librairie math sinon
         # Normaliser la vitesse pour les mouvements diagonaux
         if dx != 0 and dy != 0:
-            speed *= 0.707  # Approximativement 1/sqrt(2)
+            speed *= 0.9  # Approximativement 1/sqrt(2)
 
         self.prev_pos = self.rect.center
         self.rect.x += int(dx * speed)
