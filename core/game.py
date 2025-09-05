@@ -13,7 +13,7 @@ class Game:
         pygame.init()
 
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         pygame.display.set_caption(self.settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
 
@@ -27,6 +27,7 @@ class Game:
         self.game_win_screen = None
 
     def play(self):
+        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 

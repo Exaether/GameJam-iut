@@ -27,8 +27,8 @@ class Playing:
         self.guards_list.add(guard)
         self.guards_list.add(guard2)
 
-        item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
-        item2 = Item(self.settings.SCREEN_WIDTH // 4, self.settings.SCREEN_HEIGHT // 4)
+        item = Item(self.settings.GAME_SCREEN_WIDTH // 2, self.settings.GAME_SCREEN_HEIGHT // 2)
+        item2 = Item(self.settings.GAME_SCREEN_WIDTH // 4, self.settings.GAME_SCREEN_HEIGHT // 4)
         self.item_list = pygame.sprite.Group()
         self.item_list.add(item)
         self.item_list.add(item2)
@@ -85,11 +85,11 @@ class Playing:
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))
         score_rect = score_text.get_rect()
-        score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
+        score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
         screen.blit(score_text, score_rect)
 
         # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
-        self.player.draw_darkness_overlay(screen, camera, self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT)
+        self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)

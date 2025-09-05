@@ -1,8 +1,10 @@
 class Settings:
     def __init__(self):
         self.GAME_TITLE = "Mon Jeu"
-        self.SCREEN_WIDTH = 720
-        self.SCREEN_HEIGHT = 720
+        self.MENU_SCREEN_WIDTH = 1280
+        self.MENU_SCREEN_HEIGHT = 720
+        self.GAME_SCREEN_WIDTH = 720
+        self.GAME_SCREEN_HEIGHT = 720
         self.FPS = 60
         self.DEBUG_MODE = True
 
