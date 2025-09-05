@@ -1,5 +1,6 @@
 import pygame
 import os
+from entities.vision_service import VisionService
 
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16
@@ -7,6 +8,9 @@ class Player(pygame.sprite.Sprite):
     SPEED_SUBTERRAN = 4
     ANIMATION_FRAMES = 4
     ANIMATION_SPEED = 0.2
+    VISION_RANGE = 200
+    VISION_ANGLE = 90
+    SPEED = 3
     
     DIRECTION_ROW = {
         "down": 0,
@@ -30,6 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
         self.prev_pos = self.rect.center
         
+        self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
+    
     def _load_sprite_sheet(self):
         sprite_path = os.path.join("assets", "entities", "player_sprite.png")
         try:
@@ -78,23 +84,34 @@ class Player(pygame.sprite.Sprite):
 
     def undo_move(self):
         self.rect.center = self.prev_pos
-
+    
     def idle(self):
         self.is_moving = False
-
-    def update(self, dt):
+    
+    def update(self, dt, dungeon_map=None):
         if self.is_moving:
             self.animation_timer += dt
             if self.animation_timer >= self.ANIMATION_SPEED:
                 self.animation_frame = (self.animation_frame + 1) % self.ANIMATION_FRAMES
-                self.animation_timer = 0
         else:
             self.animation_frame = 0
+        self.animation_timer = 0
+        
+        self.vision_service.update_circular_vision(self.rect, dungeon_map)
     
-    def draw(self, screen, camera):
+
+    def draw_darkness_overlay(self, surface, camera, screen_width, screen_height):
+        self.vision_service.draw_darkness_overlay(surface, camera, screen_width, screen_height)
+    
+    def draw(self, screen, camera, show_vision=False):
         current_sprite = self._get_current_sprite()
-
+        
+        if show_vision:
+            self.vision_service.draw_vision_cone(screen, camera)
+        
         screen.blit(current_sprite, self.rect.move(camera))
-
+    
     def get_position(self):
+        #TODO : A voir si on garde, debug pour l'instant
         return self.rect.x, self.rect.y
+    
