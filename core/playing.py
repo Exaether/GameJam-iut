@@ -82,8 +82,6 @@ class Playing:
     def update(self, dt):
         self.player.update(dt, self.map)
         self.clock.update()
-        if pygame.sprite.collide_mask(self.player, self.map):
-            self.player.undo_move()
 
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
@@ -95,9 +93,8 @@ class Playing:
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
-                if isinstance(guard, Enemy):
-                    if guard.is_player_detected(self.player, self.game.clock):
-                        self.game.trigger_game_lose()
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_lose()
 
             self.pickup_effects.update(dt)
         else:
@@ -105,7 +102,10 @@ class Playing:
 
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
-            guard.update(self.map)
+            # update seulement les gardes proches
+            if abs(guard.rect.centerx - self.player.rect.centerx) < 350 or \
+                abs(guard.rect.centery - self.player.rect.centery) < 350:
+                guard.update(self.map)
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:

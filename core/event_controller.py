@@ -41,7 +41,7 @@ class EventController:
         for button in buttons:
             button.check_click(mouse_pos)
     
-    def handle_events(self, events):
+    def handle_events(self, events, dt):
         current_state = self.game.state_manager.get_current_state()
         
         for event in events:
@@ -59,19 +59,12 @@ class EventController:
             down_pressed = keys[pygame.K_s] or keys[pygame.K_DOWN]
             left_pressed = keys[pygame.K_q] or keys[pygame.K_LEFT]
             right_pressed = keys[pygame.K_d] or keys[pygame.K_RIGHT]
-            
-            dx = dy = 0
-            if up_pressed:
-                dy -= 1
-            if down_pressed:
-                dy += 1
-            if left_pressed:
-                dx -= 1
-            if right_pressed:
-                dx += 1
-            
+
+            dx = right_pressed - left_pressed
+            dy = down_pressed - up_pressed
+
             if dx != 0 or dy != 0:
-                self.player.move(dx, dy)
+                self.player.move(self.map, dx, dy, dt)
             else:
                 self.player.idle()
 
