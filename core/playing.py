@@ -1,5 +1,6 @@
 import pygame
 
+from entities.compass import Compass
 from entities.dungeon import Dungeon
 from entities.player import Player
 from entities.enemyGroup import EnemyGroup
@@ -23,12 +24,12 @@ class Playing:
 
         self.guards_list = EnemyGroup()
         guard = Enemy(250, 200, 100, 450, 100, 450, "square")
-        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe", "right")
+        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe", "left")
         self.guards_list.add(guard)
         self.guards_list.add(guard2)
 
-        item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
-        item2 = Item(self.settings.SCREEN_WIDTH // 4, self.settings.SCREEN_HEIGHT // 4)
+        item = Item(self.settings.GAME_SCREEN_WIDTH // 2, self.settings.GAME_SCREEN_HEIGHT // 2)
+        item2 = Item(self.settings.GAME_SCREEN_WIDTH // 4, self.settings.GAME_SCREEN_HEIGHT // 4)
         self.item_list = pygame.sprite.Group()
         self.item_list.add(item)
         self.item_list.add(item2)
@@ -36,6 +37,7 @@ class Playing:
         # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
+        self.compass = Compass(self.settings.GAME_SCREEN_WIDTH/2, self.settings.GAME_SCREEN_HEIGHT/2)
 
     def update(self, dt):
         self.player.update(dt, self.map)
@@ -50,6 +52,11 @@ class Playing:
                 if item.pickable:
                     self.player.items_collected += 1
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
+            # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
+            for guard in self.guards_list.sprites():
+                if isinstance(guard, Enemy):
+                    if guard.is_player_detected(self.player, self.game.clock):
+                        self.game.trigger_game_lose()
 
             self.pickup_effects.update(dt)
         else:
@@ -58,15 +65,13 @@ class Playing:
         if self.exit_door.rect.colliderect(self.player.rect):
             self.game.trigger_game_win()
 
-        # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
-        for guard in self.guards_list.sprites():
-            if isinstance(guard, Enemy):
-                if guard.is_player_detected(self.player, self.game.clock):
-                    self.game.trigger_game_lose()
-
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             guard.update(self.map)
+
+        # Mettre a jour la boussole
+        if len(self.item_list) > 0:
+            self.compass.update(self.player, self.item_list)
 
     def draw(self, screen):
         camera = (-self.player.rect.centerx + screen.get_rect().centerx,
@@ -81,15 +86,18 @@ class Playing:
             for item in self.item_list.sprites():
                 item.draw(screen, camera)
             self.pickup_effects.draw(screen, camera)
-        
+            # Boussole
+            if len(self.item_list) > 0:
+                self.compass.draw(screen)
+
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))
         score_rect = score_text.get_rect()
-        score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
+        score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
         screen.blit(score_text, score_rect)
 
         # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
-        self.player.draw_darkness_overlay(screen, camera, self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT)
+        self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
@@ -98,4 +106,4 @@ class Playing:
         """Affiche les informations de débogage à l'écran."""
         font = pygame.font.Font(None, 24)
         text = font.render(f"Position: {self.player.get_position()}", True, self.settings.WHITE)  
-        screen.blit(text, (10, 10)) 
+        screen.blit(text, (10, 10))

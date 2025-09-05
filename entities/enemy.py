@@ -176,7 +176,8 @@ class Enemy(pygame.sprite.Sprite):
     """end paterne action def"""
 
     def __handle_collision(self, dungeon_map):
-        if dungeon_map and pygame.sprite.collide_mask(self, dungeon_map):
+        offset = (dungeon_map.rect.x - self.rect.x, dungeon_map.rect.y - self.rect.y)
+        if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, offset):
             self.undo_move()
             self.step_progress = self.patrol_distance_x
 
