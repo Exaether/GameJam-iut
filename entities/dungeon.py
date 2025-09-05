@@ -15,6 +15,7 @@ class Dungeon(pygame.sprite.Sprite) :
         self.dungeonMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeon.png").convert_alpha())
         self.subMask = pygame.mask.from_surface(pygame.image.load("./assets/map/vents.png").convert_alpha())
         self.trapdoorsMask = pygame.mask.from_surface(self.trapdoors)
+        self.wallsMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeonWalls.png").convert_alpha())
 
         self.image = self.dungeonMap
         self.rect = self.image.get_rect()

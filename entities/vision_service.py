@@ -256,7 +256,7 @@ class VisionService:
                 mask_y = pixel_y - map_offset_y
 
                 if 0 <= mask_x < map_width and 0 <= mask_y < map_height:
-                    if dungeon_map.mask.get_at((mask_x, mask_y)):
+                    if dungeon_map.wallsMask.get_at((mask_x, mask_y)):
                         distance_to_obstacle = current_distance
                         obstacle_found = True
 
