@@ -15,24 +15,24 @@ class Enemy(pygame.sprite.Sprite):
     SIZE_EXCLAMATION_MARK = 24
     DETECTION_TIME_MS = 200
 
-    def __init__(self, x_start, y_start, x_range_min, x_range_max, y_range_min, y_range_max, pattern_type="square"):
+    def __init__(self, x_start = 0, y_start = 0, x_range_min = 0, x_range_max = 0, y_range_min = 0, y_range_max = 0, pattern_type_def="square", direction_def = "right"):
         super().__init__()
-        self.__init_sprite()
+        self.__init_sprite(pattern_type = pattern_type_def, direction = direction_def)
         self.__init_position(x_start, y_start)
         self.__init_patrol_ranges(x_range_min, x_range_max, y_range_min, y_range_max)
-        self.__init_patrol_steps(pattern_type)
+        self.__init_patrol_steps(pattern_type_def)
         self.__init_alertness()
         self.__init_collision()
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
 
-    def __init_sprite(self, pattern_type="square"):
+    def __init_sprite(self, pattern_type="square", direction = "right"):
         sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
         self.sprite_sheet = pygame.image.load(sprite_path)
         self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, (self.SPRITE_SIZE*4, self.SPRITE_SIZE*2))
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
         self.__get_image()    
         self.rect = self.image.get_rect()
-        self.direction = "left"
+        self.direction = direction
         self.animation_tick = 0
         self.animation_sprite = 0
         self.guard_speed = self.GUARD_DEFAULT_SPEED
@@ -78,11 +78,6 @@ class Enemy(pygame.sprite.Sprite):
         self.prev_y = self.y
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
 
-    def __update_image(self, x=0, y=0):
-        self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
-        self.image.blit(self.sprite_sheet, (0,0), (x, y, self.SPRITE_SIZE, self.SPRITE_SIZE))
-        self.image.set_colorkey([0, 0, 0])
-
     def __get_image(self, x=0, y=0):
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
         self.image.blit(self.sprite_sheet, (0, 0), (x, y, self.SPRITE_SIZE, self.SPRITE_SIZE))
@@ -100,7 +95,7 @@ class Enemy(pygame.sprite.Sprite):
         return self.SPRITE_SIZE * self.animation_sprite
 
     def __update_sprite(self):
-        self.__update_image(self.__get_sprite_x(), self.__get_sprite_y())
+        self.__get_image(self.__get_sprite_x(), self.__get_sprite_y())
 
     def __advance_animation(self):
         if self.pattern_type == "square":
@@ -189,10 +184,15 @@ class Enemy(pygame.sprite.Sprite):
         self.prev_x = self.x
         self.prev_y = self.y
 
-        step = self.__get_current_patrol_step()
-        self.__move(step['dx'], step['dy'])
-        self.set_direction(step['direction'])
-        self.__update_patrol_progress()
+        if self.pattern_type == "square":
+            step = self.__get_current_patrol_step()
+            self.__move(step['dx'], step['dy'])
+            self.set_direction(step['direction'])
+            self.__update_patrol_progress()
+
+        if self.pattern_type == "fixe" and self.direction == "left" or self.direction == "down":
+            self.__get_image(0, self.SPRITE_SIZE)
+            
 
         if self.__patrol_step_finished():
             self.__next_patrol_step()

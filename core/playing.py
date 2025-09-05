@@ -23,7 +23,7 @@ class Playing:
 
         self.guards_list = EnemyGroup()
         guard = Enemy(250, 200, 100, 450, 100, 450, "square")
-        guard2 = Enemy(2450, 326, 50, 50, 10, 10, "square")
+        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe", "right")
         self.guards_list.add(guard)
         self.guards_list.add(guard2)
 
