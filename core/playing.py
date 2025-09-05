@@ -1,5 +1,6 @@
 import pygame
 
+from entities.compass import Compass
 from entities.dungeon import Dungeon
 from entities.player import Player
 from entities.enemyGroup import EnemyGroup
@@ -39,6 +40,8 @@ class Playing:
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
 
+        self.compass = Compass(self.settings.SCREEN_WIDTH/2, self.settings.SCREEN_HEIGHT/2)
+
     def update(self, dt, events):
         self.player.update(dt)
         if pygame.sprite.collide_mask(self.player, self.map):
@@ -65,6 +68,10 @@ class Playing:
         for guard in self.guards_list.sprites():
             guard.update(self.map)
 
+        # Mettre a jour la boussole
+        if len(self.item_list) > 0:
+            self.compass.update(self.player, self.item_list)
+
 
 
     def draw(self, screen):
@@ -80,7 +87,10 @@ class Playing:
             for item in self.item_list.sprites():
                 item.draw(screen, camera)
             self.pickup_effects.draw(screen, camera)
-        
+            # Boussole
+            if len(self.item_list) > 0:
+                self.compass.draw(screen)
+
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))
         score_rect = score_text.get_rect()
