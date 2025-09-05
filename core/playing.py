@@ -60,7 +60,7 @@ class Playing:
                 self.guards_list.add(guard)
 
     def items_generator(self):
-        with open("items.txt", "r") as file:
+        with open(os.path.join("data", "items.csv"), "r") as file:
             for line in file:
                 parts = line.strip().split(",")
                 
