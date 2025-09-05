@@ -11,5 +11,5 @@ class EnemyGroup(pygame.sprite.Group):
     # TODO: Voir pour pas avoir besoin de passer le player
     def draw(self, surface, camera, player, bgsurf = None, special_flags = 0):
         for enemy in self.sprites():
-            if isinstance(enemy, Enemy) and enemy.is_in_player_vision(player):
+            if isinstance(enemy, Enemy) and enemy.is_ennemy_in_player_vision(player):
                 enemy.draw(surface, camera)

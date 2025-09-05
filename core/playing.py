@@ -6,7 +6,6 @@ from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
-from .state_manager import GameState
 
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
@@ -16,7 +15,7 @@ class Playing:
         self.screen = game.screen
         self.settings = game.settings
 
-        self.map = Dungeon("./assets/map/dungeon.png")
+        self.map = Dungeon("./assets/map/dungeon.png") #TODO : a mettre avec le .join jsp quoi
         self.vents = Dungeon("./assets/map/vents.png")
 
         center_x = self.settings.SCREEN_WIDTH // 2
@@ -26,7 +25,7 @@ class Playing:
         event_controller.set_player(self.player)
 
         self.guards_list = EnemyGroup()
-        guard = Enemy(250, 200, 100, 450, 100, 450, "square")
+        guard = Enemy(250, 200, 100, 900, 100, 900, "square")
         self.guards_list.add(guard)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
@@ -39,8 +38,8 @@ class Playing:
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
 
-    def update(self, dt, events):
-        self.player.update(dt)
+    def update(self, dt):
+        self.player.update(dt, self.map)
         
         # Vérification des collisions entre le player et les items
         collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
@@ -84,11 +83,8 @@ class Playing:
         score_rect.topright = (self.settings.SCREEN_WIDTH - 10, 10)
         screen.blit(score_text, score_rect)
 
-        # Vision mask
-        darkness = pygame.Surface((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT), pygame.SRCALPHA)
-        darkness.fill((0, 0, 0, 180))
-        pygame.draw.circle(darkness, (0, 0, 0, 0), (self.settings.SCREEN_WIDTH/2, self.settings.SCREEN_HEIGHT/2), 200)
-        screen.blit(darkness, (0, 0))
+        # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
+        self.player.draw_darkness_overlay(screen, camera, self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
