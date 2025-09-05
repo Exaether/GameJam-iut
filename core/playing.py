@@ -39,7 +39,7 @@ class Playing:
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
 
-    def update(self, dt, events):
+    def update(self, dt):
         self.player.update(dt)
         if pygame.sprite.collide_mask(self.player, self.map):
             self.player.undo_move()
@@ -64,8 +64,6 @@ class Playing:
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             guard.update(self.map)
-
-
 
     def draw(self, screen):
         camera = (-self.player.rect.centerx + screen.get_rect().centerx,

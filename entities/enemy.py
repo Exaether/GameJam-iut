@@ -5,8 +5,10 @@ import os
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    SPRITE_SIZE = 16
-    GUARD_SPEED = 1
+    SPRITE_SIZE = 24
+    GUARD_SPEED_OUT_VISION = 1.3
+    GUARD_DEFAULT_SPEED = 1.8
+    GUARD_SPEED_ON_DETECT = 2
     VISION_RANGE = 100
     VISION_ANGLE = 60
     ANIMATION_TICK = 15
@@ -15,12 +17,14 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         self.sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
         self.sprite_sheet = pygame.image.load(self.sprite_path)
+        self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, (self.SPRITE_SIZE*4, self.SPRITE_SIZE*2))
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
         self.get_image(0, 0)
         self.rect = self.image.get_rect()
         self.direction = "right"
         self.animation_tick = 0
         self.animation_sprite = 0
+        self.guard_speed = self.GUARD_DEFAULT_SPEED
 
         self.x = x_start
         self.y = y_start
@@ -83,9 +87,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def update_sprite(self):
         if self.direction == "right" or self.direction == "down":
-            self.get_image(16 * self.animation_sprite, 0)
+            self.get_image(self.SPRITE_SIZE * self.animation_sprite, 0)
         elif self.direction == "left" or self.direction == "up":
-            self.get_image(16 * self.animation_sprite, 16)
+            self.get_image(self.SPRITE_SIZE * self.animation_sprite, self.SPRITE_SIZE)
 
     def _create_vision_mask(self):
         """Crée le mask de collision pour la zone de vision"""
@@ -138,7 +142,6 @@ class Enemy(pygame.sprite.Sprite):
             # Calculer l'offset du joueur par rapport à la zone de vision
             offset_x = player.rect.x - self.vision_rect.x
             offset_y = player.rect.y - self.vision_rect.y
-
             # Tester la collision entre le mask du joueur et celui de la zone de vision
             return self.vision_mask.overlap(player.mask, (offset_x, offset_y))
         return None
@@ -184,6 +187,7 @@ class Enemy(pygame.sprite.Sprite):
         """Vérifie si le joueur est détecté dans le cône de vision"""
         settings = Settings()
         if self.is_player_in_vision(player):
+            self.guard_speed = self.GUARD_SPEED_ON_DETECT
             self.alertness += clock.tick(settings.FPS)
         else:
             self.alertness = 0
@@ -207,14 +211,14 @@ class Enemy(pygame.sprite.Sprite):
         dy = current_step['dy']
 
         # Appliquer le mouvement
-        self.x += dx * self.GUARD_SPEED
-        self.y += dy * self.GUARD_SPEED
+        self.x += dx * self.guard_speed
+        self.y += dy * self.guard_speed
 
         # Mettre à jour la direction
         self.set_direction(current_step['direction'])
 
         # Mettre à jour le progrès de l'étape
-        self.step_progress += self.GUARD_SPEED
+        self.step_progress += self.guard_speed
 
         # Vérifier si l'étape est terminée
         if self.step_progress >= self.patrol_distance_x or self.step_progress >= self.patrol_distance_y:
