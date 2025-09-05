@@ -14,13 +14,14 @@ class Enemy(pygame.sprite.Sprite):
     ANIMATION_TICK = 15
     SIZE_EXCLAMATION_MARK = 24
     DETECTION_TIME_MS = 200
+    VALID_DIRECTIONS = ["left", "right", "up", "down"]
 
     def __init__(self, x_start = 0, y_start = 0, x_range_min = 0, x_range_max = 0, y_range_min = 0, y_range_max = 0, pattern_type_def="square", direction_def = "right"):
         super().__init__()
         self.__init_sprite(pattern_type = pattern_type_def, direction = direction_def)
         self.__init_position(x_start, y_start)
         self.__init_patrol_ranges(x_range_min, x_range_max, y_range_min, y_range_max)
-        self.__init_patrol_steps(pattern_type_def)
+        self.__init_patrol_steps(pattern_type_def, direction_def)
         self.__init_alertness()
         self.__init_collision()
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
@@ -33,6 +34,8 @@ class Enemy(pygame.sprite.Sprite):
         self.__get_image()    
         self.rect = self.image.get_rect()
         self.direction = direction
+        if direction not in self.VALID_DIRECTIONS:
+            raise ValueError(f"Invalid direction '{direction}' for Enemy")
         self.animation_tick = 0
         self.animation_sprite = 0
         self.guard_speed = self.GUARD_DEFAULT_SPEED
@@ -47,10 +50,10 @@ class Enemy(pygame.sprite.Sprite):
         self.x_range_max = x_max
         self.y_range_min = y_min
         self.y_range_max = y_max
-        self.patrol_distance_x = random.randint(x_min, x_max)
-        self.patrol_distance_y = random.randint(y_min, y_max)
-
-    def __init_patrol_steps(self, pattern_type):
+        self.patrol_distance_x = 0
+        self.patrol_distance_y = 0
+        
+    def __init_patrol_steps(self, pattern_type, direction = "right"):
         if pattern_type == "square" or pattern_type == "fixe":    
             self.patrol_steps = [
                     {'direction': 'right', 'dx': 1, 'dy': 0},
@@ -61,7 +64,31 @@ class Enemy(pygame.sprite.Sprite):
         else:
             raise ValueError(f"Pattern type {pattern_type} not supported") # TODO : a rajouter des patterns de déplacement, idle...
         
-        self.current_step_index = 0
+        match direction :
+            case "right" :
+                self.current_step_index = 0
+                if self.x_range_min > 0 :
+                    self.x_range_min = self.x_range_min*(-1)
+                if self.x_range_max > 0 :
+                    self.x_range_max = self.x_range_max*(-1)
+            case "down" :
+                self.current_step_index = 1
+                if self.y_range_min < 0 :
+                    self.y_range_min = self.y_range_min*(-1)
+                if self.y_range_max < 0 :
+                    self.y_range_max = self.y_range_max*(-1)
+            case "left" :
+                self.current_step_index = 2
+                if self.x_range_min > 0 :
+                    self.x_range_min = self.x_range_min*(-1)
+                if self.x_range_max > 0 :
+                    self.x_range_max = self.x_range_max*(-1)
+            case "up" :
+                self.current_step_index = 3
+                if self.x_range_min > 0 :
+                    self.x_range_min = self.x_range_min*(-1)
+                if self.x_range_max > 0 :
+                    self.x_range_max = self.x_range_max*(-1)
         self.step_progress = 0
 
     def __init_alertness(self):
@@ -94,9 +121,11 @@ class Enemy(pygame.sprite.Sprite):
     def __get_sprite_x(self):
         return self.SPRITE_SIZE * self.animation_sprite
 
+    """Mise à jour de l'emplacement du sprite"""
     def __update_sprite(self):
         self.__get_image(self.__get_sprite_x(), self.__get_sprite_y())
 
+    """Anime suivant le nombre de tick le déplacement du garde"""
     def __advance_animation(self):
         if self.pattern_type == "square":
             self.animation_tick += 1
@@ -105,9 +134,11 @@ class Enemy(pygame.sprite.Sprite):
                 self.animation_tick = 0
                 self.__update_sprite()
 
+    """Renvoie la direction du garde"""
     def get_direction(self):
         return self.direction
     
+    """modifie le sprite suivant la direction"""
     def set_direction(self, direction="right"):
         if self.direction != direction:
             self.direction = direction
@@ -115,11 +146,12 @@ class Enemy(pygame.sprite.Sprite):
             self.animation_tick = self.ANIMATION_TICK - 1
         self.__advance_animation()
 
+    """Informe si le garde voit le joueur """
     def is_player_in_vision(self, player):
         return self.vision_service.is_target_in_vision(player)
 
+    """Informe si le garde est dans la vision du joueur"""
     def is_ennemy_in_player_vision(self, player):
-        # TODO : à changer pour la vision circulaire, actuellement on utilise un carré de 200px
         px, py = player.get_position()
         dx = self.x - px
         dy = self.y - py
@@ -128,17 +160,20 @@ class Enemy(pygame.sprite.Sprite):
     def draw_vision_cone(self, surface, camera):
         self.vision_service.draw_vision_cone(surface, camera)
 
+    """Dessine un '!' au-dessus du sprite (souvant utilisé en cas de détection de joueur)"""
     def draw_exclamation_mark(self, surface, camera):
         if self.alertness > 0:
             x = self.rect.centerx - self.image_exclamation_mark.get_width() / 2
             y = self.rect.top - self.image_exclamation_mark.get_height()
             surface.blit(self.image_exclamation_mark, (x + camera[0], y + camera[1]))
 
+    """Dessine le sprite"""
     def draw(self, surface, camera):
         self.draw_vision_cone(surface, camera)
         surface.blit(self.image, self.rect.move(camera))
         self.draw_exclamation_mark(surface, camera)
 
+    """Si un joueur est détecté, le gard va à la même vitesse que lui grâce à la constante GUARD_SPEED_ON_DETECT"""
     def is_player_detected(self, player, clock):
         settings = Settings()
         if self.is_player_in_vision(player):
@@ -147,40 +182,67 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.alertness = 0
         return self.alertness >= self.DETECTION_TIME_MS
-
+    
+    """Annule un mouvement (souvent utilisé suite à un contact sur une collision)"""
     def undo_move(self):
         self.x = self.prev_x
         self.y = self.prev_y
         self.rect.topleft = (self.x, self.y)
+        self.__next_patrol_step()
 
     def __get_current_patrol_step(self):
         return self.patrol_steps[self.current_step_index]
 
     def __move(self, dx, dy):
-        self.x += dx * self.guard_speed
-        self.y += dy * self.guard_speed
+        if dx != 0 :
+            self.x += dx * self.guard_speed
+        if dy != 0 :
+            self.y += dy * self.guard_speed
 
-    """Begin paterne action def"""
+    """Agmente la progression du parcours de 1 par pixel parcouru utilisé dans __patrol_step_finished("""
     def __update_patrol_progress(self):
         self.step_progress += self.guard_speed
 
+    """Signale si le garde a parcouru la distance de son parcours aléatoire"""
     def __patrol_step_finished(self):
-        return (self.step_progress >= self.patrol_distance_x or
-                self.step_progress >= self.patrol_distance_y)
+        step = self.__get_current_patrol_step()
+        first_flag = False
+        second_flag = False
+        if (self.x_range_max > 0) :
+            first_flag = self.step_progress >= self.patrol_distance_x
+        if (self.y_range_max > 0) :
+            second_flag = self.step_progress >= self.patrol_distance_y
+        return (first_flag or second_flag)
 
+    """Modifie la direction vers l'opposer"""
     def __next_patrol_step(self):
-        self.current_step_index = (self.current_step_index + 1) % len(self.patrol_steps)
+        match self.current_step_index :
+            case 0:
+                self.current_step_index = 2
+            case 1:
+                self.current_step_index = 3
+            case 2:
+                self.current_step_index = 0
+            case 3:
+                self.current_step_index = 1
         self.step_progress = 0
-        self.patrol_distance_x = random.randint(self.x_range_min, self.x_range_max)
-        self.patrol_distance_y = random.randint(self.y_range_min, self.y_range_max)
-    """end paterne action def"""
+        self.patrol_distance()
 
+    """Détection des murs ou objet bloquant"""
     def __handle_collision(self, dungeon_map):
         offset = (dungeon_map.rect.x - self.rect.x, dungeon_map.rect.y - self.rect.y)
         if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, offset):
             self.undo_move()
             self.step_progress = self.patrol_distance_x
+    
+    """Distance de déplacement des choses aléatoirement entre x_minimum et x_maximum ou y """
+    def patrol_distance(self) :
+        self.x_range_min, self.x_range_max = sorted([self.x_range_min, self.x_range_max])
+        self.y_range_min, self.y_range_max = sorted([self.y_range_min, self.y_range_max])
+        self.patrol_distance_x = random.randint(self.x_range_min, self.x_range_max)
+        self.patrol_distance_y = random.randint(self.y_range_min, self.y_range_max)
 
+    """Mise à jour par Tick pour les actions du garde"""
     def update(self, dungeon_map=None):
         self.prev_x = self.x
         self.prev_y = self.y

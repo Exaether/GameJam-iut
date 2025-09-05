@@ -52,7 +52,6 @@ class Playing:
                 min_y = int(parts[4])
                 max_y = int(parts[5])
                 type = parts[6]
-                print('type')
                 # Direction est optionnelle
                 if len(parts) > 7:
                     direction = parts[7]
@@ -139,8 +138,8 @@ class Playing:
 
         # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
-
-        self.clock.draw(screen)
+        # TODO 
+        #self.clock.draw(screen)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
