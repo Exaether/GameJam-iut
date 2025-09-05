@@ -8,18 +8,18 @@ class Dungeon(pygame.sprite.Sprite) :
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # images
-        self.dungeonMap = pygame.image.load("./assets/map/dungeon.png").convert_alpha()
-        self.subMap = pygame.image.load("./assets/map/vents.png").convert_alpha()
+        self.dungeonMap = pygame.image.load("./assets/map/dungeonSprite.png").convert_alpha()
+        self.subMap = pygame.image.load("./assets/map/ventsSprite.png").convert_alpha()
         self.trapdoors = pygame.image.load("./assets/map/trapdoors.png").convert_alpha()
         # masks
-        self.dungeonMask = pygame.mask.from_surface(self.dungeonMap)
-        self.subMask = pygame.mask.from_surface(self.subMap)
+        self.dungeonMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeon.png").convert_alpha())
+        self.subMask = pygame.mask.from_surface(pygame.image.load("./assets/map/vents.png").convert_alpha())
         self.trapdoorsMask = pygame.mask.from_surface(self.trapdoors)
 
         self.image = self.dungeonMap
         self.rect = self.image.get_rect()
         self.mask = self.dungeonMask
-        self.rect.topleft = 100, 0
+        self.rect.topleft = -100, -100
         self.prev_pos = self.rect.topleft
         # first layer (surface)
         self.layer = 1
