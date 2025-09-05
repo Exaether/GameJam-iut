@@ -55,15 +55,16 @@ class Playing:
 
             self.pickup_effects.update(dt)
 
-            # Mettre à jour les gardes avec les collisions
-            for guard in self.guards_list.sprites():
-                guard.update(self.map)
-
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
                 if isinstance(guard, Enemy):
                     if guard.is_player_detected(self.player, self.game.clock):
                         self.game.trigger_game_lose()
+
+        # Mettre à jour les gardes avec les collisions
+        for guard in self.guards_list.sprites():
+            guard.update(self.map)
+
 
 
     def draw(self, screen):

@@ -226,8 +226,10 @@ class Enemy(pygame.sprite.Sprite):
         # Mettre à jour la position du rect
         self.rect.topleft = (self.x, self.y)
 
+        offset_x = dungeon_map.rect.x - self.rect.x
+        offset_y = dungeon_map.rect.y - self.rect.y
         # Vérifier les collisions avec les murs
-        if dungeon_map and pygame.sprite.collide_mask(self, dungeon_map):
+        if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, (offset_x, offset_y)):
             self.undo_move()
             self.step_progress = self.patrol_distance_x
 
