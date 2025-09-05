@@ -6,6 +6,7 @@ from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
+from entities.exitDoor import ExitDoor
 from .state_manager import GameState
 
 class Playing:
@@ -17,10 +18,9 @@ class Playing:
         self.settings = game.settings
 
         self.map = Dungeon()
+        self.exit_door = ExitDoor()
 
-        center_x = self.settings.SCREEN_WIDTH // 2
-        center_y = self.settings.SCREEN_HEIGHT // 2
-        self.player = Player(center_x, center_y)
+        self.player = Player(2538, 190)
 
         event_controller.set_player(self.player)
         event_controller.set_map(self.map)
@@ -54,6 +54,9 @@ class Playing:
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
             self.pickup_effects.update(dt)
+
+        if self.exit_door.rect.colliderect(self.player.rect):
+            self.game.trigger_game_win()
 
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
