@@ -15,11 +15,13 @@ class Dungeon(pygame.sprite.Sprite) :
         self.dungeonMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeon.png").convert_alpha())
         self.subMask = pygame.mask.from_surface(pygame.image.load("./assets/map/vents.png").convert_alpha())
         self.trapdoorsMask = pygame.mask.from_surface(self.trapdoors)
+        self.dungeonWallsMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeonWalls.png").convert_alpha())
 
         self.image = self.dungeonMap
         self.rect = self.image.get_rect()
         self.mask = self.dungeonMask
-        self.rect.topleft = -100, -100
+        self.wallsMask = self.dungeonWallsMask
+        self.rect.topleft = 0, 0
         self.prev_pos = self.rect.topleft
         # first layer (surface)
         self.layer = 1
@@ -53,10 +55,12 @@ class Dungeon(pygame.sprite.Sprite) :
             self.layer = 0
             self.image = self.subMap
             self.mask = self.subMask
+            self.wallsMask = self.subMask
         else:
             self.layer = 1
             self.image = self.dungeonMap
             self.mask = self.dungeonMask
+            self.wallsMask = self.dungeonWallsMask
 
     def trapdoor_collide(self, player):
         offset_x = player.rect.x - self.rect.x

@@ -1,4 +1,4 @@
-from components import MedievalPanel
+import pygame
 from components.medieval_text import MedievalText
 from components.medieval_button import MedievalButton
 from components.menu_component import MenuComponent
@@ -22,7 +22,7 @@ class Menu:
 
         # Titre du jeu
         self.game_text = MedievalText(
-            self.settings.SCREEN_WIDTH // 2, 200,
+            self.settings.MENU_SCREEN_WIDTH // 2, 200,
             self.settings.GAME_TITLE,
             self.resources.title_font,
             self.resources.wood_color,
@@ -36,7 +36,7 @@ class Menu:
             self.resources.wood_color
         )
         self.button_play = MedievalButton(
-            self.settings.SCREEN_WIDTH // 2, 400, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2, 400, 0, 0,
             self.text_play,
             None,
             None,
@@ -52,7 +52,7 @@ class Menu:
             MedievalText.CRIMSON_RED
         )
         self.button_exit = MedievalButton(
-            self.settings.SCREEN_WIDTH // 2, 500, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2, 500, 0, 0,
             self.text_exit,
             None,
             None,
