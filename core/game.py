@@ -86,6 +86,7 @@ class Game:
         while self.running:
             events = pygame.event.get()
             dt = self.clock.tick(self.settings.FPS) / 1000
+            print(1/dt)
 
             for event in events:
                 if event.type == pygame.QUIT:

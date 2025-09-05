@@ -1,5 +1,10 @@
+import math
+
 import pygame
 import time
+from entities.player import Player
+from entities.enemy import Enemy
+
 
 class Clock:
     START_HOUR = 22
@@ -12,6 +17,14 @@ class Clock:
     WARNING_TIME_COLOR = (255, 255, 0)
     BIG_WARNING_TIME_COLOR = (255, 165, 0)
     NIGHT_TIME_COLOR = (255, 0, 0)
+    # Stat du joueur et des gardes en fonction de l'heure (ex: 5 = à partir de 5h00, 5.5 = à partir de 5h30...)
+    # TODO: Ajoutez plus d'horaires ou pas
+    HOURS_STAT = {
+        5: {"player_vision": 205, "enemy_vision_range": 115, "enemy_vision_fov": 60, "enemy_speed": 2},
+        5.5: {"player_vision": 210, "enemy_vision_range": 130, "enemy_vision_fov": 65, "enemy_speed": 2.5},
+        6: {"player_vision": 215, "enemy_vision_range": 145, "enemy_vision_fov": 70, "enemy_speed": 3.5},
+        6.5: {"player_vision": 220, "enemy_vision_range": 160, "enemy_vision_fov": 75, "enemy_speed": 5}
+    }
     
 
     def __init__(self, screen_width):
@@ -33,7 +46,7 @@ class Clock:
         self.last_update_time = time.time()
         self.elapsed_seconds = 0
 
-    def update(self):
+    def update(self, player, guards_list):
         now = time.time()
         delta = now - self.last_update_time
         self.last_update_time = now
@@ -48,14 +61,30 @@ class Clock:
                 if self.current_hour >= 24:
                     self.current_hour = 0
 
+        current_time = self.current_hour + self.current_minute/60
+        floating_point = current_time % 1
+
+        # TODO: Bouger aussi la vitesse du garde hors zone du joueur ?
+        if (math.isclose(floating_point, 0) or math.isclose(floating_point, 0.5)) and current_time in self.HOURS_STAT:
+            Player.VISION_RANGE = self.HOURS_STAT[current_time]["player_vision"]
+            Enemy.VISION_RANGE = self.HOURS_STAT[current_time]["enemy_vision_range"]
+            Enemy.VISION_ANGLE = self.HOURS_STAT[current_time]["enemy_vision_fov"]
+            Enemy.GUARD_DEFAULT_SPEED = self.HOURS_STAT[current_time]["enemy_speed"]
+
+            player.vision_service.vision_range = self.HOURS_STAT[current_time]["player_vision"]
+            for guard in guards_list:
+                guard.vision_service.vision_range = self.HOURS_STAT[current_time]["enemy_vision_range"]
+                guard.vision_service.vision_angle = self.HOURS_STAT[current_time]["enemy_vision_fov"]
+
+
     def draw(self, surface):
-        if (self.current_hour >= self.START_HOUR or self.current_hour < self.WARNING_TIME_START):
+        if self.current_hour >= self.START_HOUR or self.current_hour < self.WARNING_TIME_START:
             color = (255, 255, 255)
-        elif (self.current_hour >= self.WARNING_TIME_START and self.current_hour < self.BIG_WARNING_TIME_START):
+        elif self.WARNING_TIME_START <= self.current_hour < self.BIG_WARNING_TIME_START:
             color = (255, 255, 0)
-        elif (self.current_hour >= self.BIG_WARNING_TIME_START and self.current_hour < self.DAY_TIME_START):
+        elif self.BIG_WARNING_TIME_START <= self.current_hour < self.DAY_TIME_START:
             color = (255, 165, 0)
-        elif (self.current_hour >= self.DAY_TIME_START and self.current_hour < self.START_HOUR):
+        elif self.DAY_TIME_START <= self.current_hour < self.START_HOUR:
             color = (255, 0, 0)
         else:
             color = (255, 255, 255) 
