@@ -19,7 +19,7 @@ class Dungeon(pygame.sprite.Sprite) :
         self.image = self.dungeonMap
         self.rect = self.image.get_rect()
         self.mask = self.dungeonMask
-        self.rect.topleft = -100, -100
+        self.rect.topleft = 0, 0
         self.prev_pos = self.rect.topleft
         # first layer (surface)
         self.layer = 1

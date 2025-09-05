@@ -12,7 +12,7 @@ class Menu:
         self.game = game
 
         self.game_text = MedievalText(
-            self.settings.SCREEN_WIDTH // 2, 200, 
+            self.settings.MENU_SCREEN_WIDTH // 2, 200,
             self.settings.GAME_TITLE, 
             pygame.font.Font(None, 75),
             MedievalText.ROYAL_GOLD,
@@ -25,7 +25,7 @@ class Menu:
             MedievalText.PARCHMENT
         )
         self.button_play = MedievalButton(
-            self.settings.SCREEN_WIDTH // 2, 400, 250, 80, 
+            self.settings.MENU_SCREEN_WIDTH // 2, 400, 250, 80,
             self.text_play, 
             MedievalButton.DEEP_NAVY, 
             MedievalButton.ROYAL_BLUE, 
@@ -39,7 +39,7 @@ class Menu:
             MedievalText.ROYAL_GOLD
         )
         self.button_exit = MedievalButton(
-            self.settings.SCREEN_WIDTH // 2, 500, 250, 80, 
+            self.settings.MENU_SCREEN_WIDTH // 2, 500, 250, 80,
             self.text_exit, 
             MedievalButton.CRIMSON_BASE, 
             MedievalButton.CRIMSON_HOVER, 

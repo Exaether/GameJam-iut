@@ -13,7 +13,7 @@ class Game:
         pygame.init()
 
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((self.settings.SCREEN_WIDTH, self.settings.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         pygame.display.set_caption(self.settings.GAME_TITLE)
         self.clock = pygame.time.Clock()
 
@@ -27,6 +27,7 @@ class Game:
         self.game_win_screen = None
 
     def play(self):
+        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.playing = Playing(self, self.event_controller)
         self.state_manager.change_state(GameState.PLAYING)
 
@@ -45,8 +46,8 @@ class Game:
     def trigger_game_lose(self):
         """Déclenche la défaite du jeu"""
         self.game_lose_screen = GameLoseScreen(
-            self.settings.SCREEN_WIDTH,
-            self.settings.SCREEN_HEIGHT,
+            self.settings.GAME_SCREEN_WIDTH,
+            self.settings.GAME_SCREEN_HEIGHT,
             self.retry_game,
             self.back_to_menu
         )
@@ -81,7 +82,7 @@ class Game:
             current_state = self.state_manager.get_current_state()
 
             if current_state == GameState.PLAYING:
-                self.playing.update(dt, events)
+                self.playing.update(dt)
                 self.playing.draw(self.screen)
             elif current_state == GameState.PAUSED:
                 # TODO: A réaliser
