@@ -10,6 +10,8 @@ class Player(pygame.sprite.Sprite):
     ANIMATION_SPEED = 0.2
     VISION_RANGE = 200
     VISION_ANGLE = 90
+    SPACEBAR_WIDTH = 32
+    SPACEBAR_HEIGHT = 16
     
     DIRECTION_ROW = {
         "down": 0,
@@ -32,8 +34,17 @@ class Player(pygame.sprite.Sprite):
         self.animation_timer = 0
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
         self.prev_pos = self.rect.center
+
+        self.__init_spacebar()
         
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
+
+    def __init_spacebar(self):
+        spacebar_path = os.path.join("assets", "other", "spacebar.png")
+        self.spacebar = pygame.image.load(spacebar_path)
+        self.spacebar_image = pygame.Surface([self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT])
+        self.spacebar_image.blit(self.spacebar, (0, 0), (0, 0, self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT))
+        self.spacebar_image.set_colorkey([0, 0, 0])
     
     def _load_sprite_sheet(self):
         sprite_path = os.path.join("assets", "entities", "player_sprite.png")
@@ -98,7 +109,12 @@ class Player(pygame.sprite.Sprite):
             self.animation_timer = 0
     
         self.vision_service.update_circular_vision(self.rect, dungeon_map)
-    
+
+    def draw_spacebar(self, surface, camera, map):
+        if map.trapdoor_collide(self):
+            x = self.rect.centerx - self.spacebar_image.get_width() / 2
+            y = self.rect.top - self.spacebar_image.get_height()
+            surface.blit(self.spacebar_image, (x + camera[0], y + camera[1]))
 
     def draw_darkness_overlay(self, surface, camera, screen_width, screen_height):
         self.vision_service.draw_darkness_overlay(surface, camera, screen_width, screen_height)
