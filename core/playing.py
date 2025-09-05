@@ -1,4 +1,5 @@
 import pygame
+import os
 
 from entities.compass import Compass
 from entities.dungeon import Dungeon
@@ -23,21 +24,56 @@ class Playing:
         event_controller.set_map(self.map)
 
         self.guards_list = EnemyGroup()
-        guard = Enemy(250, 200, 100, 450, 100, 450, "square")
-        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe", "left")
-        self.guards_list.add(guard)
-        self.guards_list.add(guard2)
+        self.guard_generator()
 
-        item = Item(self.settings.GAME_SCREEN_WIDTH // 2, self.settings.GAME_SCREEN_HEIGHT // 2)
-        item2 = Item(self.settings.GAME_SCREEN_WIDTH // 4, self.settings.GAME_SCREEN_HEIGHT // 4)
         self.item_list = pygame.sprite.Group()
-        self.item_list.add(item)
-        self.item_list.add(item2)
+        self.items_generator()
 
         # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
         self.compass = Compass(self.settings.GAME_SCREEN_WIDTH/2, self.settings.GAME_SCREEN_HEIGHT/2)
+
+    def guard_generator(self):
+        with open(os.path.join("data", "guards.csv"), "r") as file:
+            for line in file:
+                parts = line.strip().split(",")
+                
+                if len(parts) < 7:
+                    continue  # Ignore les lignes invalides
+
+                x = int(parts[0])
+                y = int(parts[1])
+                min_x = int(parts[2])
+                max_x = int(parts[3])
+                min_y = int(parts[4])
+                max_y = int(parts[5])
+                type = parts[6]
+                print('type')
+                # Direction est optionnelle
+                if len(parts) > 7:
+                    direction = parts[7]
+                    guard = Enemy(x, y, min_x, max_x, min_y, max_y, type, direction)
+                    print(guard)
+                else:
+                    guard = Enemy(x, y, min_x, max_x, min_y, max_y, type)
+                self.guards_list.add(guard)
+
+    def items_generator(self):
+        with open("items.txt", "r") as file:
+            for line in file:
+                parts = line.strip().split(",")
+                
+                if len(parts) != 2:
+                    continue  # Ignore les lignes mal formatées
+
+                try:
+                    x = int(parts[0])
+                    y = int(parts[1])
+                    item = Item(x, y)
+                    self.item_list.add(item)
+                except ValueError:
+                    continue  # Ignore les valeurs non numériques
 
     def update(self, dt):
         self.player.update(dt, self.map)
