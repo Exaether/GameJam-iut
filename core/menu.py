@@ -1,7 +1,7 @@
-import pygame
-from components.medieval_text import MedievalText
-from components.medieval_button import MedievalButton
-from components.menu_component import MenuComponent
+from components import MedievalPanel
+from components import MedievalText
+from components import MedievalButton
+from components import MenuComponent
 from services import Resources
 
 
@@ -16,8 +16,8 @@ class Menu:
         # Panneau
         self.panel = MedievalPanel(
             self.resources.wood_panel_image,
-            self.settings.SCREEN_WIDTH // 2,
-            self.settings.SCREEN_HEIGHT // 2
+            self.settings.MENU_SCREEN_WIDTH // 2,
+            self.settings.MENU_SCREEN_HEIGHT // 2
         )
 
         # Titre du jeu

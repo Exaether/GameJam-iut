@@ -14,7 +14,7 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        # Centre la fênetre de jeu sur le bureaus
+        # Centre la fênetre de jeu sur le bureau
         os.environ['SDL_VIDEO_CENTERED'] = "true"
 
         self.settings = Settings()
@@ -60,9 +60,9 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
-        pygame.mixer.music.stop()
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.LOSE)
+        pygame.mixer.music.stop()
 
     def trigger_game_win(self):
         """Déclenche la victoire du jeu"""
@@ -75,9 +75,9 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
-        pygame.mixer.music.stop()
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.WIN)
+        pygame.mixer.music.stop()
 
     def exit(self):
         self.running = False
@@ -98,6 +98,8 @@ class Game:
             if current_state == GameState.PLAYING:
                 self.playing.update(dt)
                 self.playing.draw(self.screen)
+                if not pygame.mixer.music.get_busy():
+                    pygame.mixer.music.play()
             elif current_state == GameState.PAUSED:
                 # TODO: A réaliser
                 pass
