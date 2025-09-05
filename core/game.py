@@ -8,6 +8,7 @@ from .event_controller import EventController
 from .playing import Playing
 from components import GameLoseScreen, GameWinScreen
 
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -21,6 +22,7 @@ class Game:
         self.event_controller = EventController(self)
         self.menu = Menu(self.settings, self)
         self.playing = Playing(self, self.event_controller)
+        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
         self.running = True
 
         self.game_lose_screen = None
@@ -28,6 +30,7 @@ class Game:
 
     def play(self):
         self.playing = Playing(self, self.event_controller)
+        pygame.mixer.music.play()
         self.state_manager.change_state(GameState.PLAYING)
 
     def retry_game(self):
@@ -35,7 +38,7 @@ class Game:
         self.game_lose_screen = None
         self.game_win_screen = None
         self.play()
-        
+
     def back_to_menu(self):
         """Retourne au menu principal"""
         self.game_lose_screen = None
@@ -50,6 +53,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        pygame.mixer.music.stop()
         self.state_manager.change_state(GameState.LOSE)
 
     def trigger_game_win(self):
@@ -62,6 +66,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        pygame.mixer.music.stop()
         self.state_manager.change_state(GameState.WIN)
 
     def exit(self):
