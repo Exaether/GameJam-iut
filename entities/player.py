@@ -3,6 +3,8 @@ import os
 
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16
+    SPEED_DEFAULT = 2
+    SPEED_SUBTERRAN = 4
     ANIMATION_FRAMES = 4
     ANIMATION_SPEED = 0.2
     
@@ -18,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         
         self.sprite_sheet = self._load_sprite_sheet()
         self.rect = pygame.Rect(x, y, self.SPRITE_SIZE, self.SPRITE_SIZE)
-        self.speed = 2
+        self.speed = self.SPEED_DEFAULT
         self.items_collected = 0 
         
         self.direction = "down"

@@ -6,4 +6,4 @@ class ExitDoor(pygame.sprite.Sprite):
         super().__init__()
         self.x = 2530
         self.y = 150
-        self.rect = pygame.Rect(self.x, self.y, 16, 16)
+        self.rect = pygame.Rect(self.x, self.y, 24, 24)

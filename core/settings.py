@@ -1,7 +1,7 @@
 class Settings:
     def __init__(self):
         self.GAME_TITLE = "Mon Jeu"
-        self.SCREEN_WIDTH = 1240
+        self.SCREEN_WIDTH = 720
         self.SCREEN_HEIGHT = 720
         self.FPS = 60
         self.DEBUG_MODE = True

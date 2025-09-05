@@ -12,6 +12,7 @@ class Enemy(pygame.sprite.Sprite):
     VISION_RANGE = 100
     VISION_ANGLE = 60
     ANIMATION_TICK = 15
+    SIZE_EXCLAMATION_MARK = 24
 
     def __init__(self, x_start, y_start, x_range_min, x_range_max, y_range_min, y_range_max, pattern_type="square"):
         super().__init__()
@@ -25,6 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         self.animation_tick = 0
         self.animation_sprite = 0
         self.guard_speed = self.GUARD_DEFAULT_SPEED
+        self.pattern_type = pattern_type # type possible : ["fixe","square"]
 
         self.x = x_start
         self.y = y_start
@@ -47,8 +49,9 @@ class Enemy(pygame.sprite.Sprite):
 
         self.alertness = 0
         self.exclamation_mark = pygame.image.load('assets/other/exclamation_mark.png')
-        self.image_exclamation_mark = pygame.Surface([16, 16])
-        self.image_exclamation_mark.blit(self.exclamation_mark, (0, 0), (0, 0, 16, 16))
+        self.exclamation_mark = pygame.transform.scale(self.exclamation_mark, (self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
+        self.image_exclamation_mark = pygame.Surface([self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK])
+        self.image_exclamation_mark.blit(self.exclamation_mark, (0, 0), (0, 0, self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
         self.image_exclamation_mark.set_colorkey([0, 0, 0])
 
         # Pour les collisions avec les murs
@@ -74,16 +77,17 @@ class Enemy(pygame.sprite.Sprite):
             self.animation_sprite = 3
             self.animation_tick = self.ANIMATION_TICK - 1
 
-        # Faire progresser l'animation de déplacement du sprite
-        self.animation_tick += 1
+        if self.pattern_type == "square":
+            # Faire progresser l'animation de déplacement du sprite
+            self.animation_tick += 1
 
-        if self.animation_tick == self.ANIMATION_TICK:
-            if self.animation_sprite == 3:
-                self.animation_sprite = 0
-            else:
-                self.animation_sprite += 1
-            self.animation_tick = 0
-            self.update_sprite()
+            if self.animation_tick == self.ANIMATION_TICK:
+                if self.animation_sprite == 3:
+                    self.animation_sprite = 0
+                else:
+                    self.animation_sprite += 1
+        self.animation_tick = 0
+        self.update_sprite()
 
     def update_sprite(self):
         if self.direction == "right" or self.direction == "down":
@@ -210,32 +214,45 @@ class Enemy(pygame.sprite.Sprite):
         dx = current_step['dx']
         dy = current_step['dy']
 
-        # Appliquer le mouvement
-        self.x += dx * self.guard_speed
-        self.y += dy * self.guard_speed
+        if(self.pattern_type == "square"):
+            # Appliquer le mouvement
+            self.x += dx * self.guard_speed
+            self.y += dy * self.guard_speed
 
-        # Mettre à jour la direction
-        self.set_direction(current_step['direction'])
+            # Mettre à jour la direction
+            self.set_direction(current_step['direction'])
 
-        # Mettre à jour le progrès de l'étape
-        self.step_progress += self.guard_speed
+            # Mettre à jour le progrès de l'étape
+            self.step_progress += self.guard_speed
 
-        # Vérifier si l'étape est terminée
-        if self.step_progress >= self.patrol_distance_x or self.step_progress >= self.patrol_distance_y:
-            self.current_step_index = (self.current_step_index + 1) % len(self.patrol_steps)
-            self.step_progress = 0
-            self.patrol_distance_x = random.randint(self.x_range_min, self.x_range_max)
-            self.patrol_distance_y = random.randint(self.y_range_min, self.y_range_max)
+            # Vérifier si l'étape est terminée
+            if self.step_progress >= self.patrol_distance_x or self.step_progress >= self.patrol_distance_y:
+                self.current_step_index = (self.current_step_index + 1) % len(self.patrol_steps)
+                self.step_progress = 0
+                self.patrol_distance_x = random.randint(self.x_range_min, self.x_range_max)
+                self.patrol_distance_y = random.randint(self.y_range_min, self.y_range_max)
 
-        # Mettre à jour la position du rect
-        self.rect.topleft = (self.x, self.y)
+            # Mettre à jour la position du rect
+            self.rect.topleft = (self.x, self.y)
 
-        offset_x = dungeon_map.rect.x - self.rect.x
-        offset_y = dungeon_map.rect.y - self.rect.y
-        # Vérifier les collisions avec les murs
-        if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, (offset_x, offset_y)):
-            self.undo_move()
-            self.step_progress = self.patrol_distance_x
+            offset_x = dungeon_map.rect.x - self.rect.x
+            offset_y = dungeon_map.rect.y - self.rect.y
+            # Vérifier les collisions avec les murs
+            if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, (offset_x, offset_y)):
+                self.undo_move()
+                self.step_progress = self.patrol_distance_x
+        else:
+
+            self.set_direction('left')
+            # Mettre à jour la position du rect
+            self.rect.topleft = (self.x, self.y)
+            
+            offset_x = dungeon_map.rect.x - self.rect.x
+            offset_y = dungeon_map.rect.y - self.rect.y
+            # Vérifier les collisions avec les murs
+            if dungeon_map and self.mask.overlap(dungeon_map.dungeonMask, (offset_x, offset_y)):
+                self.undo_move()
+                self.step_progress = self.patrol_distance_x
 
         # Mettre à jour la zone de vision
         self._create_vision_mask()

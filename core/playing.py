@@ -27,7 +27,9 @@ class Playing:
 
         self.guards_list = EnemyGroup()
         guard = Enemy(250, 200, 100, 450, 100, 450, "square")
+        guard2 = Enemy(2450, 326, 0, 0, 0, 0, "fixe")
         self.guards_list.add(guard)
+        self.guards_list.add(guard2)
 
         item = Item(self.settings.SCREEN_WIDTH // 2, self.settings.SCREEN_HEIGHT // 2)
         item2 = Item(self.settings.SCREEN_WIDTH // 4, self.settings.SCREEN_HEIGHT // 4)
@@ -47,13 +49,15 @@ class Playing:
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
             collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
-
+            self.player.speed = self.player.SPEED_DEFAULT
             for item in collided_items:
                 if item.pickable:
                     self.player.items_collected += 1
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
 
             self.pickup_effects.update(dt)
+        else:
+            self.player.speed = self.player.SPEED_SUBTERRAN
 
         if self.exit_door.rect.colliderect(self.player.rect):
             self.game.trigger_game_win()
