@@ -9,6 +9,7 @@ from entities.enemy import Enemy
 from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
 from entities.exitDoor import ExitDoor
+from core.clock import Clock
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
     
@@ -33,6 +34,8 @@ class Playing:
         self.score_font = pygame.font.Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
         self.compass = Compass(self.settings.GAME_SCREEN_WIDTH/2, self.settings.GAME_SCREEN_HEIGHT/2)
+
+        self.clock = Clock(self.settings.GAME_SCREEN_WIDTH)
 
     def guard_generator(self):
         with open(os.path.join("data", "guards.csv"), "r") as file:
@@ -77,6 +80,7 @@ class Playing:
 
     def update(self, dt):
         self.player.update(dt, self.map)
+        self.clock.update()
         if pygame.sprite.collide_mask(self.player, self.map):
             self.player.undo_move()
 
@@ -135,6 +139,8 @@ class Playing:
 
         # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
+
+        self.clock.draw(screen)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
