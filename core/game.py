@@ -81,7 +81,7 @@ class Game:
             current_state = self.state_manager.get_current_state()
 
             if current_state == GameState.PLAYING:
-                self.playing.update(dt, events)
+                self.playing.update(dt)
                 self.playing.draw(self.screen)
             elif current_state == GameState.PAUSED:
                 # TODO: A réaliser

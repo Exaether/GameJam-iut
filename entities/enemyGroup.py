@@ -13,3 +13,6 @@ class EnemyGroup(pygame.sprite.Group):
         for enemy in self.sprites():
             if isinstance(enemy, Enemy) and enemy.is_in_player_vision(player):
                 enemy.draw(surface, camera)
+                enemy.guard_speed = enemy.GUARD_DEFAULT_SPEED
+            else : 
+                enemy.guard_speed = enemy.GUARD_SPEED_OUT_VISION

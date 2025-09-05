@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         
         self.sprite_sheet = self._load_sprite_sheet()
         self.rect = pygame.Rect(x, y, self.SPRITE_SIZE, self.SPRITE_SIZE)
-        self.speed = 3
+        self.speed = 2
         self.items_collected = 0 
         
         self.direction = "down"
