@@ -1,7 +1,9 @@
 import pygame
+
+from services import Resources
 from .medieval_text import MedievalText
 from .medieval_button import MedievalButton
-from .medieval_frame import MedievalFrame
+from .medieval_panel import MedievalPanel
 
 
 class GameLoseScreen:
@@ -11,50 +13,50 @@ class GameLoseScreen:
                  on_retry_action=None, on_menu_action=None):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.resources = Resources()
 
-        # Cadre style parchemin
-        frame_width = screen_width - 100
-        frame_height = screen_height - 80
-        self.main_frame = MedievalFrame(
-            50, 40, frame_width, frame_height,
-            border_width=6, shadow_offset=10
+        # Panneau
+        self.panel = MedievalPanel(
+            self.resources.silver_panel_image,
+            self.screen_width // 2,
+            self.screen_height // 2
         )
-
-        title_font = pygame.font.Font(None, 85)
-        subtitle_font = pygame.font.Font(None, 55)
-        button_font = pygame.font.Font(None, 42)
 
         # Titre principal en pourpre
         self.title = MedievalText(
             screen_width // 2, 140,
-            "CAPTURÉ PAR LES GARDES !",
-            title_font,
+            "Capturé par les gardes !",
+            self.resources.title_font,
             MedievalText.CRIMSON_RED,
             shadow_offset=4
         )
 
         retry_text = MedievalText(
-            screen_width // 2, 370, "NOUVELLE QUÊTE",
-            button_font, MedievalText.PARCHMENT
+            self.screen_width // 2, 370, "NOUVELLE QUETE",
+            self.resources.button_font, self.resources.silver_color
         )
         self.retry_button = MedievalButton(
-            screen_width // 2, 370, 280, 75,
+            screen_width // 2, 370, 0, 0,
             retry_text,
-            MedievalButton.DEEP_NAVY,
-            MedievalButton.ROYAL_BLUE,
-            on_retry_action
+            None,
+            None,
+            on_retry_action,
+            self.resources.silver_button_image_normal,
+            self.resources.silver_button_image_pressed
         )
 
         menu_text = MedievalText(
-            screen_width // 2, 465, "RETOUR À LA TAVERNE",
-            button_font, MedievalText.ROYAL_GOLD
+            screen_width // 2, 465, "TAVERNE",
+            self.resources.button_font, self.resources.silver_color
         )
         self.menu_button = MedievalButton(
-            screen_width // 2, 465, 320, 75,
+            screen_width // 2, 465, 0, 0,
             menu_text,
-            MedievalButton.CRIMSON_BASE,
-            MedievalButton.CRIMSON_HOVER,
-            on_menu_action
+            None,
+            None,
+            on_menu_action,
+            self.resources.silver_button_image_normal,
+            self.resources.silver_button_image_pressed
         )
 
         self.buttons = [self.retry_button, self.menu_button]
@@ -62,12 +64,8 @@ class GameLoseScreen:
     def draw(self, surface):
         surface.fill(self.TAVERN_BACKGROUND)
 
-        # Cadre de parchemin
-        self.main_frame.draw(surface)
-
-        # Texte
+        self.panel.draw(surface)
         self.title.draw(surface)
 
-        # Boutons
         for button in self.buttons:
             button.draw(surface)

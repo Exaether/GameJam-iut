@@ -19,7 +19,7 @@ class MedievalText:
         self.color = color if color else self.ROYAL_GOLD
         self.shadow_offset = shadow_offset
 
-        # Création du texte principal et de so ombre
+        # Création du texte principal et de son ombre
         self.text_surf = self.font.render(text, True, self.color)
         self.shadow_surf = self.font.render(text, True, self.BLACK_INK)
         
