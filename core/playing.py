@@ -57,7 +57,6 @@ class Playing:
                 if len(parts) > 7:
                     direction = parts[7]
                     guard = Enemy(x, y, min_x, max_x, min_y, max_y, type, direction)
-                    print(guard)
                 else:
                     guard = Enemy(x, y, min_x, max_x, min_y, max_y, type)
                 self.guards_list.add(guard)
