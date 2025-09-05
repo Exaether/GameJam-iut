@@ -1,4 +1,5 @@
 import pygame
+from entities.exitDoor import ExitDoor
 from .state_manager import GameState
 
 class EventController:
@@ -6,12 +7,16 @@ class EventController:
         self.game = game
         self.player = None
         self.map = None
+        self.exit_door = None
     
     def set_player(self, player):
         self.player = player
 
     def set_map(self, map):
         self.map = map
+
+    def set_exit_door(self, exit_door):
+        self.exit_door = exit_door
     
     def _get_buttons_for_state(self, game_state):
         """Retourne la liste des boutons pour un état de jeu donné"""
@@ -71,10 +76,11 @@ class EventController:
                 self.player.idle()
 
     def _handle_keydown(self, key, state):
-        if state == GameState.PLAYING and self.player:
+        if state == GameState.PLAYING:
             if self.map.trapdoor_collide(self.player) and key == pygame.K_SPACE:
                 self.map.switch_map()
-
+            elif self.exit_door.rect.colliderect(self.player.rect) and key == pygame.K_SPACE:
+                self.game.trigger_game_win()
 
         elif state == GameState.MENU:
             # TODO : à définir

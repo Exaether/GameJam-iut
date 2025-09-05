@@ -23,6 +23,7 @@ class Playing:
 
         event_controller.set_player(self.player)
         event_controller.set_map(self.map)
+        event_controller.set_exit_door(self.exit_door)
 
         self.guards_list = EnemyGroup()
         self.guard_generator()
@@ -102,9 +103,6 @@ class Playing:
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN
 
-        if self.exit_door.rect.colliderect(self.player.rect):
-            self.game.trigger_game_win()
-
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             guard.update(self.map)
@@ -118,8 +116,9 @@ class Playing:
                   -self.player.rect.centery + screen.get_rect().centery)
         screen.fill(self.settings.BACKGROUND_COLOR)
         self.map.draw(screen, camera)
+        self.exit_door.draw(screen, camera)
         self.player.draw(screen, camera)
-        self.player.draw_spacebar(screen, camera, self.map)
+        self.player.draw_spacebar(screen, camera, self.map, self.exit_door)
 
         if self.map.layer == 1:
             self.guards_list.draw(screen, camera, self.player)

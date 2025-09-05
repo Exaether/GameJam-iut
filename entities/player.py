@@ -110,8 +110,8 @@ class Player(pygame.sprite.Sprite):
     
         self.vision_service.update_circular_vision(self.rect, dungeon_map)
 
-    def draw_spacebar(self, surface, camera, map):
-        if map.trapdoor_collide(self):
+    def draw_spacebar(self, surface, camera, map, exit_door):
+        if map.trapdoor_collide(self) or exit_door.rect.colliderect(self.rect):
             x = self.rect.centerx - self.spacebar_image.get_width() / 2
             y = self.rect.top - self.spacebar_image.get_height()
             surface.blit(self.spacebar_image, (x + camera[0], y + camera[1]))

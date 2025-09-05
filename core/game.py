@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 
 from .menu import Menu
 from .settings import Settings
@@ -11,6 +12,9 @@ from components import GameLoseScreen, GameWinScreen
 class Game:
     def __init__(self):
         pygame.init()
+
+        # Centre la fênetre de jeu sur le bureaus
+        os.environ['SDL_VIDEO_CENTERED'] = "true"
 
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
@@ -35,30 +39,34 @@ class Game:
         """Relance une nouvelle partie"""
         self.game_lose_screen = None
         self.game_win_screen = None
+        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.play()
         
     def back_to_menu(self):
         """Retourne au menu principal"""
         self.game_lose_screen = None
         self.game_win_screen = None
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.MENU)
 
     def trigger_game_lose(self):
         """Déclenche la défaite du jeu"""
         self.game_lose_screen = GameLoseScreen(
-            self.settings.GAME_SCREEN_WIDTH,
-            self.settings.GAME_SCREEN_HEIGHT,
+            self.settings.MENU_SCREEN_WIDTH,
+            self.settings.MENU_SCREEN_HEIGHT,
             self.retry_game,
             self.back_to_menu
         )
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.LOSE)
 
     def trigger_game_win(self):
         """Déclenche la victoire du jeu"""
         final_score = self.playing.player.items_collected
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.game_win_screen = GameWinScreen(
-            self.settings.GAME_SCREEN_WIDTH,
-            self.settings.GAME_SCREEN_HEIGHT,
+            self.settings.MENU_SCREEN_WIDTH,
+            self.settings.MENU_SCREEN_HEIGHT,
             final_score,
             self.retry_game,
             self.back_to_menu

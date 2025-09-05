@@ -118,8 +118,7 @@ class Enemy(pygame.sprite.Sprite):
     def is_player_in_vision(self, player):
         return self.vision_service.is_target_in_vision(player)
 
-    def is_ennemy_in_player_vision(self, player):
-        # TODO : à changer pour la vision circulaire, actuellement on utilise un carré de 200px
+    def is_enemy_in_player_vision(self, player):
         return player.vision_service.is_target_in_vision(self)
 
     def draw_vision_cone(self, surface, camera):
