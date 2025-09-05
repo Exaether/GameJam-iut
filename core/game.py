@@ -57,8 +57,8 @@ class Game:
         """Déclenche la victoire du jeu"""
         final_score = self.playing.player.items_collected
         self.game_win_screen = GameWinScreen(
-            self.settings.SCREEN_WIDTH,
-            self.settings.SCREEN_HEIGHT,
+            self.settings.GAME_SCREEN_WIDTH,
+            self.settings.GAME_SCREEN_HEIGHT,
             final_score,
             self.retry_game,
             self.back_to_menu
