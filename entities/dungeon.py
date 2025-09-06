@@ -1,4 +1,7 @@
 import pygame
+import os
+
+from paths import get_asset_path
 
 class Dungeon(pygame.sprite.Sprite) :
     '''
@@ -8,14 +11,14 @@ class Dungeon(pygame.sprite.Sprite) :
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # images
-        self.dungeonMap = pygame.image.load("./assets/map/dungeonSprite.png").convert_alpha()
-        self.subMap = pygame.image.load("./assets/map/ventsSprite.png").convert_alpha()
-        self.trapdoors = pygame.image.load("./assets/map/trapdoors.png").convert_alpha()
+        self.dungeonMap = pygame.image.load(get_asset_path('map','dungeonSprite.png')).convert_alpha()
+        self.subMap = pygame.image.load(get_asset_path('map','ventsSprite.png')).convert_alpha()
+        self.trapdoors = pygame.image.load(get_asset_path('map','trapdoors.png')).convert_alpha()
         # masks
-        self.dungeonMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeon.png").convert_alpha())
-        self.subMask = pygame.mask.from_surface(pygame.image.load("./assets/map/vents.png").convert_alpha())
+        self.dungeonMask = pygame.mask.from_surface(pygame.image.load(get_asset_path('map','dungeon.png')).convert_alpha())
+        self.subMask = pygame.mask.from_surface(pygame.image.load(get_asset_path('map','vents.png')).convert_alpha())
         self.trapdoorsMask = pygame.mask.from_surface(self.trapdoors)
-        self.dungeonWallsMask = pygame.mask.from_surface(pygame.image.load("./assets/map/dungeonWalls.png").convert_alpha())
+        self.dungeonWallsMask = pygame.mask.from_surface(pygame.image.load(get_asset_path('map','dungeonWalls.png')).convert_alpha())
 
         self.image = self.dungeonMap
         self.rect = self.image.get_rect()

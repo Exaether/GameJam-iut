@@ -1,4 +1,7 @@
 import pygame
+import os
+
+from paths import get_asset_path
 from entities.player import Player
 
 class IntroGame:
@@ -39,7 +42,7 @@ class IntroGame:
         self.allow_advance = False
         self.mode = self.MODE_TYPING_NORMAL
 
-        self.font = pygame.font.Font("./assets/font/VPPixel-Standard.ttf", 25) if self.settings else None
+        self.font = pygame.font.Font(get_asset_path('font','VPPixel-Standard.ttf'), 25) if self.settings else None
 
         self.dialog_lines = [
             "Ca c'est Georges, Georges est ce qu'on appel un voleur",

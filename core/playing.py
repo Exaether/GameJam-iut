@@ -1,6 +1,7 @@
 import pygame
 import os
 
+from paths import *
 from services.resources import Resources 
 from entities.compass import Compass
 from entities.dungeon import Dungeon
@@ -14,7 +15,7 @@ from core.clock import Clock
 from services.suspicion_service import SuspicionService
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
-    
+
     def __init__(self, game, event_controller):
         self.game = game
         self.screen = game.screen
@@ -49,7 +50,7 @@ class Playing:
         Enemy.GUARD_DEFAULT_SPEED = 1.8
 
     def guard_generator(self):
-        with open(os.path.join("data", "guards.csv"), "r") as file:
+        with open(get_data_path("guards.csv"), "r") as file:
             for line in file:
                 parts = line.strip().split(",")
                 
@@ -72,7 +73,7 @@ class Playing:
                 self.guards_list.add(guard)
 
     def items_generator(self):
-        with open(os.path.join("data", "items.csv"), "r") as file:
+        with open(get_data_path("items.csv"), "r") as file:
             nb_items = 0
             for line in file:
                 parts = line.strip().split(",")

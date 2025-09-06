@@ -1,6 +1,7 @@
 import pygame
-import os
 import random
+
+from paths import get_asset_path
 from core.settings import Settings
 from services.vision_service import VisionService
 from services.resources import Resources
@@ -29,7 +30,7 @@ class Enemy(pygame.sprite.Sprite):
         self.speed_multiplier = 1.0
 
     def __init_sprite(self, pattern_type="square", direction = "right"):
-        sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
+        sprite_path = get_asset_path("entities", "enemy_sprite.png")
         self.sprite_sheet = pygame.image.load(sprite_path)
         self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, (self.SPRITE_SIZE*4, self.SPRITE_SIZE*2))
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
@@ -96,7 +97,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init_alertness(self):
         self.alertness = 0
-        exclamation_path = os.path.join("assets", "other", "exclamation_mark.png")
+        exclamation_path = get_asset_path("other", "exclamation_mark.png")
         self.exclamation_mark = pygame.image.load(exclamation_path)
         self.exclamation_mark = pygame.transform.scale(self.exclamation_mark, (self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
         self.image_exclamation_mark = pygame.Surface([self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK])

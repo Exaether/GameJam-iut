@@ -1,10 +1,12 @@
 import math
-
+import os
 import pygame
+
+from paths import get_asset_path
 
 class Compass(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        self.arrow = pygame.image.load("./assets/other/arrow.png").convert_alpha()
+        self.arrow = pygame.image.load(get_asset_path('other','arrow.png')).convert_alpha()
         self.image = self.arrow
         self.rect = self.image.get_rect()
         self.angle = 0
