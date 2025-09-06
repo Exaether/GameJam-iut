@@ -154,9 +154,11 @@ class Playing:
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         self.clock.draw(screen)
-        # Boussole
-        if len(self.item_list) > 0:
-            self.compass.draw(screen)
+        
+        if self.map.layer == 1:
+            # Boussole
+            if len(self.item_list) > 0:
+                self.compass.draw(screen)
 
         self.suspicion_service.draw_suspicion(screen)
 
