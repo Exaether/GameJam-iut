@@ -177,7 +177,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.is_player_in_vision(player):
             self.guard_speed = self.GUARD_SPEED_ON_DETECT
             self.alertness += clock.tick(settings.FPS)
-            if pygame.time.get_ticks() - self.last_detect_sound_time >= 4000:  # 1.5 seconde
+            if pygame.time.get_ticks() - self.last_detect_sound_time >= 1000:  # 1 seconde
                 Resources().detect_sound.play()
                 self.last_detect_sound_time = pygame.time.get_ticks()
         else:
