@@ -70,6 +70,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        self.playing = Playing(self, self.event_controller)
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.LOSE)
         pygame.mixer.music.stop()
@@ -85,6 +86,7 @@ class Game:
             self.retry_game,
             self.back_to_menu
         )
+        self.playing = Playing(self, self.event_controller)
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.WIN)
         pygame.mixer.music.stop()

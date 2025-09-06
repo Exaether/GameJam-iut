@@ -111,8 +111,8 @@ class Playing:
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.rect.centerx - self.player.rect.centerx) < 350 or \
-                abs(guard.rect.centery - self.player.rect.centery) < 350:
+            if abs(guard.rect.centerx - self.player.rect.centerx) < 500 or \
+                abs(guard.rect.centery - self.player.rect.centery) < 500:
                 guard.update(self.map)
 
         # Mettre a jour la boussole
