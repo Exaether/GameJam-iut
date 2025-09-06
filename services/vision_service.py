@@ -190,7 +190,8 @@ class VisionService:
     def __generate_points_cone(self, center: Tuple[int, int], base_angle: float, fov_deg: int):
         cx, cy = center
         half_angle = math.radians(fov_deg / 2)
-        n = max(8, min(15, fov_deg // 4))
+        # Détermine le nombre de rayons en fonction de l'angle de vision
+        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, max(20, int(self.vision_angle_degree * 0.5))))
         step = (2 * half_angle) / (n - 1)
         points = [(cx, cy)]
         for i in range(n):
@@ -201,7 +202,8 @@ class VisionService:
         return points
 
     def __generate_angles_cone(self, base_angle: float, half_angle_rad: float):
-        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, int(self.vision_angle_degree)))
+        # Détermine le nombre de rayons en fonction de l'angle de vision
+        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, max(20, int(self.vision_angle_degree * 0.5))))
         step = (2 * half_angle_rad) / (n - 1) if n > 1 else 0
         angles = []
         for i in range(n):
