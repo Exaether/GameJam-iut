@@ -2,7 +2,7 @@ import math
 
 import pygame
 import os
-from entities.vision_service import VisionService
+from services.vision_service import VisionService
 
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16

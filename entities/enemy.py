@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 from core.settings import Settings
-from entities.vision_service import VisionService
+from services.vision_service import VisionService
 
 class Enemy(pygame.sprite.Sprite):
     SPRITE_SIZE = 24
