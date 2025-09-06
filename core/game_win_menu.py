@@ -1,12 +1,10 @@
-import pygame
-
 from services import Resources
-from .medieval_text import MedievalText
-from .medieval_button import MedievalButton
-from .medieval_panel import MedievalPanel
+from components.medieval_text import MedievalText
+from components.medieval_button import MedievalButton
+from components.medieval_panel import MedievalPanel
 
 
-class GameWinScreen:
+class GameWinMenu:
     TAVERN_BACKGROUND = "#2F1B14"
 
     def __init__(self, screen_width: int, screen_height: int, final_score: int,
@@ -41,7 +39,7 @@ class GameWinScreen:
             MedievalText.ROYAL_GOLD
         )
 
-        encouragement_message = GameWinScreen.__get_encouragement_message(final_score)
+        encouragement_message = GameWinMenu.__get_encouragement_message(final_score)
         self.encouragement_message_text = MedievalText(
             screen_width // 2, 290,
             encouragement_message,

@@ -2,13 +2,14 @@ import pygame
 import sys
 import os
 
-from .menu import Menu
+from .game_lose_menu import GameLoseMenu
+from .game_win_menu import GameWinMenu
+from .main_menu import MainMenu
 from .settings import Settings
 from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
-from components import GameLoseScreen, GameWinScreen
-from components.credits import Credits
+from .credits import Credits
 from .intro_game import IntroGame
 
 class Game:
@@ -25,7 +26,7 @@ class Game:
 
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
-        self.menu = Menu(self.settings, self)
+        self.menu = MainMenu(self.settings, self)
 
         self.playing = Playing(self, self.event_controller)
         self.intro_scene = None
@@ -71,7 +72,7 @@ class Game:
 
     def trigger_game_lose(self):
         """Déclenche la défaite du jeu"""
-        self.game_lose_screen = GameLoseScreen(
+        self.game_lose_screen = GameLoseMenu(
             self.settings.MENU_SCREEN_WIDTH,
             self.settings.MENU_SCREEN_HEIGHT,
             self.retry_game,
@@ -86,7 +87,7 @@ class Game:
         """Déclenche la victoire du jeu"""
         final_score = self.playing.player.items_collected
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.game_win_screen = GameWinScreen(
+        self.game_win_screen = GameWinMenu(
             self.settings.MENU_SCREEN_WIDTH,
             self.settings.MENU_SCREEN_HEIGHT,
             final_score,
@@ -105,7 +106,6 @@ class Game:
         while self.running:
             events = pygame.event.get()
             dt = self.clock.tick(self.settings.FPS) / 1000
-            print(1/dt)
 
             for event in events:
                 if event.type == pygame.QUIT:

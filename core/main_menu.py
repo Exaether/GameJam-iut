@@ -1,12 +1,12 @@
 from components import MedievalPanel
 from components import MedievalText
 from components import MedievalButton
-from components import MenuComponent
+from components import Menu
 from components.animated_image import AnimatedImage
 from services import Resources
 
 
-class Menu:
+class MainMenu:
     BACKGROUND_COLOR = "#2F1B14"
 
     def __init__(self, settings, game):
@@ -101,8 +101,6 @@ class Menu:
             self.resources.tutorial_frame_14,
             self.resources.tutorial_frame_15
         ])
-
-        # Texte "ou"
         self.tutorial_text_or = MedievalText(
             self.settings.MENU_SCREEN_WIDTH // 2 + 150,
             415,
@@ -112,14 +110,14 @@ class Menu:
         )
 
         # Créer le menu avec le composant générique
-        self.menu_component = MenuComponent(
+        self.menu_component = Menu(
+            self.BACKGROUND_COLOR,
             self.panel,
             [self.game_text, self.tutorial_text_or],
             [self.button_play, self.button_credits, self.button_exit],
             self.tutorial,
             self.settings.MENU_SCREEN_WIDTH // 2 + 150,
-            450,
-            self.BACKGROUND_COLOR
+            450
         )
 
     def update(self):
