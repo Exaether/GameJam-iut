@@ -6,7 +6,6 @@ from components.animated_image import AnimatedImage
 from services import Resources
 
 
-
 class Menu:
     BACKGROUND_COLOR = "#2F1B14"
 
@@ -18,14 +17,14 @@ class Menu:
         # Panneau
         self.panel = MedievalPanel(
             self.resources.wood_panel_image,
-            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            self.settings.MENU_SCREEN_WIDTH // 2,
             self.settings.MENU_SCREEN_HEIGHT // 2
         )
 
         # Titre du jeu
         self.game_text = MedievalText(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
-            200,
+            self.settings.MENU_SCREEN_WIDTH // 2,
+            175,
             self.settings.GAME_TITLE,
             self.resources.title_font,
             self.resources.wood_color,
@@ -39,7 +38,7 @@ class Menu:
             self.resources.wood_color
         )
         self.button_play = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             350, 0, 0,
             self.text_play,
             None,
@@ -51,12 +50,12 @@ class Menu:
 
         # Bouton crédits
         self.text_credits = MedievalText(
-            0,0, "Crédits",
+            0, 0, "Crédits",
             self.resources.button_font,
             self.resources.wood_color
         )
         self.button_credits = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             450, 0, 0,
             self.text_credits,
             None,
@@ -73,7 +72,7 @@ class Menu:
             MedievalText.CRIMSON_RED
         )
         self.button_exit = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             550, 0, 0,
             self.text_exit,
             None,
@@ -103,14 +102,23 @@ class Menu:
             self.resources.tutorial_frame_15
         ])
 
+        # Texte "ou"
+        self.tutorial_text_or = MedievalText(
+            self.settings.MENU_SCREEN_WIDTH // 2 + 150,
+            415,
+            "OU",
+            self.resources.button_font,
+            self.resources.wood_color
+        )
+
         # Créer le menu avec le composant générique
         self.menu_component = MenuComponent(
             self.panel,
-            self.game_text,
-            [self.button_play, self.button_credits ,self.button_exit],
+            [self.game_text, self.tutorial_text_or],
+            [self.button_play, self.button_credits, self.button_exit],
             self.tutorial,
-            self.settings.MENU_SCREEN_WIDTH // 2 + 350,
-            self.settings.MENU_SCREEN_HEIGHT // 2 + self.settings.MENU_SCREEN_HEIGHT // 4,
+            self.settings.MENU_SCREEN_WIDTH // 2 + 150,
+            450,
             self.BACKGROUND_COLOR
         )
 
