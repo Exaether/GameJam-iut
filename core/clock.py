@@ -79,15 +79,15 @@ class Clock:
 
     def draw(self, surface):
         if self.current_hour >= self.START_HOUR or self.current_hour < self.WARNING_TIME_START:
-            color = (255, 255, 255)
+            color = self.DAY_TIME_COLOR
         elif self.WARNING_TIME_START <= self.current_hour < self.BIG_WARNING_TIME_START:
-            color = (255, 255, 0)
+            color = self.WARNING_TIME_COLOR
         elif self.BIG_WARNING_TIME_START <= self.current_hour < self.DAY_TIME_START:
-            color = (255, 165, 0)
+            color = self.BIG_WARNING_TIME_COLOR
         elif self.DAY_TIME_START <= self.current_hour < self.START_HOUR:
-            color = (255, 0, 0)
+            color = self.NIGHT_TIME_COLOR
         else:
-            color = (255, 255, 255) 
+            color = self.DAY_TIME_COLOR
         time_str = f"{self.current_hour:02d}:{self.current_minute:02d}"
         text_surface = self.font.render(time_str, True, color)
         text_rect = text_surface.get_rect()
