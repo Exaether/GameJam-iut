@@ -31,7 +31,7 @@ class Menu:
 
         # Bouton jouer
         self.text_play = MedievalText(
-            0, 0, "VOLER !",
+            0, 0, "Jouer",
             self.resources.button_font,
             self.resources.wood_color
         )
@@ -47,7 +47,7 @@ class Menu:
 
         # Bouton quitter
         self.text_exit = MedievalText(
-            0, 0, "FUIR",
+            0, 0, "Quiter",
             self.resources.button_font,
             MedievalText.CRIMSON_RED
         )

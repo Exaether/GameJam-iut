@@ -6,10 +6,10 @@ class ExitDoor(pygame.sprite.Sprite):
         super().__init__()
         self.x = 2522
         self.y = 150
-        self.rect = pygame.Rect(self.x, self.y, 48, 24)
+        self.rect = pygame.Rect(self.x, self.y, 48, 36)
 
     def draw(self, surface, camera):
-        rect = pygame.Rect(self.rect.left + camera[0], self.rect.top + camera[1], 48, 24)
+        rect = pygame.Rect(self.rect.left + camera[0], self.rect.top + camera[1], 48, 36)
 
         # Surface temporaire avec canal alpha
         temp_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)

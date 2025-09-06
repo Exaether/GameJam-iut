@@ -27,9 +27,9 @@ class GameWinScreen:
         # Titre principal en bronze
         self.title = MedievalText(
             screen_width // 2, 140,
-            "Vous vous etes echappes !",
+            "Vous avez fui !",
             self.resources.title_font,
-            MedievalText.FOREST_GREEN,
+            MedievalText.ROYAL_BLUE,
             shadow_offset=4
         )
 
@@ -50,7 +50,7 @@ class GameWinScreen:
         )
 
         retry_text = MedievalText(
-            screen_width // 2, 370, "NOUVELLE QUETE",
+            screen_width // 2, 370, "Rejouer",
             self.resources.button_font, self.resources.gold_color
         )
         self.retry_button = MedievalButton(
@@ -64,7 +64,7 @@ class GameWinScreen:
         )
 
         menu_text = MedievalText(
-            screen_width // 2, 465, "TAVERNE",
+            screen_width // 2, 465, "Retour Menu",
             self.resources.button_font, self.resources.gold_color
         )
         self.menu_button = MedievalButton(

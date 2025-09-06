@@ -32,7 +32,7 @@ class GameLoseScreen:
         )
 
         retry_text = MedievalText(
-            self.screen_width // 2, 370, "NOUVELLE QUETE",
+            self.screen_width // 2, 370, "Rejouer",
             self.resources.button_font, self.resources.silver_color
         )
         self.retry_button = MedievalButton(
@@ -46,7 +46,7 @@ class GameLoseScreen:
         )
 
         menu_text = MedievalText(
-            screen_width // 2, 465, "TAVERNE",
+            screen_width // 2, 465, "Retour Menu",
             self.resources.button_font, self.resources.silver_color
         )
         self.menu_button = MedievalButton(
