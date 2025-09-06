@@ -9,7 +9,7 @@ from entities.enemy import Enemy
 class Clock:
     START_HOUR = 22
     START_MINUTE = 0
-    SECONDS_PER_GAME_MINUTE = 0.01
+    SECONDS_PER_GAME_MINUTE = 1
     DAY_TIME_START = 7
     WARNING_TIME_START = 5
     BIG_WARNING_TIME_START = 6
