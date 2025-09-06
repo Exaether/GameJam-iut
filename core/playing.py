@@ -117,8 +117,8 @@ class Playing:
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.x - self.player.rect.centerx) < self.settings.GAME_SCREEN_WIDTH / 2 and \
-                abs(guard.y - self.player.rect.centery) < self.settings.GAME_SCREEN_HEIGHT / 2:
+            if abs(guard.x - self.player.rect.centerx) < (self.settings.GAME_SCREEN_WIDTH / 2 + 100) and\
+                abs(guard.y - self.player.rect.centery) < (self.settings.GAME_SCREEN_HEIGHT / 2 + 100):
                 if self.map.layer == 1:
                     if guard.is_player_detected(self.player, self.game.clock):
                         self.game.trigger_game_lose()
