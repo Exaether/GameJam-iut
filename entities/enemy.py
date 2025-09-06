@@ -182,6 +182,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.last_detect_sound_time = pygame.time.get_ticks()
         else:
             self.alertness = 0
+            self.guard_speed = self.GUARD_DEFAULT_SPEED
         return self.alertness >= self.DETECTION_TIME_MS
     
     """Annule un mouvement (souvent utilisé suite à un contact sur une collision)"""
