@@ -1,6 +1,6 @@
 import pygame
 
-from services import Resources
+from services.resources import Resources
 from components.medieval_text import MedievalText
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel

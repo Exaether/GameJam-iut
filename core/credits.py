@@ -1,5 +1,5 @@
 import pygame
-from services import Resources
+from services.resources import Resources
 
 
 class Credits:
