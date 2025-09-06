@@ -15,9 +15,9 @@ class AnimatedImage:
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_delay:
-            if self.index == len(self.frames) - 1:
+            if self.index == 0:
                 if (now - self.last_update) > self.pause:
-                    self.index = 0
+                    self.index = 1
                     self.last_update = now
             else:
                 self.index = (self.index + 1) % len(self.frames)
