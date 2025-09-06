@@ -1,5 +1,3 @@
-import math
-
 import pygame
 import os
 from services.vision_service import VisionService
@@ -14,6 +12,7 @@ class Player(pygame.sprite.Sprite):
     VISION_ANGLE = 90
     SPACEBAR_WIDTH = 32
     SPACEBAR_HEIGHT = 16
+    TRAPDOOR_ANIMATION_DURATION = 0.2
     
     DIRECTION_ROW = {
         "down": 0,
@@ -34,6 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.is_moving = False
         self.animation_frame = 0
         self.animation_timer = 0
+        self.is_traversing_trapdoor = False
+        self.trapdoor_animation_timer = 0
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
         self.prev_pos = self.rect.center
 
@@ -68,30 +69,35 @@ class Player(pygame.sprite.Sprite):
         sprite_surface = None
         if self.sprite_sheet is not None:
             sprite_surface = pygame.Surface((self.SPRITE_SIZE, self.SPRITE_SIZE), pygame.SRCALPHA)
-            sprite_surface.blit(self.sprite_sheet, (0, 0), self._get_sprite_rect(self.direction, self.animation_frame))
+            if self.is_traversing_trapdoor:
+                sprite_rect = self._get_sprite_rect("down", 6) # dernier sprite de la premiere col du sprite sheet (position baissé)
+            else:
+                sprite_rect = self._get_sprite_rect(self.direction, self.animation_frame)
+            sprite_surface.blit(self.sprite_sheet, (0, 0), sprite_rect)
         return sprite_surface
     
     def move(self, map, dx, dy, dt):
-        self.is_moving = True
+        if not self.is_traversing_trapdoor: # permet d'empecher les mouvements pendant la traversé de trap
+            self.is_moving = True
 
-        self.prev_pos = self.rect.center
-        self.rect.x += int(dx * self.speed * dt)
-        if pygame.sprite.collide_mask(self, map):
-            self.rect.x -= int(dx * self.speed * dt)
+            self.prev_pos = self.rect.center
+            self.rect.x += int(dx * self.speed * dt)
+            if pygame.sprite.collide_mask(self, map):
+                self.rect.x -= int(dx * self.speed * dt)
 
-        self.rect.y += int(dy * self.speed * dt)
-        if pygame.sprite.collide_mask(self, map):
-            self.rect.y -= int(dy * self.speed * dt)
+            self.rect.y += int(dy * self.speed * dt)
+            if pygame.sprite.collide_mask(self, map):
+                self.rect.y -= int(dy * self.speed * dt)
 
-        if dy < 0:
-            self.direction = "up"
-        elif dy > 0:
-            self.direction = "down"
-        
-        if dx < 0:
-            self.direction = "left"
-        elif dx > 0:
-            self.direction = "right"
+            if dy < 0:
+                self.direction = "up"
+            elif dy > 0:
+                self.direction = "down"
+            
+            if dx < 0:
+                self.direction = "left"
+            elif dx > 0:
+                self.direction = "right"
 
     def undo_move(self):
         self.rect.center = self.prev_pos
@@ -99,12 +105,21 @@ class Player(pygame.sprite.Sprite):
     def idle(self):
         self.is_moving = False
     
+    def animation_traverse_trapdoor(self):
+        self.is_traversing_trapdoor = True
+        self.trapdoor_animation_timer = 0
+
     def update(self, dt, dungeon_map=None):
+
         if self.is_moving:
             self.animation_timer += dt
             if self.animation_timer >= self.ANIMATION_SPEED:
                 self.animation_frame = (self.animation_frame + 1) % self.ANIMATION_FRAMES
                 self.animation_timer = 0
+        elif self.is_traversing_trapdoor:
+            self.trapdoor_animation_timer += dt
+            if self.trapdoor_animation_timer >= self.TRAPDOOR_ANIMATION_DURATION:
+                self.is_traversing_trapdoor = False
         else:
             self.animation_frame = 0
             self.animation_timer = 0

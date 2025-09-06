@@ -8,6 +8,7 @@ class EventController:
         self.player = None
         self.map = None
         self.exit_door = None
+        self.is_player_in_trapdoor_animation = False
     
     def set_player(self, player):
         self.player = player
@@ -44,6 +45,11 @@ class EventController:
     def handle_events(self, events, dt):
         current_state = self.game.state_manager.get_current_state()
         
+        if self.is_player_in_trapdoor_animation:
+            if not self.player.is_traversing_trapdoor:
+                self.map.switch_map()
+                self.is_player_in_trapdoor_animation = False
+
         for event in events:
             if event.type == pygame.KEYDOWN:
                 self._handle_keydown(event.key, current_state)
@@ -71,7 +77,9 @@ class EventController:
     def _handle_keydown(self, key, state):
         if state == GameState.PLAYING:
             if self.map.trapdoor_collide(self.player) and key == pygame.K_SPACE:
-                self.map.switch_map()
+                if not self.is_player_in_trapdoor_animation:
+                    self.player.animation_traverse_trapdoor()
+                    self.is_player_in_trapdoor_animation = True
             elif self.exit_door.rect.colliderect(self.player.rect) and key == pygame.K_SPACE:
                 self.game.trigger_game_win()
 
