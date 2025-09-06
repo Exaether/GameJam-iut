@@ -8,7 +8,6 @@ from components.menu import Menu
 
 
 class MainMenu:
-    BACKGROUND_COLOR = "#2F1B14"
 
     def __init__(self, settings, game):
         self.settings = settings
@@ -28,7 +27,7 @@ class MainMenu:
             175,
             self.settings.GAME_TITLE,
             self.resources.title_font,
-            self.resources.wood_color,
+            Resources.WOOD_COLOR,
             shadow_offset=4
         )
 
@@ -36,7 +35,7 @@ class MainMenu:
         self.text_play = MedievalText(
             0, 0, "Jouer",
             self.resources.button_font,
-            self.resources.wood_color
+            Resources.WOOD_COLOR
         )
         self.button_play = MedievalButton(
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
@@ -53,7 +52,7 @@ class MainMenu:
         self.text_credits = MedievalText(
             0, 0, "Crédits",
             self.resources.button_font,
-            self.resources.wood_color
+            Resources.WOOD_COLOR
         )
         self.button_credits = MedievalButton(
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
@@ -107,12 +106,12 @@ class MainMenu:
             415,
             "OU",
             self.resources.button_font,
-            self.resources.wood_color
+            Resources.WOOD_COLOR
         )
 
         # Créer le menu avec le composant générique
         self.menu_component = Menu(
-            self.BACKGROUND_COLOR,
+            Resources.MENU_BACKGROUND_COLOR,
             self.panel,
             [self.game_text, self.tutorial_text_or],
             [self.button_play, self.button_credits, self.button_exit],

@@ -6,7 +6,6 @@ from components.medieval_text import MedievalText
 
 
 class GameWinMenu:
-    TAVERN_BACKGROUND = "#2F1B14"
 
     def __init__(self, screen_width: int, screen_height: int, final_score: int,
                  on_retry_action=None, on_menu_action=None):
@@ -51,7 +50,7 @@ class GameWinMenu:
 
         retry_text = MedievalText(
             0, 0, "Rejouer",
-            self.resources.button_font, self.resources.gold_color
+            self.resources.button_font, Resources.GOLD_COLOR
         )
         self.retry_button = MedievalButton(
             screen_width // 2, 400, 0, 0,
@@ -65,7 +64,7 @@ class GameWinMenu:
 
         menu_text = MedievalText(
             0, 0, "Retour Menu",
-            self.resources.button_font, self.resources.gold_color
+            self.resources.button_font, Resources.GOLD_COLOR
         )
         self.menu_button = MedievalButton(
             screen_width // 2, 495, 0, 0,
@@ -92,7 +91,7 @@ class GameWinMenu:
             return "Magnifique butin ! Le roi tremble !"
 
     def draw(self, surface):
-        surface.fill(self.TAVERN_BACKGROUND)
+        surface.fill(Resources.MENU_BACKGROUND_COLOR)
 
         self.panel.draw(surface)
         self.title.draw(surface)

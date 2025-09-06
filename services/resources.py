@@ -7,6 +7,12 @@ from components.image import Image
 class Resources:
     __instance = None
 
+    # Couleurs
+    MENU_BACKGROUND_COLOR = "#2F1B14"
+    WOOD_COLOR = "#ffc97f"
+    SILVER_COLOR = "#e6e6f2"
+    GOLD_COLOR = "#ffff73"
+
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
@@ -39,11 +45,6 @@ class Resources:
         self.__subtitle_font = None
         self.__description_font = None
         self.__buttons_font = None
-
-        # Couleurs
-        self.__wood_color = None
-        self.__silver_color = None
-        self.__gold_color = None
 
         # Effets sonores
         self.__pickup_sound = None
@@ -209,26 +210,6 @@ class Resources:
         if self.__buttons_font is None:
             self.__buttons_font = Font("./assets/font/VPPixel-Standard.ttf", 35)
         return self.__buttons_font
-
-    # ========================= SECTION COULEURS =========================
-
-    @property
-    def wood_color(self):
-        if self.__wood_color is None:
-            self.__wood_color = "#ffc97f"
-        return self.__wood_color
-
-    @property
-    def silver_color(self):
-        if self.__silver_color is None:
-            self.__silver_color = "#e6e6f2"
-        return self.__silver_color
-
-    @property
-    def gold_color(self):
-        if self.__gold_color is None:
-            self.__gold_color = "#ffff73"
-        return self.__gold_color
 
     # ========================= SECTION EFFETS SONORES =========================
 
