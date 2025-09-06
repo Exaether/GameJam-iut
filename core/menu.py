@@ -44,7 +44,7 @@ class Menu:
             self.text_play,
             None,
             None,
-            self.game.play,
+            self.game.intro,
             self.resources.wood_button_image_normal,
             self.resources.wood_button_image_pressed
         )
