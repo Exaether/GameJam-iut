@@ -1,8 +1,8 @@
 import pygame
 from services import Resources
 
-class Credits:
 
+class Credits:
     # Couleurs
     BLANC = (255, 255, 255)
     NOIR = (0, 0, 0)
@@ -20,24 +20,27 @@ class Credits:
         self.credits = [
             ("Le Château sans Portes", self.resources.game_title_font),
             ("", self.resources.description_font),
-            ("Jeu développé par :",self.resources.title_font),
+            ("Jeu développé par :", self.resources.title_font),
             ("   Kylian Metayer (chef de projet & développement) ", self.resources.subtitle_font),
             ("   Lukas Faure (Architecte développement)", self.resources.subtitle_font),
-            ("   Leo Ducruet (Animation & developpement)", self.resources.subtitle_font),
-            ("   Joan Le Fol (Interact Developpement)", self.resources.subtitle_font),
+            ("   Léo Ducruet (Animation & développement)", self.resources.subtitle_font),
+            ("   Joan Le Fol (Développement d'interactions)", self.resources.subtitle_font),
             ("   Valentin Wouters (UI/UX designer & développement)", self.resources.subtitle_font),
             ("", self.resources.description_font),
-            ("Graphismes : ",self.resources.title_font),
-            ("   Pixel-Boy - Ninja-adventure-asset-pack (Itch.io)", self.resources.subtitle_font),
-            ("   LimeZu - Moderne Interior (Itch.io)", self.resources.subtitle_font),
-            ("   Pixelfrog - Kings and Pig (Itch.io)", self.resources.subtitle_font),
-            ("   Brackeysgames - brackeys-platformer-bundle (Itch.io)", self.resources.subtitle_font),
+            ("Graphismes : ", self.resources.title_font),
+            ("   Pixel-Boy et AAA - Ninja Adventure Asset Pack (Itch.io)", self.resources.subtitle_font),
+            ("   LimeZu - Modern Interiors (Itch.io)", self.resources.subtitle_font),
+            ("   Pixel Frog - Kings and Pig (Itch.io)", self.resources.subtitle_font),
+            ("   Brackeys - Brackeys' Platformer Bundle (Itch.io)", self.resources.subtitle_font),
+            ("   Oink55 - Fantasy UI (Itch.io)", self.resources.subtitle_font),
             ("", self.resources.description_font),
-            ("Musique : ",self.resources.title_font),
+            ("Musique : ", self.resources.title_font),
             ("   Kevin MacLeod - incompetech.com (Creative Commons)", self.resources.subtitle_font),
-            ("   Eric Fredricksen - sfxr.me/", self.resources.subtitle_font),
+            ("   RUSTED MUSIC STUDIO Music & Assets - 10 spooky 8bit tracks (Itch.io)",
+             self.resources.subtitle_font),
+            ("   Eric Fredricksen - sfxr.me", self.resources.subtitle_font),
             ("", self.resources.description_font),
-            ("Merci d'avoir joué !",self.resources.title_font),
+            ("Merci d'avoir joué !", self.resources.title_font),
         ]
         self.credit_surfaces = [font.render(text, True, self.BLANC) for (text, font) in self.credits]
         # Position de départ en Y (en dessous de l'écran)
