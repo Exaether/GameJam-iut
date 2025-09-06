@@ -64,13 +64,8 @@ class Clock:
         current_time = self.current_hour + self.current_minute/60
         floating_point = current_time % 1
 
-        # TODO: Bouger aussi la vitesse du garde hors zone du joueur ?
         if (math.isclose(floating_point, 0) or math.isclose(floating_point, 0.5)) and current_time in self.HOURS_STAT:
-            Player.VISION_RANGE = self.HOURS_STAT[current_time]["player_vision"]
-            Enemy.VISION_RANGE = self.HOURS_STAT[current_time]["enemy_vision_range"]
-            Enemy.VISION_ANGLE = self.HOURS_STAT[current_time]["enemy_vision_fov"]
             Enemy.GUARD_DEFAULT_SPEED = self.HOURS_STAT[current_time]["enemy_speed"]
-
             player.vision_service.vision_range = self.HOURS_STAT[current_time]["player_vision"]
             for guard in guards_list:
                 guard.vision_service.vision_range = self.HOURS_STAT[current_time]["enemy_vision_range"]

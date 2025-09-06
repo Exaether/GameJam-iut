@@ -26,6 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         self.__init_alertness()
         self.__init_collision()
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
+        self.speed_multiplier = 1.0
 
     def __init_sprite(self, pattern_type="square", direction = "right"):
         sprite_path = os.path.join("assets", "entities", "enemy_sprite.png")
@@ -148,6 +149,11 @@ class Enemy(pygame.sprite.Sprite):
             self.animation_tick = self.ANIMATION_TICK - 1
         self.__advance_animation()
 
+    def apply_vision_scale(self, range_multiplier = 1.0, angle_multiplier = 1.0):
+        self.vision_service.vision_range = int(self.vision_service.vision_range * range_multiplier)
+        self.vision_service.vision_angle_degree = int(self.vision_service.vision_angle_degree * angle_multiplier)
+        self.vision_service.clear_cache()
+
     """Informe si le garde voit le joueur """
     def is_player_in_vision(self, player):
         return self.vision_service.is_target_in_vision(player)
@@ -175,13 +181,15 @@ class Enemy(pygame.sprite.Sprite):
     def is_player_detected(self, player, clock):
         settings = Settings()
         if self.is_player_in_vision(player):
-            self.guard_speed = self.GUARD_SPEED_ON_DETECT
+            self.guard_speed = self.GUARD_SPEED_ON_DETECT * self.speed_multiplier
             self.alertness += clock.tick(settings.FPS)
             if pygame.time.get_ticks() - self.last_detect_sound_time >= 1000:  # 1 seconde
                 Resources().detect_sound.play()
                 self.last_detect_sound_time = pygame.time.get_ticks()
         else:
             self.alertness = 0
+
+            self.guard_speed = self.GUARD_DEFAULT_SPEED * self.speed_multiplier
         return self.alertness >= self.DETECTION_TIME_MS
     
     """Annule un mouvement (souvent utilisé suite à un contact sur une collision)"""

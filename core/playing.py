@@ -11,6 +11,7 @@ from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
 from entities.exitDoor import ExitDoor
 from core.clock import Clock
+from services.suspicion_service import SuspicionService
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
     
@@ -28,11 +29,14 @@ class Playing:
         event_controller.set_map(self.map)
         event_controller.set_exit_door(self.exit_door)
 
+        self.suspicion_service = SuspicionService(self.player)
+
         self.guards_list = EnemyGroup()
         self.guard_generator()
 
         self.item_list = pygame.sprite.Group()
         self.items_generator()
+        self.suspicion_service.set_total_items_count(self.nb_items_max)
 
         # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
         self.score_font = pygame.font.Font(None, 36)
@@ -40,6 +44,9 @@ class Playing:
         self.compass = Compass(self.settings.GAME_SCREEN_WIDTH/2, self.settings.GAME_SCREEN_HEIGHT/2)
 
         self.clock = Clock(self.settings.GAME_SCREEN_WIDTH)
+
+        # Reset les paramètres du garde (pour annuler les changements de stat dû à l'horloge si activé lors de la partie précédente)
+        Enemy.GUARD_DEFAULT_SPEED = 1.8
 
     def guard_generator(self):
         with open(os.path.join("data", "guards.csv"), "r") as file:
@@ -98,6 +105,7 @@ class Playing:
                     self.player.items_collected += 1
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
                     self.ressource.pickup_sound.play()
+                    self.suspicion_service.verify_effect_suspicion_to_apply(self.guards_list)
 
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
@@ -111,8 +119,8 @@ class Playing:
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.rect.centerx - self.player.rect.centerx) < 350 or \
-                abs(guard.rect.centery - self.player.rect.centery) < 350:
+            if abs(guard.rect.centerx - self.player.rect.centerx) < 500 or \
+                abs(guard.rect.centery - self.player.rect.centery) < 500:
                 guard.update(self.map)
 
         # Mettre a jour la boussole
@@ -133,9 +141,6 @@ class Playing:
             for item in self.item_list.sprites():
                 item.draw(screen, camera)
             self.pickup_effects.draw(screen, camera)
-            # Boussole
-            if len(self.item_list) > 0:
-                self.compass.draw(screen)
 
         self.player.draw(screen, camera)
 
@@ -149,6 +154,13 @@ class Playing:
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         self.clock.draw(screen)
+        
+        if self.map.layer == 1:
+            # Boussole
+            if len(self.item_list) > 0:
+                self.compass.draw(screen)
+
+        self.suspicion_service.draw_suspicion(screen)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
