@@ -1,5 +1,5 @@
-import pygame
 from pygame.font import Font
+from pygame.mixer import Sound
 
 from components.image import Image
 
@@ -235,13 +235,13 @@ class Resources:
     @property
     def pickup_sound(self):
         if self.__pickup_sound is None:
-            self.__pickup_sound = pygame.mixer.Sound("assets/SFX/pickItems.wav")
+            self.__pickup_sound = Sound("assets/SFX/pickItems.wav")
         return self.__pickup_sound
 
     @property
     def detect_sound(self):
         if self.__detect_sound is None:
-            self.__detect_sound = pygame.mixer.Sound("assets/SFX/alert.wav")
+            self.__detect_sound = Sound("assets/SFX/alert.wav")
             # Réduction du volume à 50%
             self.__detect_sound.set_volume(0.5)
         return self.__detect_sound
@@ -249,13 +249,13 @@ class Resources:
     @property
     def pick_trap_door(self):
         if self.__pick_trap_door is None:
-            self.__pick_trap_door = pygame.mixer.Sound("assets/SFX/trapdoor.wav")
+            self.__pick_trap_door = Sound("assets/SFX/trapdoor.wav")
         return self.__pick_trap_door
 
     @property
     def defeat(self):
         if self.__defeat is None:
-            self.__defeat = pygame.mixer.Sound("assets/SFX/defeat.wav")
+            self.__defeat = Sound("assets/SFX/defeat.wav")
         return self.__defeat
 
     # ========================= SECTION TUTORIEL =========================

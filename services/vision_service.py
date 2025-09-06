@@ -1,15 +1,18 @@
-import math
 import pygame
+
+from math import pi, radians, cos, sin
 from typing import Dict, Tuple, Iterable, Optional
 from enum import Enum
+
 
 class VisionShape(Enum):
     CIRCLE = "circle"
     CONE = "cone"
 
+
 class VisionService:
     """Gestion du champ de vision des entités"""
-    #TODO: a voir si on peut seulement garder les verifs avec la nouvelle version qui utilise les LOS 
+    # TODO: a voir si on peut seulement garder les verifs avec la nouvelle version qui utilise les LOS
 
     DEFAULT_CIRCLE_RAYS = 72
     MIN_CONE_RAYS = 20
@@ -31,9 +34,9 @@ class VisionService:
 
         self.__direction_angles = {
             "right": 0.0,
-            "down": math.pi / 2,
-            "left": math.pi,
-            "up": -math.pi / 2,
+            "down": pi / 2,
+            "left": pi,
+            "up": -pi / 2,
         }
 
         self.__temp_display_surface: Optional[pygame.Surface] = None
@@ -179,7 +182,7 @@ class VisionService:
             angles = self.__generate_angles_circle()
         if shape == VisionShape.CONE:
             angle_base = self.__direction_to_angle(direction)
-            demi_angle = math.radians(self.vision_angle_degree / 2)
+            demi_angle = radians(self.vision_angle_degree / 2)
             angles = self.__generate_angles_cone(angle_base, demi_angle)
         return angles
 
@@ -189,14 +192,14 @@ class VisionService:
 
     def __generate_points_cone(self, center: Tuple[int, int], base_angle: float, fov_deg: int):
         cx, cy = center
-        half_angle = math.radians(fov_deg / 2)
+        half_angle = radians(fov_deg / 2)
         n = max(8, min(15, fov_deg // 4))
         step = (2 * half_angle) / (n - 1)
         points = [(cx, cy)]
         for i in range(n):
             angle = base_angle - half_angle + i * step
-            x = cx + self.vision_range * math.cos(angle)
-            y = cy + self.vision_range * math.sin(angle)
+            x = cx + self.vision_range * cos(angle)
+            y = cy + self.vision_range * sin(angle)
             points.append((x, y))
         return points
 
@@ -210,7 +213,7 @@ class VisionService:
 
     def __generate_angles_circle(self):
         n = self.DEFAULT_CIRCLE_RAYS
-        step = (2 * math.pi) / n
+        step = (2 * pi) / n
         angles = []
         for i in range(n + 1):
             angles.append(i * step)
@@ -229,7 +232,7 @@ class VisionService:
         pts = [(cxl, cyl)]
         for a in angles:
             d = self.__cast_ray((cxw, cyw), a, dungeon_map)
-            pts.append((cxl + d * math.cos(a), cyl + d * math.sin(a)))
+            pts.append((cxl + d * cos(a), cyl + d * sin(a)))
         return pts
 
     def __cast_ray(self, start: Tuple[int, int], angle: float, dungeon_map):
@@ -238,7 +241,7 @@ class VisionService:
 
         if self.__is_valid_map(dungeon_map):
             start_x, start_y = start
-            direction_x, direction_y = math.cos(angle), math.sin(angle)
+            direction_x, direction_y = cos(angle), sin(angle)
 
             step_size = 4
             current_distance = 0.0

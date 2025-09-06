@@ -1,6 +1,6 @@
 import pygame
-from entities.exitDoor import ExitDoor
-from .state_manager import GameState
+
+from core.state_manager import GameState
 
 class EventController:
     def __init__(self, game):

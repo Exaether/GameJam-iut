@@ -1,23 +1,24 @@
 import pygame
-import sys
-import os
 
-from .game_lose_menu import GameLoseMenu
-from .game_win_menu import GameWinMenu
-from .main_menu import MainMenu
-from .settings import Settings
-from .state_manager import StateManager, GameState
-from .event_controller import EventController
-from .playing import Playing
-from .credits import Credits
-from .intro_game import IntroGame
+from sys import exit
+from os import environ
+
+from core.game_lose_menu import GameLoseMenu
+from core.game_win_menu import GameWinMenu
+from core.main_menu import MainMenu
+from core.settings import Settings
+from core.state_manager import StateManager, GameState
+from core.event_controller import EventController
+from core.playing import Playing
+from core.credits import Credits
+from core.intro_game import IntroGame
 
 class Game:
     def __init__(self):
         pygame.init()
 
         # Centre la fênetre de jeu sur le bureau
-        os.environ['SDL_VIDEO_CENTERED'] = "true"
+        environ['SDL_VIDEO_CENTERED'] = "true"
 
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
@@ -159,4 +160,4 @@ class Game:
             pygame.display.flip()
 
         pygame.quit()
-        sys.exit()
+        exit()

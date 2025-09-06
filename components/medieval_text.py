@@ -1,4 +1,4 @@
-import pygame
+from pygame.font import Font
 
 
 class MedievalText:
@@ -13,7 +13,7 @@ class MedievalText:
     NOBLE_BRONZE = "#8B4513"
 
     def __init__(self, center_x: int, center_y: int, text: str,
-                 font: pygame.font.Font, color: str = None, shadow_offset: int = 2):
+                 font: Font, color: str = None, shadow_offset: int = 2):
         self.center_x = center_x
         self.center_y = center_y
         self.text = text

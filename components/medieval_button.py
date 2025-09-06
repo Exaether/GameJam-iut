@@ -1,7 +1,8 @@
-import pygame
+from pygame import Rect
+from pygame.draw import rect
 
-from .image import Image
-from .medieval_text import MedievalText
+from components.image import Image
+from components.medieval_text import MedievalText
 
 
 class MedievalButton:
@@ -32,7 +33,7 @@ class MedievalButton:
         if base_image:
             self.rect = self.base_image.image_surf.get_rect(center=(self.center_x, self.center_y))
         else:
-            self.rect = pygame.Rect((0, 0, self.width, self.height))
+            self.rect = Rect((0, 0, self.width, self.height))
             self.rect.center = (self.center_x, self.center_y)
 
         self.text.center_x = self.center_x
@@ -52,18 +53,18 @@ class MedievalButton:
             color = self.hovering_color if self.is_hovering else self.base_color
 
             # Dessin du bouton principal
-            pygame.draw.rect(surface, color, self.rect)
+            rect(surface, color, self.rect)
 
             # Bordure
-            pygame.draw.rect(surface, self.ROYAL_GOLD, self.rect, self.BORDER_WIDTH)
+            rect(surface, self.ROYAL_GOLD, self.rect, self.BORDER_WIDTH)
 
             # Bordure intérieure au hover
             if self.is_hovering:
-                inner_rect = pygame.Rect(
+                inner_rect = Rect(
                     self.rect.x + 3, self.rect.y + 3,
                     self.rect.width - 6, self.rect.height - 6
                 )
-                pygame.draw.rect(surface, self.DARK_GOLD, inner_rect, 1)
+                rect(surface, self.DARK_GOLD, inner_rect, 1)
         else:
             # Image selon l'état (hover ou non) et si une image d'hover est définie
             if self.hovering_image and self.is_hovering:

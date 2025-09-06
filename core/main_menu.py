@@ -1,9 +1,10 @@
+from services.resources import Resources
+
+from components.animated_image import AnimatedImage
+from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
-from components.medieval_button import MedievalButton
 from components.menu import Menu
-from components.animated_image import AnimatedImage
-from services.resources import Resources
 
 
 class MainMenu:

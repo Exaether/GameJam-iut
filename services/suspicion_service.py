@@ -1,6 +1,7 @@
-import pygame
-from typing import List, Callable, Dict, Any
-from entities.enemy import Enemy
+from pygame.font import Font
+
+from typing import List, Dict, Any
+
 
 class SuspicionService:
     """Gestion de la suspicion des gardes et des efffets associés
@@ -20,10 +21,10 @@ class SuspicionService:
     def __init__(self, player):
         self.player = player
 
-        # suspicion 100% (1.0) = tous les items collectés
+        # suspicion 100% (1.0) = tous les items collectés
         self.suspicion = 0.0
         self.total_items = 0
-        self.hud_font = pygame.font.Font(None, 28)
+        self.hud_font = Font(None, 28)
 
         self._thresholds: List[Dict[str, Any]] = [
             {
@@ -54,7 +55,7 @@ class SuspicionService:
 
     def __recalculate_suspicion_percentage(self):
         if self.total_items > 0:
-            self.suspicion = (self.player.items_collected / self.total_items) * 100.0 
+            self.suspicion = (self.player.items_collected / self.total_items) * 100.0
         else:
             self.suspicion = 0.0
 

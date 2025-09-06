@@ -1,4 +1,5 @@
-import pygame
+from pygame.image import load
+from pygame.transform import scale
 
 
 class Image:
@@ -7,7 +8,7 @@ class Image:
         self.width = width
         self.height = height
 
-        self.image_surf = pygame.image.load(path)
+        self.image_surf = load(path)
         orig_width, orig_height = self.image_surf.get_size()
 
         if self.width:
@@ -18,7 +19,7 @@ class Image:
             self.width = int(self.height * ratio)
 
         if self.width and self.height:
-            self.image_surf = pygame.transform.scale(self.image_surf, (self.width, self.height))
+            self.image_surf = scale(self.image_surf, (self.width, self.height))
         else:
             self.width = orig_width
             self.height = orig_height

@@ -1,4 +1,4 @@
-import pygame
+from pygame.time import get_ticks
 
 from components.image import Image
 
@@ -10,10 +10,10 @@ class AnimatedImage:
         self.frame_delay = frame_delay
         self.pause = pause
         self.index = 0
-        self.last_update = pygame.time.get_ticks()
+        self.last_update = get_ticks()
 
     def update(self):
-        now = pygame.time.get_ticks()
+        now = get_ticks()
         if now - self.last_update > self.frame_delay:
             if self.index == 0:
                 if (now - self.last_update) > self.pause:

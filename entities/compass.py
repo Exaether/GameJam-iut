@@ -1,6 +1,7 @@
+import pygame
+
 import math
 
-import pygame
 
 class Compass(pygame.sprite.Sprite):
     def __init__(self, x, y):

@@ -1,12 +1,13 @@
-import pygame
+from pygame.font import Font
+
 
 class ItemPickupEffect:
     """Classe pour gérer les effets visuels de la collecte d'items"""
-    
+
     def __init__(self):
-        self.pickup_font = pygame.font.Font(None, 24)
+        self.pickup_font = Font(None, 24)
         self.animations = []
-    
+
     def add_pickup_animation(self, x, y):
         """Ajoute une animation '+1' à la position donnée"""
         self.animations.append({
@@ -15,7 +16,7 @@ class ItemPickupEffect:
             'timer': 1.0,
             'original_y': y  # Position Y initiale pour l'effet de montée (+1)
         })
-    
+
     def update(self, dt):
         remaining_animations = []
         for anim in self.animations:
@@ -25,7 +26,7 @@ class ItemPickupEffect:
                 anim['y'] -= 30 * dt
                 remaining_animations.append(anim)
         self.animations = remaining_animations
-    
+
     def draw(self, screen, camera):
         """Dessine toutes les animations '+1' en cours"""
         for anim in self.animations:

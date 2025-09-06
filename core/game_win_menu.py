@@ -1,7 +1,8 @@
 from services.resources import Resources
-from components.medieval_text import MedievalText
+
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
+from components.medieval_text import MedievalText
 
 
 class GameWinMenu:

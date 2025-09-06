@@ -1,4 +1,5 @@
 import pygame
+
 from entities.player import Player
 
 class IntroGame:

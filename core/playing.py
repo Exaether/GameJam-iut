@@ -1,7 +1,11 @@
-import pygame
-import os
+from pygame.sprite import Group, spritecollide
+from pygame.font import Font
 
-from services.resources import Resources 
+from os.path import join
+
+from services.resources import Resources
+from services.suspicion_service import SuspicionService
+
 from entities.compass import Compass
 from entities.dungeon import Dungeon
 from entities.player import Player
@@ -10,11 +14,13 @@ from entities.enemy import Enemy
 from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
 from entities.exitDoor import ExitDoor
+
 from core.clock import Clock
-from services.suspicion_service import SuspicionService
+
+
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
-    
+
     def __init__(self, game, event_controller):
         self.game = game
         self.screen = game.screen
@@ -34,14 +40,14 @@ class Playing:
         self.guards_list = EnemyGroup()
         self.guard_generator()
 
-        self.item_list = pygame.sprite.Group()
+        self.item_list = Group()
         self.items_generator()
         self.suspicion_service.set_total_items_count(self.nb_items_max)
 
         # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
-        self.score_font = pygame.font.Font(None, 36)
+        self.score_font = Font(None, 36)
         self.pickup_effects = ItemPickupEffect()
-        self.compass = Compass(self.settings.GAME_SCREEN_WIDTH/2, self.settings.GAME_SCREEN_HEIGHT/2)
+        self.compass = Compass(self.settings.GAME_SCREEN_WIDTH / 2, self.settings.GAME_SCREEN_HEIGHT / 2)
 
         self.clock = Clock(self.settings.GAME_SCREEN_WIDTH)
 
@@ -49,10 +55,10 @@ class Playing:
         Enemy.GUARD_DEFAULT_SPEED = 1.8
 
     def guard_generator(self):
-        with open(os.path.join("data", "guards.csv"), "r") as file:
+        with open(join("data", "guards.csv"), "r") as file:
             for line in file:
                 parts = line.strip().split(",")
-                
+
                 if len(parts) < 7:
                     continue  # Ignore les lignes invalides
 
@@ -72,11 +78,11 @@ class Playing:
                 self.guards_list.add(guard)
 
     def items_generator(self):
-        with open(os.path.join("data", "items.csv"), "r") as file:
+        with open(join("data", "items.csv"), "r") as file:
             nb_items = 0
             for line in file:
                 parts = line.strip().split(",")
-                
+
                 if len(parts) != 2:
                     continue  # Ignore les lignes mal formatées
 
@@ -95,10 +101,9 @@ class Playing:
         self.player.update(dt, self.map)
         self.clock.update(self.player, self.guards_list)
 
-
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
-            collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
+            collided_items = spritecollide(self.player, self.item_list, True)
             self.player.speed = self.player.SPEED_DEFAULT
             for item in collided_items:
                 if item.pickable:
@@ -112,12 +117,12 @@ class Playing:
             self.player.speed = self.player.SPEED_SUBTERRAN
 
         camera = (-self.player.rect.centerx + self.screen.get_rect().centerx,
-                    -self.player.rect.centery + self.screen.get_rect().centery)
+                  -self.player.rect.centery + self.screen.get_rect().centery)
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
             if abs(guard.x - self.player.rect.centerx) < self.settings.GAME_SCREEN_WIDTH / 2 and \
-                abs(guard.y - self.player.rect.centery) < self.settings.GAME_SCREEN_HEIGHT / 2:
+                    abs(guard.y - self.player.rect.centery) < self.settings.GAME_SCREEN_HEIGHT / 2:
                 guard.update(self.map)
                 if guard.is_player_detected(self.player, self.game.clock):
                     self.game.trigger_game_lose()
@@ -137,7 +142,7 @@ class Playing:
         if self.map.layer == 1:
             self.exit_door.draw(screen, camera)
             self.guards_list.draw(screen, camera, self.player)
-            #self.item_list.draw(screen)
+            # self.item_list.draw(screen)
             for item in self.item_list.sprites():
                 item.draw(screen, camera)
             self.pickup_effects.draw(screen, camera)
@@ -154,7 +159,7 @@ class Playing:
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         self.clock.draw(screen)
-        
+
         if self.map.layer == 1:
             # Boussole
             if len(self.item_list) > 0:
@@ -164,9 +169,9 @@ class Playing:
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
-            
+
     def _draw_debug_info(self, screen):
         """Affiche les informations de débogage à l'écran."""
-        font = pygame.font.Font(None, 24)
-        text = font.render(f"Position: {self.player.get_position()}", True, self.settings.WHITE)  
+        font = Font(None, 24)
+        text = font.render(f"Position: {self.player.get_position()}", True, self.settings.WHITE)
         screen.blit(text, (10, 10))

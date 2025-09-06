@@ -1,11 +1,11 @@
 import pygame
-from pygame.locals import *
-import os
-import random
-import math
+
+from os.path import join, dirname
+from random import randint
+from math import sin, pi
 
 # Dossier du script courant
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = dirname(__file__)
 
 PULSATION_DURATION = 0.2
 PAUSE_BETWEEN_PULSATIONS = 0.1
@@ -14,12 +14,14 @@ PULSATION_CYCLE = 2 * PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS + PAUSE_BETW
 PULSATION_AMPLITUDE_PERCENT = 0.2
 ORIGINAL_SCALE_PERCENT = 1.0
 
-"Item objectif du joueur"
+
 class Item(pygame.sprite.Sprite):
-    def __init__(self,x,y):
+    """Item objectif du joueur"""
+
+    def __init__(self, x, y):
         super().__init__()
-        img_number = random.randint(1, 12)
-        img_path = os.path.join("assets", "items", f"{img_number}.png")
+        img_number = randint(1, 12)
+        img_path = join("assets", "items", f"{img_number}.png")
 
         self.image = pygame.image.load(img_path).convert_alpha()
         self.pickable = True
@@ -37,23 +39,23 @@ class Item(pygame.sprite.Sprite):
 
         # Animation de deux pulsations rapides puis on marque une pause
         if 0 <= t_cycle < PULSATION_DURATION:
-            pulsation_scale = ORIGINAL_SCALE_PERCENT + PULSATION_AMPLITUDE_PERCENT * math.sin(math.pi * (t_cycle / PULSATION_DURATION))
+            pulsation_scale = ORIGINAL_SCALE_PERCENT + PULSATION_AMPLITUDE_PERCENT * sin(
+                pi * (t_cycle / PULSATION_DURATION))
         # pause entre les deux pulsations
-        elif PULSATION_DURATION <= t_cycle < PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS:   
+        elif PULSATION_DURATION <= t_cycle < PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS:
             pulsation_scale = ORIGINAL_SCALE_PERCENT
         # 2ème pulsation
         elif PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS <= t_cycle < 2 * PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS:
             t2 = t_cycle - (PULSATION_DURATION + PAUSE_BETWEEN_PULSATIONS)
-            pulsation_scale = ORIGINAL_SCALE_PERCENT + PULSATION_AMPLITUDE_PERCENT * math.sin(math.pi * (t2 / PULSATION_DURATION))
+            pulsation_scale = ORIGINAL_SCALE_PERCENT + PULSATION_AMPLITUDE_PERCENT * sin(pi * (t2 / PULSATION_DURATION))
         # pause entre deux cycles de pulsation
         else:
             pulsation_scale = ORIGINAL_SCALE_PERCENT
-        
-        return pulsation_scale
-        
-        
 
-    def draw_highlight(self, screen, screen_rect, color=(255, 255, 255, 180), thickness=3, pulsation_scale=ORIGINAL_SCALE_PERCENT):
+        return pulsation_scale
+
+    def draw_highlight(self, screen, screen_rect, color=(255, 255, 255, 180), thickness=3,
+                       pulsation_scale=ORIGINAL_SCALE_PERCENT):
         # screen_rect est déjà ajusté à la caméra
         highlight_rect = screen_rect.inflate(thickness * 2, thickness * 2)
 
@@ -66,7 +68,7 @@ class Item(pygame.sprite.Sprite):
 
         highlight_surface = pygame.Surface((highlight_rect.width, highlight_rect.height), pygame.SRCALPHA)
 
-        pygame.draw.rect(highlight_surface, color, highlight_surface.get_rect(), border_radius=100)  
+        pygame.draw.rect(highlight_surface, color, highlight_surface.get_rect(), border_radius=100)
 
         screen.blit(highlight_surface, highlight_rect.topleft)
 
@@ -79,7 +81,7 @@ class Item(pygame.sprite.Sprite):
         # Dessiner l'item en pulsation
         image = self.image
         if pulsation_scale != ORIGINAL_SCALE_PERCENT:
-            new_w = int(self.item_width * pulsation_scale)    
+            new_w = int(self.item_width * pulsation_scale)
             new_h = int(self.item_height * pulsation_scale)
             image = pygame.transform.smoothscale(self.image, (new_w, new_h))
             img_rect = image.get_rect(center=screen_pos.center)

@@ -1,7 +1,7 @@
-from .animated_image import AnimatedImage
-from .medieval_button import MedievalButton
-from .medieval_panel import MedievalPanel
-from .medieval_text import MedievalText
+from components.animated_image import AnimatedImage
+from components.medieval_button import MedievalButton
+from components.medieval_panel import MedievalPanel
+from components.medieval_text import MedievalText
 
 
 class Menu:
