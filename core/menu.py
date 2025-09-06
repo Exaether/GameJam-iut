@@ -41,7 +41,7 @@ class Menu:
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             350, 0, 0,
             self.text_play,
-            self.game.play,
+            self.game.intro,
             None,
             None,
             self.resources.wood_button_image_normal,

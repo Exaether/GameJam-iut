@@ -83,11 +83,11 @@ class Player(pygame.sprite.Sprite):
 
             self.prev_pos = self.rect.center
             self.rect.x += int(dx * self.speed * dt)
-            if pygame.sprite.collide_mask(self, map):
+            if map is not None and pygame.sprite.collide_mask(self, map):
                 self.rect.x -= int(dx * self.speed * dt)
 
             self.rect.y += int(dy * self.speed * dt)
-            if pygame.sprite.collide_mask(self, map):
+            if map is not None and pygame.sprite.collide_mask(self, map):
                 self.rect.y -= int(dy * self.speed * dt)
 
             if dy < 0:

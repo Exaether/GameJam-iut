@@ -3,6 +3,7 @@ from enum import Enum
 class GameState(Enum):
     MENU = "menu"
     PAUSED = "paused"
+    INTRO = "intro"
     PLAYING = "playing"
     LOSE = "lose"
     WIN = "win"

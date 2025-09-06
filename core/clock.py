@@ -20,10 +20,12 @@ class Clock:
     # Stat du joueur et des gardes en fonction de l'heure (ex: 5 = à partir de 5h00, 5.5 = à partir de 5h30...)
     # TODO: Ajoutez plus d'horaires ou pas
     HOURS_STAT = {
+        22: {"player_vision": Player.VISION_RANGE, "enemy_vision_range": Enemy.VISION_RANGE, "enemy_vision_fov": Enemy.VISION_ANGLE, "enemy_speed": 2},
         5: {"player_vision": 205, "enemy_vision_range": 115, "enemy_vision_fov": 60, "enemy_speed": 2},
         5.5: {"player_vision": 210, "enemy_vision_range": 130, "enemy_vision_fov": 65, "enemy_speed": 2.5},
         6: {"player_vision": 215, "enemy_vision_range": 145, "enemy_vision_fov": 70, "enemy_speed": 3.5},
-        6.5: {"player_vision": 220, "enemy_vision_range": 160, "enemy_vision_fov": 75, "enemy_speed": 5}
+        6.5: {"player_vision": 220, "enemy_vision_range": 160, "enemy_vision_fov": 75, "enemy_speed": 5},
+        8: {"player_vision": 220, "enemy_vision_range": 190, "enemy_vision_fov": 160, "enemy_speed": 5}
     }
     
 

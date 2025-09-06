@@ -107,21 +107,21 @@ class Playing:
                     self.ressource.pickup_sound.play()
                     self.suspicion_service.verify_effect_suspicion_to_apply(self.guards_list)
 
-            # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
-            for guard in self.guards_list.sprites():
-                if guard.is_player_detected(self.player, self.game.clock):
-                    self.game.trigger_game_lose()
-                    self.ressource.defeat.play()
             self.pickup_effects.update(dt)
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN
 
+        camera = (-self.player.rect.centerx + self.screen.get_rect().centerx,
+                    -self.player.rect.centery + self.screen.get_rect().centery)
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.rect.centerx - self.player.rect.centerx) < 500 or \
-                abs(guard.rect.centery - self.player.rect.centery) < 500:
+            if abs(guard.x - self.player.rect.centerx) < self.settings.GAME_SCREEN_WIDTH / 2 and \
+                abs(guard.y - self.player.rect.centery) < self.settings.GAME_SCREEN_HEIGHT / 2:
                 guard.update(self.map)
+                if guard.is_player_detected(self.player, self.game.clock):
+                    self.game.trigger_game_lose()
+                    self.ressource.defeat.play()
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:
