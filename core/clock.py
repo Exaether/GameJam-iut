@@ -9,7 +9,7 @@ from entities.enemy import Enemy
 class Clock:
     START_HOUR = 22
     START_MINUTE = 0
-    SECONDS_PER_GAME_MINUTE = 0.01
+    SECONDS_PER_GAME_MINUTE = 1
     DAY_TIME_START = 7
     WARNING_TIME_START = 5
     BIG_WARNING_TIME_START = 6
@@ -87,7 +87,7 @@ class Clock:
             color = self.NIGHT_TIME_COLOR
         else:
             color = self.DAY_TIME_COLOR
-        time_str = f"{self.current_hour:02d}:{self.current_minute:02d}"
+        time_str = f"{self.current_hour:02d}h{self.current_minute:02d}"
         text_surface = self.font.render(time_str, True, color)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (self.screen_width // 2, 10)
