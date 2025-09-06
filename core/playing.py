@@ -20,6 +20,7 @@ class Playing:
         self.map = Dungeon()
         self.exit_door = ExitDoor()
         self.player = Player(2538, 190)
+        self.nb_items_max = 0
 
         event_controller.set_player(self.player)
         event_controller.set_map(self.map)
@@ -63,6 +64,7 @@ class Playing:
 
     def items_generator(self):
         with open(os.path.join("data", "items.csv"), "r") as file:
+            nb_items = 0
             for line in file:
                 parts = line.strip().split(",")
                 
@@ -74,8 +76,11 @@ class Playing:
                     y = int(parts[1])
                     item = Item(x, y)
                     self.item_list.add(item)
+                    nb_items += 1
                 except ValueError:
                     continue  # Ignore les valeurs non numériques
+
+            self.nb_items_max = nb_items
 
     def update(self, dt):
         self.player.update(dt, self.map)
@@ -130,7 +135,7 @@ class Playing:
         self.player.draw(screen, camera)
 
         # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
-        score_text = self.score_font.render(f"Items: {self.player.items_collected}", True, (255, 255, 255))
+        score_text = self.score_font.render(f"Items: {self.player.items_collected}/{self.nb_items_max}", True, (255, 255, 255))
         score_rect = score_text.get_rect()
         score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
         screen.blit(score_text, score_rect)
