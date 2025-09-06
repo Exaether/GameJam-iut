@@ -51,6 +51,24 @@ class Resources:
         self.__pick_trap_door = None
         self.__defeat = None
 
+        # Images pour le tutoriel
+        self.__tutorial_frame_00 = None
+        self.__tutorial_frame_01 = None
+        self.__tutorial_frame_02 = None
+        self.__tutorial_frame_03 = None
+        self.__tutorial_frame_04 = None
+        self.__tutorial_frame_05 = None
+        self.__tutorial_frame_06 = None
+        self.__tutorial_frame_07 = None
+        self.__tutorial_frame_08 = None
+        self.__tutorial_frame_09 = None
+        self.__tutorial_frame_10 = None
+        self.__tutorial_frame_11 = None
+        self.__tutorial_frame_12 = None
+        self.__tutorial_frame_13 = None
+        self.__tutorial_frame_14 = None
+        self.__tutorial_frame_15 = None
+
     # ========================= SECTION PANNEAUX =========================
 
     @property
@@ -239,3 +257,149 @@ class Resources:
         if self.__defeat is None:
             self.__defeat = pygame.mixer.Sound("assets/SFX/defeat.wav")
         return self.__defeat
+
+    # ========================= SECTION TUTORIEL =========================
+
+    @property
+    def tutorial_frame_00(self):
+        if self.__tutorial_frame_00 is None:
+            self.__tutorial_frame_00 = Image(
+                "./assets/tutorial/frame0000.png",
+                400, 0
+            )
+        return self.__tutorial_frame_00
+
+    @property
+    def tutorial_frame_01(self):
+        if self.__tutorial_frame_01 is None:
+            self.__tutorial_frame_01 = Image(
+                "./assets/tutorial/frame0001.png",
+                400, 0
+            )
+        return self.__tutorial_frame_01
+
+    @property
+    def tutorial_frame_02(self):
+        if self.__tutorial_frame_02 is None:
+            self.__tutorial_frame_02 = Image(
+                "./assets/tutorial/frame0002.png",
+                400, 0
+            )
+        return self.__tutorial_frame_02
+
+    @property
+    def tutorial_frame_03(self):
+        if self.__tutorial_frame_03 is None:
+            self.__tutorial_frame_03 = Image(
+                "./assets/tutorial/frame0003.png",
+                400, 0
+            )
+        return self.__tutorial_frame_03
+
+    @property
+    def tutorial_frame_04(self):
+        if self.__tutorial_frame_04 is None:
+            self.__tutorial_frame_04 = Image(
+                "./assets/tutorial/frame0004.png",
+                400, 0
+            )
+        return self.__tutorial_frame_04
+
+    @property
+    def tutorial_frame_05(self):
+        if self.__tutorial_frame_05 is None:
+            self.__tutorial_frame_05 = Image(
+                "./assets/tutorial/frame0005.png",
+                400, 0
+            )
+        return self.__tutorial_frame_05
+
+    @property
+    def tutorial_frame_06(self):
+        if self.__tutorial_frame_06 is None:
+            self.__tutorial_frame_06 = Image(
+                "./assets/tutorial/frame0006.png",
+                400, 0
+            )
+        return self.__tutorial_frame_06
+
+    @property
+    def tutorial_frame_07(self):
+        if self.__tutorial_frame_07 is None:
+            self.__tutorial_frame_07 = Image(
+                "./assets/tutorial/frame0007.png",
+                400, 0
+            )
+        return self.__tutorial_frame_07
+
+    @property
+    def tutorial_frame_08(self):
+        if self.__tutorial_frame_08 is None:
+            self.__tutorial_frame_08 = Image(
+                "./assets/tutorial/frame0008.png",
+                400, 0
+            )
+        return self.__tutorial_frame_08
+
+    @property
+    def tutorial_frame_09(self):
+        if self.__tutorial_frame_09 is None:
+            self.__tutorial_frame_09 = Image(
+                "./assets/tutorial/frame0009.png",
+                400, 0
+            )
+        return self.__tutorial_frame_09
+
+    @property
+    def tutorial_frame_10(self):
+        if self.__tutorial_frame_10 is None:
+            self.__tutorial_frame_10 = Image(
+                "./assets/tutorial/frame0010.png",
+                400, 0
+            )
+        return self.__tutorial_frame_10
+
+    @property
+    def tutorial_frame_11(self):
+        if self.__tutorial_frame_11 is None:
+            self.__tutorial_frame_11 = Image(
+                "./assets/tutorial/frame0011.png",
+                400, 0
+            )
+        return self.__tutorial_frame_11
+
+    @property
+    def tutorial_frame_12(self):
+        if self.__tutorial_frame_12 is None:
+            self.__tutorial_frame_12 = Image(
+                "./assets/tutorial/frame0012.png",
+                400, 0
+            )
+        return self.__tutorial_frame_12
+
+    @property
+    def tutorial_frame_13(self):
+        if self.__tutorial_frame_13 is None:
+            self.__tutorial_frame_13 = Image(
+                "./assets/tutorial/frame0013.png",
+                400, 0
+            )
+        return self.__tutorial_frame_13
+
+    @property
+    def tutorial_frame_14(self):
+        if self.__tutorial_frame_14 is None:
+            self.__tutorial_frame_14 = Image(
+                "./assets/tutorial/frame0014.png",
+                400, 0
+            )
+        return self.__tutorial_frame_14
+
+    @property
+    def tutorial_frame_15(self):
+        if self.__tutorial_frame_15 is None:
+            self.__tutorial_frame_15 = Image(
+                "./assets/tutorial/frame0015.png",
+                400, 0
+            )
+        return self.__tutorial_frame_15

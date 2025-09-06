@@ -11,7 +11,6 @@ from components import GameLoseScreen, GameWinScreen
 from components.credits import Credits
 
 
-
 class Game:
     def __init__(self):
         pygame.init()
@@ -27,7 +26,7 @@ class Game:
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
         self.menu = Menu(self.settings, self)
-        
+
         self.playing = Playing(self, self.event_controller)
         self.running = True
 
@@ -40,7 +39,7 @@ class Game:
         self.state_manager.change_state(GameState.CREDITS)
         pygame.mixer.music.load("./assets/music/Mesmerizing Galaxy Loop.mp3")
         pygame.mixer.music.play(-1)
-        
+
     def play(self):
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.playing = Playing(self, self.event_controller)
@@ -117,6 +116,7 @@ class Game:
                 # TODO: A réaliser
                 pass
             elif current_state == GameState.MENU:
+                self.menu.update()
                 self.menu.draw(self.screen)
             elif current_state == GameState.LOSE:
                 if self.game_lose_screen:
