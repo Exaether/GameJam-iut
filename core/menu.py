@@ -2,6 +2,7 @@ from components import MedievalPanel
 from components import MedievalText
 from components import MedievalButton
 from components import MenuComponent
+from components.animated_image import AnimatedImage
 from services import Resources
 
 
@@ -17,13 +18,14 @@ class Menu:
         # Panneau
         self.panel = MedievalPanel(
             self.resources.wood_panel_image,
-            self.settings.MENU_SCREEN_WIDTH // 2,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
             self.settings.MENU_SCREEN_HEIGHT // 2
         )
 
         # Titre du jeu
         self.game_text = MedievalText(
-            self.settings.MENU_SCREEN_WIDTH // 2, 200,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            200,
             self.settings.GAME_TITLE,
             self.resources.title_font,
             self.resources.wood_color,
@@ -36,9 +38,9 @@ class Menu:
             self.resources.button_font,
             self.resources.wood_color
         )
-
         self.button_play = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2, 350, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            350, 0, 0,
             self.text_play,
             None,
             None,
@@ -47,15 +49,16 @@ class Menu:
             self.resources.wood_button_image_pressed
         )
 
-        # Bouton credit
-        self.text_credit = MedievalText(
-            0,0, "Credits",
+        # Bouton crédits
+        self.text_credits = MedievalText(
+            0,0, "Crédits",
             self.resources.button_font,
             self.resources.wood_color
         )
         self.button_credits = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2, 450, 0, 0,
-            self.text_credit,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            450, 0, 0,
+            self.text_credits,
             None,
             None,
             self.game.credits,
@@ -69,9 +72,9 @@ class Menu:
             self.resources.button_font,
             MedievalText.CRIMSON_RED
         )
-        
         self.button_exit = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2, 550, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2 - 200,
+            550, 0, 0,
             self.text_exit,
             None,
             None,
@@ -80,13 +83,39 @@ class Menu:
             self.resources.silver_button_image_pressed_short
         )
 
+        # Tutoriel
+        self.tutorial = AnimatedImage([
+            self.resources.tutorial_frame_00,
+            self.resources.tutorial_frame_01,
+            self.resources.tutorial_frame_02,
+            self.resources.tutorial_frame_03,
+            self.resources.tutorial_frame_04,
+            self.resources.tutorial_frame_05,
+            self.resources.tutorial_frame_06,
+            self.resources.tutorial_frame_07,
+            self.resources.tutorial_frame_08,
+            self.resources.tutorial_frame_09,
+            self.resources.tutorial_frame_10,
+            self.resources.tutorial_frame_11,
+            self.resources.tutorial_frame_12,
+            self.resources.tutorial_frame_13,
+            self.resources.tutorial_frame_14,
+            self.resources.tutorial_frame_15
+        ])
+
         # Créer le menu avec le composant générique
         self.menu_component = MenuComponent(
             self.panel,
             self.game_text,
             [self.button_play, self.button_credits ,self.button_exit],
+            self.tutorial,
+            self.settings.MENU_SCREEN_WIDTH // 2 + 350,
+            self.settings.MENU_SCREEN_HEIGHT // 2 + self.settings.MENU_SCREEN_HEIGHT // 4,
             self.BACKGROUND_COLOR
         )
+
+    def update(self):
+        self.menu_component.update()
 
     def draw(self, screen):
         self.menu_component.draw(screen)
