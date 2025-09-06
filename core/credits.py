@@ -1,4 +1,3 @@
-import pygame
 from services.resources import Resources
 
 
@@ -15,7 +14,6 @@ class Credits:
         self.__init_text()
 
     def __init_text(self):
-        self.font = pygame.font.SysFont("Arial", 36)
         # Liste des lignes de crédits
         self.credits = [
             ("Le Château sans Portes", self.resources.game_title_font),
