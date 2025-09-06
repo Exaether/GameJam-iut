@@ -41,9 +41,9 @@ class Menu:
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             350, 0, 0,
             self.text_play,
-            None,
-            None,
             self.game.play,
+            None,
+            None,
             self.resources.wood_button_image_normal,
             self.resources.wood_button_image_pressed
         )
@@ -58,9 +58,9 @@ class Menu:
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             450, 0, 0,
             self.text_credits,
-            None,
-            None,
             self.game.credits,
+            None,
+            None,
             self.resources.wood_button_image_normal,
             self.resources.wood_button_image_pressed
         )
@@ -75,9 +75,9 @@ class Menu:
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,
             550, 0, 0,
             self.text_exit,
-            None,
-            None,
             self.game.exit,
+            None,
+            None,
             self.resources.silver_button_image_normal_short,
             self.resources.silver_button_image_pressed_short
         )

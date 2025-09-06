@@ -23,12 +23,19 @@ class GameLoseScreen:
         )
 
         # Titre principal en pourpre
-        self.title = MedievalText(
-            screen_width // 2, 140,
-            "Capturé par les gardes !",
+        self.title_1 = MedievalText(
+            screen_width // 2, 150,
+            "Capturé",
             self.resources.title_font,
             MedievalText.CRIMSON_RED,
-            shadow_offset=4
+            shadow_offset=3
+        )
+        self.title_2 = MedievalText(
+            screen_width // 2, 210,
+            "par les gardes !",
+            self.resources.title_font,
+            MedievalText.CRIMSON_RED,
+            shadow_offset=3
         )
 
         retry_text = MedievalText(
@@ -38,9 +45,9 @@ class GameLoseScreen:
         self.retry_button = MedievalButton(
             screen_width // 2, 370, 0, 0,
             retry_text,
-            None,
-            None,
             on_retry_action,
+            None,
+            None,
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )
@@ -52,9 +59,9 @@ class GameLoseScreen:
         self.menu_button = MedievalButton(
             screen_width // 2, 465, 0, 0,
             menu_text,
-            None,
-            None,
             on_menu_action,
+            None,
+            None,
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )
@@ -65,7 +72,8 @@ class GameLoseScreen:
         surface.fill(self.TAVERN_BACKGROUND)
 
         self.panel.draw(surface)
-        self.title.draw(surface)
+        self.title_1.draw(surface)
+        self.title_2.draw(surface)
 
         for button in self.buttons:
             button.draw(surface)

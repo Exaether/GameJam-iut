@@ -16,7 +16,7 @@ class MedievalButton:
     BORDER_WIDTH = 3
 
     def __init__(self, center_x: int, center_y: int, width: int, height: int, text: MedievalText,
-                 base_color: str = None, hovering_color: str = None, on_click_action=None,
+                 on_click_action, base_color: str | None, hovering_color: str = None,
                  base_image: Image = None, hovering_image: Image = None):
         self.center_x = center_x
         self.center_y = center_y
@@ -38,7 +38,10 @@ class MedievalButton:
         self.text.center_x = self.center_x
         self.text.center_y = self.center_y
         self.text.text_rect.center = (self.center_x, self.center_y - 7)
-        self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset, self.center_y + self.text.shadow_offset - 7)
+        self.text.shadow_rect.center = (
+            self.center_x + self.text.shadow_offset,
+            self.center_y + self.text.shadow_offset - 7
+        )
 
         self.is_hovering = False
 
@@ -67,14 +70,18 @@ class MedievalButton:
                 image = self.hovering_image
                 # Descend le texte pour l'adapter au bouton pressé
                 self.text.text_rect.center = (self.center_x, self.center_y - 3)
-                self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset,
-                                                self.center_y + self.text.shadow_offset - 3)
+                self.text.shadow_rect.center = (
+                    self.center_x + self.text.shadow_offset,
+                    self.center_y + self.text.shadow_offset - 3
+                )
             else:
                 image = self.base_image
                 # Remonte le texte pour l'adapter au bouton non pressé
                 self.text.text_rect.center = (self.center_x, self.center_y - 7)
-                self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset,
-                                                self.center_y + self.text.shadow_offset - 7)
+                self.text.shadow_rect.center = (
+                    self.center_x + self.text.shadow_offset,
+                    self.center_y + self.text.shadow_offset - 7
+                )
 
             # Dessin de l'image
             surface.blit(image.image_surf, self.rect)
