@@ -9,7 +9,7 @@ from .event_controller import EventController
 from .playing import Playing
 from components import GameLoseScreen, GameWinScreen
 from components.credits import Credits
-
+from .intro_game import IntroGame
 
 class Game:
     def __init__(self):
@@ -28,10 +28,18 @@ class Game:
         self.menu = Menu(self.settings, self)
 
         self.playing = Playing(self, self.event_controller)
+        self.intro_scene = None
         self.running = True
 
         self.game_lose_screen = None
         self.game_win_screen = None
+
+    def intro(self):
+        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
+        self.intro_scene = IntroGame(self)
+        self.state_manager.change_state(GameState.INTRO)
+        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
+        pygame.mixer.music.play(-1)
 
     def credits(self):
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
@@ -97,7 +105,6 @@ class Game:
         while self.running:
             events = pygame.event.get()
             dt = self.clock.tick(self.settings.FPS) / 1000
-            print(1/dt)
 
             for event in events:
                 if event.type == pygame.QUIT:
@@ -139,6 +146,13 @@ class Game:
                     current_state = GameState.MENU
                     pygame.mixer.music.stop()
                     self.back_to_menu()
+            elif current_state == GameState.INTRO:
+                if self.intro_scene is None:
+                    self.intro()
+                else:
+                    self.intro_scene.handle_events(events)
+                    self.intro_scene.update(dt)
+                    self.intro_scene.draw(self.screen)
 
             pygame.display.update()
             pygame.display.flip()
