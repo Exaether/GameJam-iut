@@ -42,10 +42,10 @@ class IntroGame:
         self.font = pygame.font.Font("./assets/font/VPPixel-Standard.ttf", 25) if self.settings else None
 
         self.dialog_lines = [
-            "Ca c'est Georgres, Geores est ce qu'on appel un voleur",
+            "Ca c'est Georges, Georges est ce qu'on appel un voleur",
             "Comme tout voleur, Georges vol",
             "Mais contrairement aux autres Georges a du courage !",
-            "C'est pour ça que Georges va au chateau pour voler le roi et trouver le fam...",
+            "C'est pour ça que Georges va au chateau pour voler le roi et trouver le fameux li...",
         ]
 
         self.__prepare_current_line()
