@@ -41,6 +41,9 @@ class Playing:
 
         self.clock = Clock(self.settings.GAME_SCREEN_WIDTH)
 
+        # Reset les paramètres du garde (pour annuler les changements de stat dû à l'horloge si activé lors de la partie précédente)
+        Enemy.GUARD_DEFAULT_SPEED = 1.8
+
     def guard_generator(self):
         with open(os.path.join("data", "guards.csv"), "r") as file:
             for line in file:
