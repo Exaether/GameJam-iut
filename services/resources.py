@@ -215,7 +215,7 @@ class Resources:
     @property
     def wood_color(self):
         if self.__wood_color is None:
-            self.__wood_color = "#c29b89"
+            self.__wood_color = "#ffc97f"
         return self.__wood_color
 
     @property
@@ -227,7 +227,7 @@ class Resources:
     @property
     def gold_color(self):
         if self.__gold_color is None:
-            self.__gold_color = "#f7be47"
+            self.__gold_color = "#ffff73"
         return self.__gold_color
 
     # ========================= SECTION EFFETS SONORES =========================
