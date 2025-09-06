@@ -37,8 +37,8 @@ class MedievalButton:
 
         self.text.center_x = self.center_x
         self.text.center_y = self.center_y
-        self.text.text_rect.center = (self.center_x, self.center_y)
-        self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset, self.center_y + self.text.shadow_offset)
+        self.text.text_rect.center = (self.center_x, self.center_y - 7)
+        self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset, self.center_y + self.text.shadow_offset - 7)
 
         self.is_hovering = False
 
@@ -63,7 +63,18 @@ class MedievalButton:
                 pygame.draw.rect(surface, self.DARK_GOLD, inner_rect, 1)
         else:
             # Image selon l'état (hover ou non) et si une image d'hover est définie
-            image = self.hovering_image if self.hovering_image and self.is_hovering else self.base_image
+            if self.hovering_image and self.is_hovering:
+                image = self.hovering_image
+                # Descend le texte pour l'adapter au bouton pressé
+                self.text.text_rect.center = (self.center_x, self.center_y - 3)
+                self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset,
+                                                self.center_y + self.text.shadow_offset - 3)
+            else:
+                image = self.base_image
+                # Remonte le texte pour l'adapter au bouton non pressé
+                self.text.text_rect.center = (self.center_x, self.center_y - 7)
+                self.text.shadow_rect.center = (self.center_x + self.text.shadow_offset,
+                                                self.center_y + self.text.shadow_offset - 7)
 
             # Dessin de l'image
             surface.blit(image.image_surf, self.rect)
