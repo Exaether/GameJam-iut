@@ -23,7 +23,7 @@ class EventController:
         """Retourne la liste des boutons pour un état de jeu donné"""
         buttons = []
         if game_state == GameState.MENU:
-            buttons = [self.game.menu.button_play, self.game.menu.button_exit]
+            buttons = [self.game.menu.button_play, self.game.menu.button_exit, self.game.menu.button_credits]
         elif game_state == GameState.LOSE and self.game.game_lose_screen:
             buttons = self.game.game_lose_screen.buttons
         elif game_state == GameState.WIN and self.game.game_win_screen:

@@ -81,6 +81,7 @@ class Playing:
         self.player.update(dt, self.map)
         self.clock.update(self.player, self.guards_list)
 
+
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
             collided_items = pygame.sprite.spritecollide(self.player, self.item_list, True)
@@ -138,7 +139,7 @@ class Playing:
         # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
         # TODO 
-        self.clock.draw(screen)
+        #self.clock.draw(screen)
 
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)

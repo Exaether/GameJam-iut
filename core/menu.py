@@ -5,6 +5,7 @@ from components import MenuComponent
 from services import Resources
 
 
+
 class Menu:
     BACKGROUND_COLOR = "#2F1B14"
 
@@ -35,8 +36,9 @@ class Menu:
             self.resources.button_font,
             self.resources.wood_color
         )
+
         self.button_play = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2, 400, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2, 350, 0, 0,
             self.text_play,
             None,
             None,
@@ -45,14 +47,31 @@ class Menu:
             self.resources.wood_button_image_pressed
         )
 
+        # Bouton credit
+        self.text_credit = MedievalText(
+            0,0, "Credits",
+            self.resources.button_font,
+            self.resources.wood_color
+        )
+        self.button_credits = MedievalButton(
+            self.settings.MENU_SCREEN_WIDTH // 2, 450, 0, 0,
+            self.text_credit,
+            None,
+            None,
+            self.game.credits,
+            self.resources.wood_button_image_normal,
+            self.resources.wood_button_image_pressed
+        )
+
         # Bouton quitter
         self.text_exit = MedievalText(
-            0, 0, "Quiter",
+            0, 0, "Quitter",
             self.resources.button_font,
             MedievalText.CRIMSON_RED
         )
+        
         self.button_exit = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2, 500, 0, 0,
+            self.settings.MENU_SCREEN_WIDTH // 2, 550, 0, 0,
             self.text_exit,
             None,
             None,
@@ -65,7 +84,7 @@ class Menu:
         self.menu_component = MenuComponent(
             self.panel,
             self.game_text,
-            [self.button_play, self.button_exit],
+            [self.button_play, self.button_credits ,self.button_exit],
             self.BACKGROUND_COLOR
         )
 

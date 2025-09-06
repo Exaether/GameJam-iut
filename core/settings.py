@@ -1,6 +1,6 @@
 class Settings:
     def __init__(self):
-        self.GAME_TITLE = "Le château sans portes"
+        self.GAME_TITLE = "Le Château sans Portes"
         self.MENU_SCREEN_WIDTH = 1280
         self.MENU_SCREEN_HEIGHT = 720
         self.GAME_SCREEN_WIDTH = 720

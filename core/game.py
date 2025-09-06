@@ -8,6 +8,8 @@ from .state_manager import StateManager, GameState
 from .event_controller import EventController
 from .playing import Playing
 from components import GameLoseScreen, GameWinScreen
+from components.credits import Credits
+
 
 
 class Game:
@@ -25,17 +27,25 @@ class Game:
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
         self.menu = Menu(self.settings, self)
+        
         self.playing = Playing(self, self.event_controller)
-        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
         self.running = True
 
         self.game_lose_screen = None
         self.game_win_screen = None
 
+    def credits(self):
+        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
+        self.credits_playing = Credits(self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT)
+        self.state_manager.change_state(GameState.CREDITS)
+        pygame.mixer.music.load("./assets/music/Mesmerizing Galaxy Loop.mp3")
+        pygame.mixer.music.play(-1)
+        
     def play(self):
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.playing = Playing(self, self.event_controller)
-        pygame.mixer.music.play()
+        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
+        pygame.mixer.music.play(-1)
         self.state_manager.change_state(GameState.PLAYING)
 
     def retry_game(self):
@@ -107,16 +117,25 @@ class Game:
                 self.menu.draw(self.screen)
             elif current_state == GameState.LOSE:
                 if self.game_lose_screen:
+                    pygame.mixer.music.stop()
                     self.game_lose_screen.draw(self.screen)
                 else:
                     # Initialiser l'écran Game Lose à la première image
                     self.trigger_game_lose()
             elif current_state == GameState.WIN:
                 if self.game_win_screen:
+                    pygame.mixer.music.stop()
                     self.game_win_screen.draw(self.screen)
                 else:
                     # Initialiser l'écran Game Win à la première image
                     self.trigger_game_win()
+            elif current_state == GameState.CREDITS:
+                self.credits_playing.update()
+                finished = self.credits_playing.draw(self.screen)
+                if not finished or event.type == pygame.KEYDOWN:
+                    current_state = GameState.MENU
+                    pygame.mixer.music.stop()
+                    self.back_to_menu()
 
             pygame.display.update()
             pygame.display.flip()
