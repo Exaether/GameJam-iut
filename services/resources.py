@@ -49,8 +49,8 @@ class Resources:
         # Effets sonores
         self.__pickup_sound = None
         self.__detect_sound = None
-        self.__pick_trap_door = None
-        self.__defeat = None
+        self.__pick_trapdoor_sound = None
+        self.__defeat_sound = None
 
         # Images pour le tutoriel
         self.__tutorial_frame_00 = None
@@ -228,16 +228,16 @@ class Resources:
         return self.__detect_sound
 
     @property
-    def pick_trap_door(self):
-        if self.__pick_trap_door is None:
-            self.__pick_trap_door = Sound("assets/SFX/trapdoor.wav")
-        return self.__pick_trap_door
+    def pick_trapdoor_sound(self):
+        if self.__pick_trapdoor_sound is None:
+            self.__pick_trapdoor_sound = Sound("assets/SFX/trapdoor.wav")
+        return self.__pick_trapdoor_sound
 
     @property
-    def defeat(self):
-        if self.__defeat is None:
-            self.__defeat = Sound("assets/SFX/defeat.wav")
-        return self.__defeat
+    def defeat_sound(self):
+        if self.__defeat_sound is None:
+            self.__defeat_sound = Sound("assets/SFX/defeat.wav")
+        return self.__defeat_sound
 
     # ========================= SECTION TUTORIEL =========================
 

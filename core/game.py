@@ -33,8 +33,8 @@ class Game:
         self.intro_scene = None
         self.running = True
 
-        self.game_lose_screen = None
-        self.game_win_screen = None
+        self.game_lose_menu = None
+        self.game_win_menu = None
 
     def intro(self):
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
@@ -59,21 +59,21 @@ class Game:
 
     def retry_game(self):
         """Relance une nouvelle partie"""
-        self.game_lose_screen = None
-        self.game_win_screen = None
+        self.game_lose_menu = None
+        self.game_win_menu = None
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.play()
 
     def back_to_menu(self):
         """Retourne au menu principal"""
-        self.game_lose_screen = None
-        self.game_win_screen = None
+        self.game_lose_menu = None
+        self.game_win_menu = None
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.state_manager.change_state(GameState.MENU)
 
     def trigger_game_lose(self):
         """Déclenche la défaite du jeu"""
-        self.game_lose_screen = GameLoseMenu(
+        self.game_lose_menu = GameLoseMenu(
             self.settings.MENU_SCREEN_WIDTH,
             self.settings.MENU_SCREEN_HEIGHT,
             self.retry_game,
@@ -88,7 +88,7 @@ class Game:
         """Déclenche la victoire du jeu"""
         final_score = self.playing.player.items_collected
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.game_win_screen = GameWinMenu(
+        self.game_win_menu = GameWinMenu(
             self.settings.MENU_SCREEN_WIDTH,
             self.settings.MENU_SCREEN_HEIGHT,
             final_score,
@@ -128,16 +128,16 @@ class Game:
                 self.menu.update()
                 self.menu.draw(self.screen)
             elif current_state == GameState.LOSE:
-                if self.game_lose_screen:
+                if self.game_lose_menu:
                     pygame.mixer.music.stop()
-                    self.game_lose_screen.draw(self.screen)
+                    self.game_lose_menu.draw(self.screen)
                 else:
                     # Initialiser l'écran Game Lose à la première image
                     self.trigger_game_lose()
             elif current_state == GameState.WIN:
-                if self.game_win_screen:
+                if self.game_win_menu:
                     pygame.mixer.music.stop()
-                    self.game_win_screen.draw(self.screen)
+                    self.game_win_menu.draw(self.screen)
                 else:
                     # Initialiser l'écran Game Win à la première image
                     self.trigger_game_win()

@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
     def animation_traverse_trapdoor(self):
         self.is_traversing_trapdoor = True
         self.trapdoor_animation_timer = 0
-        Resources().pick_trap_door.play()
+        Resources().pick_trapdoor_sound.play()
 
     def update(self, dt, dungeon_map=None):
 

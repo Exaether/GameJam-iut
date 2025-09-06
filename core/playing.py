@@ -126,7 +126,7 @@ class Playing:
                 guard.update(self.map)
                 if guard.is_player_detected(self.player, self.game.clock):
                     self.game.trigger_game_lose()
-                    self.ressource.defeat.play()
+                    self.ressource.defeat_sound.play()
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:
