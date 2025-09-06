@@ -141,9 +141,6 @@ class Playing:
             for item in self.item_list.sprites():
                 item.draw(screen, camera)
             self.pickup_effects.draw(screen, camera)
-            # Boussole
-            if len(self.item_list) > 0:
-                self.compass.draw(screen)
 
         self.player.draw(screen, camera)
 
@@ -157,6 +154,9 @@ class Playing:
         self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
 
         self.clock.draw(screen)
+        # Boussole
+        if len(self.item_list) > 0:
+            self.compass.draw(screen)
 
         self.suspicion_service.draw_suspicion(screen)
 
