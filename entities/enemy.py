@@ -3,6 +3,7 @@ import os
 import random
 from core.settings import Settings
 from services.vision_service import VisionService
+from services.resources import Resources
 
 class Enemy(pygame.sprite.Sprite):
     SPRITE_SIZE = 24
@@ -40,6 +41,7 @@ class Enemy(pygame.sprite.Sprite):
         self.animation_sprite = 0
         self.guard_speed = self.GUARD_DEFAULT_SPEED
         self.pattern_type = pattern_type # type possible : ["fixe","square"]
+        self.last_detect_sound_time = 0
 
     def __init_position(self, x, y):
         self.x = x
@@ -175,6 +177,9 @@ class Enemy(pygame.sprite.Sprite):
         if self.is_player_in_vision(player):
             self.guard_speed = self.GUARD_SPEED_ON_DETECT
             self.alertness += clock.tick(settings.FPS)
+            if pygame.time.get_ticks() - self.last_detect_sound_time >= 4000:  # 1.5 seconde
+                Resources().detect_sound.play()
+                self.last_detect_sound_time = pygame.time.get_ticks()
         else:
             self.alertness = 0
         return self.alertness >= self.DETECTION_TIME_MS

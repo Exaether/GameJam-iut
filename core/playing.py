@@ -1,6 +1,7 @@
 import pygame
 import os
 
+from services.resources import Resources 
 from entities.compass import Compass
 from entities.dungeon import Dungeon
 from entities.player import Player
@@ -17,6 +18,7 @@ class Playing:
         self.game = game
         self.screen = game.screen
         self.settings = game.settings
+        self.ressource = Resources()
         self.map = Dungeon()
         self.exit_door = ExitDoor()
         self.player = Player(2538, 190)
@@ -95,11 +97,13 @@ class Playing:
                 if item.pickable:
                     self.player.items_collected += 1
                     self.pickup_effects.add_pickup_animation(item.rect.centerx, item.rect.centery)
+                    self.ressource.pickup_sound.play()
+
             # Verifie si le joueur est dans la zone de vision d'au moins un garde, arrête le jeu si c'est le cas
             for guard in self.guards_list.sprites():
                 if guard.is_player_detected(self.player, self.game.clock):
                     self.game.trigger_game_lose()
-
+                    self.ressource.defeat.play()
             self.pickup_effects.update(dt)
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN

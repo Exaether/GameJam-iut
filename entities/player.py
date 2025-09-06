@@ -1,6 +1,7 @@
 import pygame
 import os
 from services.vision_service import VisionService
+from services.resources import Resources
 
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16
@@ -108,6 +109,7 @@ class Player(pygame.sprite.Sprite):
     def animation_traverse_trapdoor(self):
         self.is_traversing_trapdoor = True
         self.trapdoor_animation_timer = 0
+        Resources().pick_trap_door.play()
 
     def update(self, dt, dungeon_map=None):
 

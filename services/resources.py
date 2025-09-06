@@ -1,3 +1,4 @@
+import pygame
 from pygame.font import Font
 
 from components.image import Image
@@ -43,6 +44,13 @@ class Resources:
         self.__wood_color = None
         self.__silver_color = None
         self.__gold_color = None
+        
+        # Sound effect
+        self.pickup_sound = pygame.mixer.Sound("assets/SFX/pickItems.wav")
+        self.detect_sound = pygame.mixer.Sound("assets/SFX/alert.wav")
+        self.pick_trap_door = pygame.mixer.Sound("assets/SFX/trapdoor.wav")
+        self.defeat = pygame.mixer.Sound("assets/SFX/defeat.wav")
+        self.detect_sound.set_volume(0.5)  # 50% du volume pour sound detect
 
     # ========================= SECTION PANNEAUX =========================
 
