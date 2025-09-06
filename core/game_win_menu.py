@@ -3,16 +3,17 @@ from services.resources import Resources
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
+from components.menu import Menu
 
 
 class GameWinMenu:
 
     def __init__(self, screen_width: int, screen_height: int, final_score: int,
                  on_retry_action=None, on_menu_action=None):
-        self.settings = None
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.final_score = final_score
+
         self.resources = Resources()
 
         # Panneau
@@ -48,6 +49,7 @@ class GameWinMenu:
             shadow_offset=1
         )
 
+        # Bouton rejouer
         retry_text = MedievalText(
             0, 0, "Rejouer",
             self.resources.button_font, Resources.GOLD_COLOR
@@ -62,6 +64,7 @@ class GameWinMenu:
             self.resources.gold_button_image_pressed
         )
 
+        # Bouton retour menu
         menu_text = MedievalText(
             0, 0, "Retour Menu",
             self.resources.button_font, Resources.GOLD_COLOR
@@ -78,6 +81,14 @@ class GameWinMenu:
 
         self.buttons = [self.retry_button, self.menu_button]
 
+        # Créer le menu avec le composant générique
+        self.menu = Menu(
+            Resources.MENU_BACKGROUND_COLOR,
+            self.panel,
+            [self.title, self.score_text, self.encouragement_message_text],
+            self.buttons
+        )
+
     @staticmethod
     def __get_encouragement_message(score: int) -> str:
         """Messages d'encouragement dans le style médiéval noble"""
@@ -91,12 +102,4 @@ class GameWinMenu:
             return "Magnifique butin ! Le roi tremble !"
 
     def draw(self, surface):
-        surface.fill(Resources.MENU_BACKGROUND_COLOR)
-
-        self.panel.draw(surface)
-        self.title.draw(surface)
-        self.score_text.draw(surface)
-        self.encouragement_message_text.draw(surface)
-
-        for button in self.buttons:
-            button.draw(surface)
+        self.menu.draw(surface)

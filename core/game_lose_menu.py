@@ -3,6 +3,7 @@ from services.resources import Resources
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
+from components.menu import Menu
 
 
 class GameLoseMenu:
@@ -11,6 +12,7 @@ class GameLoseMenu:
                  on_retry_action=None, on_menu_action=None):
         self.screen_width = screen_width
         self.screen_height = screen_height
+
         self.resources = Resources()
 
         # Panneau
@@ -20,7 +22,7 @@ class GameLoseMenu:
             self.screen_height // 2
         )
 
-        # Titre principal en pourpre
+        # Titre principal
         self.title_1 = MedievalText(
             screen_width // 2, 150,
             "Capturé",
@@ -36,6 +38,7 @@ class GameLoseMenu:
             shadow_offset=3
         )
 
+        # Bouton rejouer
         retry_text = MedievalText(
             self.screen_width // 2, 370, "Rejouer",
             self.resources.button_font, Resources.SILVER_COLOR
@@ -50,6 +53,7 @@ class GameLoseMenu:
             self.resources.silver_button_image_pressed
         )
 
+        # Bouton retour menu
         menu_text = MedievalText(
             screen_width // 2, 465, "Retour Menu",
             self.resources.button_font, Resources.SILVER_COLOR
@@ -66,12 +70,13 @@ class GameLoseMenu:
 
         self.buttons = [self.retry_button, self.menu_button]
 
+        # Créer le menu avec le composant générique
+        self.menu = Menu(
+            Resources.MENU_BACKGROUND_COLOR,
+            self.panel,
+            [self.title_1, self.title_2],
+            self.buttons
+        )
+
     def draw(self, surface):
-        surface.fill(Resources.MENU_BACKGROUND_COLOR)
-
-        self.panel.draw(surface)
-        self.title_1.draw(surface)
-        self.title_2.draw(surface)
-
-        for button in self.buttons:
-            button.draw(surface)
+        self.menu.draw(surface)
