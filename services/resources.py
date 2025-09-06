@@ -44,13 +44,12 @@ class Resources:
         self.__wood_color = None
         self.__silver_color = None
         self.__gold_color = None
-        
-        # Sound effect
-        self.pickup_sound = pygame.mixer.Sound("assets/SFX/pickItems.wav")
-        self.detect_sound = pygame.mixer.Sound("assets/SFX/alert.wav")
-        self.pick_trap_door = pygame.mixer.Sound("assets/SFX/trapdoor.wav")
-        self.defeat = pygame.mixer.Sound("assets/SFX/defeat.wav")
-        self.detect_sound.set_volume(0.5)  # 50% du volume pour sound detect
+
+        # Effets sonores
+        self.__pickup_sound = None
+        self.__detect_sound = None
+        self.__pick_trap_door = None
+        self.__defeat = None
 
     # ========================= SECTION PANNEAUX =========================
 
@@ -212,3 +211,31 @@ class Resources:
         if self.__gold_color is None:
             self.__gold_color = "#f7be47"
         return self.__gold_color
+
+    # ========================= SECTION EFFETS SONORES =========================
+
+    @property
+    def pickup_sound(self):
+        if self.__pickup_sound is None:
+            self.__pickup_sound = pygame.mixer.Sound("assets/SFX/pickItems.wav")
+        return self.__pickup_sound
+
+    @property
+    def detect_sound(self):
+        if self.__detect_sound is None:
+            self.__detect_sound = pygame.mixer.Sound("assets/SFX/alert.wav")
+            # Réduction du volume à 50%
+            self.__detect_sound.set_volume(0.5)
+        return self.__detect_sound
+
+    @property
+    def pick_trap_door(self):
+        if self.__pick_trap_door is None:
+            self.__pick_trap_door = pygame.mixer.Sound("assets/SFX/trapdoor.wav")
+        return self.__pick_trap_door
+
+    @property
+    def defeat(self):
+        if self.__defeat is None:
+            self.__defeat = pygame.mixer.Sound("assets/SFX/defeat.wav")
+        return self.__defeat
