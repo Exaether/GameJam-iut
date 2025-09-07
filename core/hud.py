@@ -17,7 +17,7 @@ class HUD:
         # Score
         self._draw_score(screen)
 
-        self.suspicion_service.draw_suspicion(screen)
+        self.suspicion_service.draw_suspicion(screen, self.settings.DEBUG_MODE)
 
         # Boussole
         if self.nb_items_max > 0 and map_layer == self.settings.LAYER_OF_MAP:

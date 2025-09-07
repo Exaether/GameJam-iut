@@ -49,9 +49,12 @@ class SuspicionService:
         self.__recalculate_suspicion_percentage()
         self.__apply_thresholds_if_needed(guards_group)
 
-    def draw_suspicion(self, screen):
+    def draw_suspicion(self, screen, debug_mode):
         text = self.hud_font.render(f"Suspicion: {int(self.suspicion)}%", True, self.SUSPICION_COLOR)
-        screen.blit(text, (10, 40))
+        if debug_mode:
+            screen.blit(text, (10, 40))
+        else:
+            screen.blit(text, (10, 10))
 
     def __recalculate_suspicion_percentage(self):
         if self.total_items > 0:
