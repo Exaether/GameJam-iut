@@ -39,7 +39,7 @@ class Credits:
              self.resources.subtitle_font),
             ("   Eric Fredricksen - sfxr.me", self.resources.subtitle_font),
             ("", self.resources.description_font),
-            ("Merci d'avoir joué !", self.resources.title_font),
+            ("Merci d'avoir joué !", self.resources.title_font)
         ]
         self.credit_surfaces = [font.render(text, True, self.settings.WHITE) for (text, font) in self.credits]
         # Position de départ en Y

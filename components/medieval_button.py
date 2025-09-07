@@ -29,8 +29,6 @@ class MedievalButton:
             self.rect = Rect((0, 0, self.width, self.height))
             self.rect.center = (self.center_x, self.center_y)
 
-        self.text.center_x = self.center_x
-        self.text.center_y = self.center_y
         self.text.text_rect.center = (self.center_x, self.center_y - 7)
         self.text.shadow_rect.center = (
             self.center_x + self.text.shadow_offset,
