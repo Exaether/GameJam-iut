@@ -41,6 +41,15 @@ class Game:
 
         self.running = True
 
+        self.handlers = {
+            GameState.INTRO: self.__handle_intro,
+            GameState.PLAYING: self.__handle_playing,
+            GameState.CREDITS: self.__handle_credits,
+            GameState.LOSE: self.__handle_lose,
+            GameState.WIN: self.__handle_win,
+            GameState.MENU: self.__handle_menu,
+        }
+
     # Factory qui permet de créer les différent état du jeu
     def intro(self): self.state_factory.create(GameState.INTRO)
     def play(self): self.state_factory.create(GameState.PLAYING)
@@ -59,6 +68,53 @@ class Game:
     def exit(self):
         self.running = False
 
+    #########################################################
+    # DIFFERENTES HANDLERS POUR CHAQUE ETAT
+    #########################################################
+    def __handle_intro(self, events, dt):
+        if self.intro_scene is None:
+            self.intro()
+        else:
+            self.intro_scene.handle_events(events)
+            self.intro_scene.update(dt)
+            self.intro_scene.draw(self.screen)
+    
+    def __handle_playing(self, events, dt):
+        self.playing.update(dt)
+        self.playing.draw(self.screen)
+        if not pygame.mixer.music.get_busy():   
+            pygame.mixer.music.play()
+
+    def __handle_credits(self, events, dt):
+        self.credits_playing.update()
+        finished = self.credits_playing.draw(self.screen)
+        if not finished or any(e.type == pygame.KEYDOWN for e in events):
+            pygame.mixer.music.stop()
+            self.back_to_menu()
+    
+    def __handle_lose(self, events, dt):
+        if self.game_lose_menu:
+            pygame.mixer.music.stop()
+            self.game_lose_menu.draw(self.screen)
+        else:
+            # Initialiser l'écran Game Lose à la première image
+            self.trigger_game_lose()
+
+    def __handle_win(self, events, dt):
+        if self.game_win_menu:
+            pygame.mixer.music.stop()
+            self.game_win_menu.draw(self.screen)
+        else:
+            # Initialiser l'écran Game Win à la première image
+            self.trigger_game_win()
+
+    def __handle_menu(self, events, dt):
+        self.menu.update()
+        self.menu.draw(self.screen)
+
+    #########################################################
+
+
     def run(self):
         while self.running:
             events = pygame.event.get()
@@ -70,46 +126,12 @@ class Game:
 
             self.event_controller.handle_events(events, dt)
 
-            current_state = self.state_manager.get_current_state()
+            state = self.state_manager.get_current_state()
 
-            if current_state == GameState.PLAYING:
-                self.playing.update(dt)
-                self.playing.draw(self.screen)
-                if not pygame.mixer.music.get_busy():
-                    pygame.mixer.music.play()
-            elif current_state == GameState.PAUSED:
-                # TODO: A réaliser
-                pass
-            elif current_state == GameState.MENU:
-                self.menu.update()
-                self.menu.draw(self.screen)
-            elif current_state == GameState.LOSE:
-                if self.game_lose_menu:
-                    pygame.mixer.music.stop()
-                    self.game_lose_menu.draw(self.screen)
-                else:
-                    # Initialiser l'écran Game Lose à la première image
-                    self.trigger_game_lose()
-            elif current_state == GameState.WIN:
-                if self.game_win_menu:
-                    pygame.mixer.music.stop()
-                    self.game_win_menu.draw(self.screen)
-                else:
-                    # Initialiser l'écran Game Win à la première image
-                    self.trigger_game_win()
-            elif current_state == GameState.CREDITS:
-                self.credits_playing.update()
-                finished = self.credits_playing.draw(self.screen)
-                if not finished or event.type == pygame.KEYDOWN:
-                    pygame.mixer.music.stop()
-                    self.back_to_menu()
-            elif current_state == GameState.INTRO:
-                if self.intro_scene is None:
-                    self.intro()
-                else:
-                    self.intro_scene.handle_events(events)
-                    self.intro_scene.update(dt)
-                    self.intro_scene.draw(self.screen)
+            # On récupère les actions a effectuer pour l'état courrant
+            handler = self.handlers.get(state)
+            if handler:
+                handler(events, dt)
 
             pygame.display.update()
             pygame.display.flip()
