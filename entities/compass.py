@@ -1,10 +1,10 @@
 import pygame
 
-import math
+from math import hypot, degrees, atan2
 from paths import get_asset_path
 
 
-class Compass(pygame.sprite.Sprite):
+class Compass:
     def __init__(self, x, y):
         self.arrow = pygame.image.load(get_asset_path('other','arrow.png')).convert_alpha()
         self.image = self.arrow
@@ -15,13 +15,14 @@ class Compass(pygame.sprite.Sprite):
         self.y = y
 
     def update(self, player, items):
-        rel_loot_x, rel_loot_y = self.__find_closest_item(player, items)
-        rel_loot_x, rel_loot_y = self.__normalize_distance(rel_loot_x, rel_loot_y)
-        angle = self.__calculate_angle(rel_loot_x, rel_loot_y)
+        rel_loot_x, rel_loot_y = Compass.__find_closest_item(player, items)
+        rel_loot_x, rel_loot_y = Compass.__normalize_distance(rel_loot_x, rel_loot_y)
+        angle = Compass.__calculate_angle(rel_loot_x, rel_loot_y)
 
         self.__update_image_position(angle, rel_loot_x, rel_loot_y)     
 
-    def __find_closest_item(self, player, items):
+    @staticmethod
+    def __find_closest_item(player, items):
         loot = items.sprites()[0]
         player_x = player.rect.centerx
         player_y = player.rect.centery
@@ -36,15 +37,17 @@ class Compass(pygame.sprite.Sprite):
                 rel_loot_x = rel_pos_x
                 rel_loot_y = rel_pos_y
         return rel_loot_x, rel_loot_y
-    
-    def __normalize_distance(self, rel_loot_x, rel_loot_y):
-        r = math.hypot(rel_loot_x, rel_loot_y)
+
+    @staticmethod
+    def __normalize_distance(rel_loot_x, rel_loot_y):
+        r = hypot(rel_loot_x, rel_loot_y)
         rel_loot_x /= r
         rel_loot_y /= r
         return rel_loot_x, rel_loot_y
 
-    def __calculate_angle(self, rel_loot_x, rel_loot_y):
-        return -math.degrees(math.atan2(rel_loot_y, rel_loot_x))
+    @staticmethod
+    def __calculate_angle(rel_loot_x, rel_loot_y):
+        return -degrees(atan2(rel_loot_y, rel_loot_x))
          
     def __update_image_position(self, angle, rel_loot_x, rel_loot_y):
         self.image = pygame.transform.rotate(self.arrow, angle)

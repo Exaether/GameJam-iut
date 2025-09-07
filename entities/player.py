@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x=0, y=0):
         super().__init__()
 
-        self.sprite_sheet = self._load_sprite_sheet()
+        self.sprite_sheet = Player._load_sprite_sheet()
         self.rect = pygame.Rect(x, y, self.SPRITE_SIZE, self.SPRITE_SIZE)
         self.speed = self.SPEED_DEFAULT
         self.items_collected = 0
@@ -54,7 +54,8 @@ class Player(pygame.sprite.Sprite):
         self.spacebar_image.blit(self.spacebar, (0, 0), (0, 0, self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT))
         self.spacebar_image.set_colorkey([0, 0, 0])
 
-    def _load_sprite_sheet(self):
+    @staticmethod
+    def _load_sprite_sheet():
         sprite_path = get_asset_path("entities", "player_sprite.png")
         try:
             return pygame.image.load(sprite_path).convert_alpha()
