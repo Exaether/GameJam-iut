@@ -1,7 +1,7 @@
 import pygame
 
 from math import pi, radians, cos, sin
-from typing import Dict, Tuple, Iterable, Optional
+from typing import Tuple, Iterable, Optional
 from enum import Enum
 
 
@@ -21,16 +21,11 @@ class VisionService:
         self.vision_range = vision_range
         self.vision_angle_degree = vision_angle_degree
 
-        self.__surface_cache: Dict[str, Tuple[pygame.Surface, pygame.mask.Mask]] = {}
-
-        self.vision_surface_transparent: Optional[pygame.Surface] = None
-        self.vision_mask: Optional[pygame.mask.Mask] = None
-        self.vision_rect: Optional[pygame.Rect] = None
-
         # LOS (line of sight)
         self.vision_surface_los: Optional[pygame.Surface] = None
         self.vision_mask_los: Optional[pygame.mask.Mask] = None
-
+        self.vision_rect: Optional[pygame.Rect] = None
+        
         self.__direction_angles = {
             "right": 0.0,
             "down": pi / 2,
@@ -43,31 +38,29 @@ class VisionService:
         self.__eraser_surface: Optional[pygame.Surface] = None
 
     def update_cone_vision(self, entity_rect: pygame.Rect, direction: str, dungeon_map=None):
-        self.__build_base_mask(entity_rect, shape=VisionShape.CONE, direction=direction)
+        self.__update_vision_rect(entity_rect)
         self.__generate_surface_los(entity_rect, shape=VisionShape.CONE, direction=direction, dungeon_map=dungeon_map)
 
-    def update_circular_vision(self, entity_rect: pygame.Rect, dungeon_map=None):
-        self.__build_base_mask(entity_rect, shape=VisionShape.CIRCLE)
+    def update_circular_vision(self, entity_rect: pygame.Rect, dungeon_map=None): 
+        self.__update_vision_rect(entity_rect)
         self.__generate_surface_los(entity_rect, shape=VisionShape.CIRCLE, dungeon_map=dungeon_map)
 
     def is_target_in_vision(self, target):
         is_target_in_vision = False
-        if hasattr(target, "rect") and hasattr(target, "mask"):
-            mask = self.vision_mask_los or self.vision_mask
-            if mask and self.vision_rect:
-                offset = (target.rect.x - self.vision_rect.x, target.rect.y - self.vision_rect.y)
-                is_target_in_vision = bool(mask.overlap(target.mask, offset))
+        if self.vision_mask_los:
+            offset = (target.rect.x - self.vision_rect.x, target.rect.y - self.vision_rect.y)
+            is_target_in_vision = bool(self.vision_mask_los.overlap(target.mask, offset))
         return is_target_in_vision
 
     def draw_vision_cone(self, surface: pygame.Surface, camera: Tuple[int, int], color=(255, 255, 0, 64)):
-        """Dessine la zone de vision (LOS si dispo, sinon avec la vision transparente)."""
-        src = self.vision_surface_los or self.vision_surface_transparent
-        if src and self.vision_rect:
-            if (self.__temp_display_surface is None) or (self.__temp_display_surface.get_size() != src.get_size()):
-                self.__temp_display_surface = pygame.Surface(src.get_size(), pygame.SRCALPHA)
+        """Dessine la zone de vision (LOS)."""
+        surface_los = self.vision_surface_los
+        if surface_los and self.vision_rect:
+            if (self.__temp_display_surface is None) or (self.__temp_display_surface.get_size() != surface_los.get_size()):
+                self.__temp_display_surface = pygame.Surface(surface_los.get_size(), pygame.SRCALPHA)
 
             self.__temp_display_surface.fill((0, 0, 0, 0))
-            self.__temp_display_surface.blit(src, (0, 0))
+            self.__temp_display_surface.blit(surface_los, (0, 0))
             self.__temp_display_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
 
             surface.blit(self.__temp_display_surface, self.vision_rect.move(camera).topleft)
@@ -86,18 +79,18 @@ class VisionService:
 
         self.__darkness_surface.fill(darkness_color)
 
-        src = self.vision_surface_los or self.vision_surface_transparent
-        if src and self.vision_rect:
+        surface_los = self.vision_surface_los
+        if surface_los and self.vision_rect:
             vsx, vsy = self.vision_rect.x + camera[0], self.vision_rect.y + camera[1]
             draw_x, draw_y = max(0, vsx), max(0, vsy)
-            draw_w = min(src.get_width(), screen_width - draw_x)
-            draw_h = min(src.get_height(), screen_height - draw_y)
+            draw_w = min(surface_los.get_width(), screen_width - draw_x)
+            draw_h = min(surface_los.get_height(), screen_height - draw_y)
 
             if draw_w > 0 and draw_h > 0:
-                src_x = max(0, -vsx)
-                src_y = max(0, -vsy)
+                surface_los_x = max(0, -vsx)
+                surface_los_y = max(0, -vsy)
                 try:
-                    clip = src.subsurface((src_x, src_y, draw_w, draw_h))
+                    clip = surface_los.subsurface((surface_los_x, surface_los_y, draw_w, draw_h))
                     if (self.__eraser_surface is None) or (self.__eraser_surface.get_size() != (draw_w, draw_h)):
                         self.__eraser_surface = pygame.Surface((draw_w, draw_h), pygame.SRCALPHA)
 
@@ -111,55 +104,10 @@ class VisionService:
 
         surface.blit(self.__darkness_surface, (0, 0))
 
-    def clear_cache(self):
-        self.__surface_cache.clear()
-        self.__temp_display_surface = None
-        self.__darkness_surface = None
-        self.__eraser_surface = None
-
-    def __build_base_mask(self, entity_rect: pygame.Rect, shape: VisionShape, direction: Optional[str] = None):
-        """Construit le masque de base (sans LOS), avec cache sino on le génère"""
-        diameter = self.__diameter()
-        cache_key = self.__cache_key(shape, direction)
-
-        cached = self.__surface_cache.get(cache_key)
-        if cached:
-            surface, mask = cached
-            self.vision_surface_transparent = surface.copy()
-            self.vision_mask = mask.copy()
-        else:
-            s = self.__transparent_surface(diameter)
-            cx = cy = diameter // 2
-
-            if shape == VisionShape.CONE:
-                base_angle = self.__direction_to_angle(direction)
-                points = self.__generate_points_cone((cx, cy), base_angle, self.vision_angle_degree)
-                pygame.draw.polygon(s, (255, 255, 255, 255), points)
-            elif shape == VisionShape.CIRCLE:
-                pygame.draw.circle(s, (255, 255, 255, 255), (cx, cy), self.vision_range)
-
-            m = pygame.mask.from_surface(s)
-            self.__surface_cache[cache_key] = (s.copy(), m.copy())
-            self.vision_surface_transparent = s
-            self.vision_mask = m
-
-        self.vision_rect = pygame.Rect(
-            entity_rect.centerx - self.vision_range,
-            entity_rect.centery - self.vision_range,
-            diameter,
-            diameter,
-        )
-
     def __generate_surface_los(self, entity_rect: pygame.Rect, shape: VisionShape, direction: Optional[str] = None, dungeon_map=None):
-        if self.__is_valid_map(dungeon_map):
-            surface_los = self.__create_transparent_surface_los(shape, entity_rect, direction, dungeon_map)
-            self.__apply_surface_los(surface_los)
-        else:
-            self.__reset_surface_los()
-
-    def __reset_surface_los(self):
-        self.vision_surface_los = None
-        self.vision_mask_los = None
+        surface_los = self.__create_transparent_surface_los(shape, entity_rect, direction, dungeon_map)
+        self.vision_surface_los = surface_los
+        self.vision_mask_los = pygame.mask.from_surface(surface_los)
 
     def __create_transparent_surface_los(self, shape: VisionShape, entity_rect: pygame.Rect, direction: Optional[str], dungeon_map):
         diameter = self.__diameter()
@@ -170,10 +118,6 @@ class VisionService:
         if len(polygon_points) > 2:
             pygame.draw.polygon(surface, (255, 255, 255, 255), polygon_points)
         return surface
-
-    def __apply_surface_los(self, surface_los: pygame.Surface):
-        self.vision_surface_los = surface_los
-        self.vision_mask_los = pygame.mask.from_surface(surface_los)
 
     def __get_angles_los(self, shape: VisionShape, direction: Optional[str]):
         angles = []
@@ -188,20 +132,6 @@ class VisionService:
     def __calculate_points_polygone_los(self, entite_rect: pygame.Rect, local_center: tuple, angles, dungeon_map):
         world_center = (entite_rect.centerx, entite_rect.centery)
         return self.__los_polygon_points(world_center, local_center, angles, dungeon_map)
-
-    def __generate_points_cone(self, center: Tuple[int, int], base_angle: float, fov_deg: int):
-        cx, cy = center
-        half_angle = radians(fov_deg / 2)
-        # Détermine le nombre de rayons en fonction de l'angle de vision
-        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, max(20, int(self.vision_angle_degree * 0.5))))
-        step = (2 * half_angle) / (n - 1)
-        points = [(cx, cy)]
-        for i in range(n):
-            angle = base_angle - half_angle + i * step
-            x = cx + self.vision_range * cos(angle)
-            y = cy + self.vision_range * sin(angle)
-            points.append((x, y))
-        return points
 
     def __generate_angles_cone(self, base_angle: float, half_angle_rad: float):
         # Détermine le nombre de rayons en fonction de l'angle de vision
@@ -240,7 +170,7 @@ class VisionService:
         """Lance un rayon et retourne la distance d'intersection avec un obstacle ou la portée max (aucun obsatcle)"""
         distance_to_obstacle = float(self.vision_range)
 
-        if self.__is_valid_map(dungeon_map):
+        if dungeon_map:
             start_x, start_y = start
             direction_x, direction_y = cos(angle), sin(angle)
 
@@ -276,9 +206,9 @@ class VisionService:
         return distance_to_obstacle
 
     def __transparent_surface(self, size: int):
-        s = pygame.Surface((size, size), pygame.SRCALPHA)
-        s.fill((0, 0, 0, 0))
-        return s
+        surface = pygame.Surface((size, size), pygame.SRCALPHA)
+        surface.fill((0, 0, 0, 0))
+        return surface
 
     def __diameter(self):
         return self.vision_range * 2
@@ -289,14 +219,12 @@ class VisionService:
             direction_to_angle = self.__direction_angles.get(direction, 0.0)
         return direction_to_angle
 
-    def __cache_key(self, shape: VisionShape, direction: Optional[str]):
-        cache_key = ""
-        if shape == VisionShape.CIRCLE:
-            cache_key = f"vision_circle_r{self.vision_range}"
-        elif shape == VisionShape.CONE:
-            cache_key = f"vision_cone_r{self.vision_range}_a{self.vision_angle_degree}_dir{direction}"
-        return cache_key
 
-    @staticmethod
-    def __is_valid_map(dungeon_map):
-        return bool(dungeon_map and hasattr(dungeon_map, "mask") and hasattr(dungeon_map, "rect"))
+    def __update_vision_rect(self, entity_rect: pygame.Rect):
+        diameter = self.__diameter()
+        self.vision_rect = pygame.Rect(
+            entity_rect.centerx - self.vision_range,
+            entity_rect.centery - self.vision_range,
+            diameter,
+            diameter,
+        )
