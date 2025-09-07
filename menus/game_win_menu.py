@@ -45,18 +45,28 @@ class GameWinMenu:
         encouragement_message_1, encouragement_message_2, color = (
             GameWinMenu.__get_encouragement_message_and_color(final_score, nb_items_max)
         )
-        self.encouragement_message_text_1 = MedievalText(
-            screen_width // 2, 300,
-            encouragement_message_1,
-            self.resources.description_font,
-            color
-        )
-        self.encouragement_message_text_2 = MedievalText(
-            screen_width // 2, 335,
-            encouragement_message_2,
-            self.resources.description_font,
-            color
-        )
+        if encouragement_message_2:
+            self.encouragement_message_text_1 = MedievalText(
+                screen_width // 2, 305,
+                encouragement_message_1,
+                self.resources.description_font,
+                color
+            )
+            self.encouragement_message_text_2 = MedievalText(
+                screen_width // 2, 340,
+                encouragement_message_2,
+                self.resources.description_font,
+                color
+            )
+            texts = [self.title, self.score_text, self.encouragement_message_text_1, self.encouragement_message_text_2]
+        else:
+            self.encouragement_message_text_1 = MedievalText(
+                screen_width // 2, 320,
+                encouragement_message_1,
+                self.resources.description_font,
+                color
+            )
+            texts = [self.title, self.score_text, self.encouragement_message_text_1]
 
         # Bouton rejouer
         retry_text = MedievalText(
@@ -94,7 +104,7 @@ class GameWinMenu:
         self.menu = Menu(
             Resources.MENU_BACKGROUND_COLOR,
             self.panel,
-            [self.title, self.score_text, self.encouragement_message_text_1, self.encouragement_message_text_2],
+            texts,
             self.buttons
         )
 
