@@ -120,10 +120,6 @@ class Game:
             events = pygame.event.get()
             dt = self.clock.tick(self.settings.FPS) / 1000
 
-            for event in events:
-                if event.type == pygame.QUIT:
-                    self.running = False
-
             self.event_controller.handle_events(events, dt)
 
             state = self.state_manager.get_current_state()

@@ -58,7 +58,9 @@ class EventController:
 
     def __handle_input_events(self, events, current_state):
         for event in events:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.QUIT:
+                self.game.running = False
+            elif event.type == pygame.KEYDOWN:
                 self._handle_keydown(event.key, current_state)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self._handle_mousedown(event.pos, current_state)
