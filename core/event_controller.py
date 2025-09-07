@@ -19,6 +19,14 @@ class EventController:
     def set_exit_door(self, exit_door):
         self.exit_door = exit_door
     
+    
+    def reset(self):
+        """Reset l\'état interne du contrôleur d\'événements pour une nouvelle partie"""
+        self.player = None
+        self.map = None
+        self.exit_door = None
+        self.is_player_in_trapdoor_animation = False
+        
     def _get_buttons_for_state(self, game_state):
         """Retourne la liste des boutons pour un état de jeu donné"""
         buttons = []
