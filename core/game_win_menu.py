@@ -34,18 +34,25 @@ class GameWinMenu:
 
         # Sous-titre
         self.score_text = MedievalText(
-            screen_width // 2, 225,
+            screen_width // 2, 230,
             f"Trésors pillés : {final_score}",
             self.resources.subtitle_font,
             Resources.SILVER_COLOR
         )
 
-        encouragement_message = GameWinMenu.__get_encouragement_message(final_score)
-        self.encouragement_message_text = MedievalText(
-            screen_width // 2, 290,
-            encouragement_message,
+        # Texte d'encouragement
+        encouragement_message_1, encouragement_message_2, color = GameWinMenu.__get_encouragement_message_and_color(final_score)
+        self.encouragement_message_text_1 = MedievalText(
+            screen_width // 2, 300,
+            encouragement_message_1,
             self.resources.description_font,
-            Resources.PURPLE_COLOR
+            color
+        )
+        self.encouragement_message_text_2 = MedievalText(
+            screen_width // 2, 335,
+            encouragement_message_2,
+            self.resources.description_font,
+            color
         )
 
         # Bouton rejouer
@@ -54,7 +61,7 @@ class GameWinMenu:
             self.resources.button_font, Resources.GOLD_COLOR
         )
         self.retry_button = MedievalButton(
-            screen_width // 2, 400, 0, 0,
+            screen_width // 2, 450, 0, 0,
             retry_text,
             on_retry_action,
             None,
@@ -69,7 +76,7 @@ class GameWinMenu:
             self.resources.button_font, Resources.GOLD_COLOR
         )
         self.menu_button = MedievalButton(
-            screen_width // 2, 495, 0, 0,
+            screen_width // 2, 545, 0, 0,
             menu_text,
             on_menu_action,
             None,
@@ -84,21 +91,21 @@ class GameWinMenu:
         self.menu = Menu(
             Resources.MENU_BACKGROUND_COLOR,
             self.panel,
-            [self.title, self.score_text, self.encouragement_message_text],
+            [self.title, self.score_text, self.encouragement_message_text_1, self.encouragement_message_text_2],
             self.buttons
         )
 
     @staticmethod
-    def __get_encouragement_message(score: int) -> str:
+    def __get_encouragement_message_and_color(score: int) -> (str, str):
         """Messages d'encouragement dans le style médiéval noble"""
         if score == 0:
-            return "Hélas ! Les gardes étaient trop vigilants..."
+            return "Hélas !", "Les gardes étaient trop vigilants...", Resources.CRIMSON_COLOR
         elif score <= 3:
-            return "Quelques pièces d'or... Un début prometteur !"
+            return "Quelques pièces d'or...", "Un début prometteur !", Resources.WOOD_COLOR
         elif score <= 7:
-            return "Belle razzia ! Tu deviens un habile brigand !"
+            return "Belle razzia !", "Tu deviens un habile brigand !", Resources.PURPLE_COLOR
         else:
-            return "Magnifique butin ! Le roi tremble !"
+            return "Magnifique butin !", "Le roi tremble !", Resources.GOLD_COLOR
 
     def draw(self, surface):
         self.menu.draw(surface)
