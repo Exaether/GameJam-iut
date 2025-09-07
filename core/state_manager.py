@@ -22,18 +22,6 @@ class StateManager:
             self.current_state = new_state
             self.state_changed = True
     
-    def is_state(self, state):
-        return self.current_state == state
-    
     def get_current_state(self):
         return self.current_state
-    
-    def get_previous_state(self):
-        return self.previous_state
-    
-    def has_state_changed(self):
-        state = False
-        if self.state_changed:
-            self.state_changed = False
-            state = True
-        return state
+
