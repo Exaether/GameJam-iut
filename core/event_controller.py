@@ -43,13 +43,20 @@ class EventController:
             button.check_click(mouse_pos)
     
     def handle_events(self, events, dt):
+        """Gère les événements du jeu"""
         current_state = self.game.state_manager.get_current_state()
         
-        if self.is_player_in_trapdoor_animation:
-            if not self.player.is_traversing_trapdoor:
-                self.map.switch_map()
-                self.is_player_in_trapdoor_animation = False
+        self.__handle_trapdoor_animation()
+        self.__handle_input_player_movement(dt, current_state)
+        self.__handle_input_events(events, current_state)
+    
 
+    def __handle_trapdoor_animation(self):
+        if self.is_player_in_trapdoor_animation and not self.player.is_traversing_trapdoor:
+            self.map.switch_map()
+            self.is_player_in_trapdoor_animation = False
+
+    def __handle_input_events(self, events, current_state):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 self._handle_keydown(event.key, current_state)
@@ -57,7 +64,8 @@ class EventController:
                 self._handle_mousedown(event.pos, current_state)
             elif event.type == pygame.MOUSEMOTION:
                 self._handle_mousemotion(event.pos, current_state)
-        
+    
+    def __handle_input_player_movement(self, dt, current_state):
         if self.player and current_state == GameState.PLAYING:
             keys = pygame.key.get_pressed()
             
