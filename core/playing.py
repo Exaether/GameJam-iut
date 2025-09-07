@@ -17,6 +17,8 @@ from entities.exitDoor import ExitDoor
 
 from core.clock import Clock
 
+from utils.load_csv import load_csv
+
 
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
@@ -55,47 +57,32 @@ class Playing:
         Enemy.GUARD_DEFAULT_SPEED = 1.8
 
     def guard_generator(self):
-        with open(get_data_path("guards.csv"), "r") as file:
-            for line in file:
-                parts = line.strip().split(",")
-
-                if len(parts) < 7:
-                    continue  # Ignore les lignes invalides
-
-                x = int(parts[0])
-                y = int(parts[1])
-                min_x = int(parts[2])
-                max_x = int(parts[3])
-                min_y = int(parts[4])
-                max_y = int(parts[5])
-                type = parts[6]
-                # Direction est optionnelle
-                if len(parts) > 7:
-                    direction = parts[7]
-                    guard = Enemy(x, y, min_x, max_x, min_y, max_y, type, direction)
-                else:
-                    guard = Enemy(x, y, min_x, max_x, min_y, max_y, type)
+        # Méthode interne pour construire un garde à partir d'une ligne du CSV
+        def build_guard(parts):
+            # On ignore les lignes invalides
+            if len(parts) >= 7:
+                x, y, min_x, max_x, min_y, max_y = map(int, parts[:6])
+                guard_type = parts[6]
+                direction = parts[7] if len(parts) > 7 else None
+                guard = Enemy(x, y, min_x, max_x, min_y, max_y, guard_type, direction)
                 self.guards_list.add(guard)
 
+
+        load_csv("guards.csv", build_guard)
+
     def items_generator(self):
-        with open(get_data_path("items.csv"), "r") as file:
-            nb_items = 0
-            for line in file:
-                parts = line.strip().split(",")
-
-                if len(parts) != 2:
-                    continue  # Ignore les lignes mal formatées
-
+        # Méthode interne pour construire un item à partir d'une ligne du CSV
+        def build_item(parts):
+            if len(parts) == 2:
                 try:
-                    x = int(parts[0])
-                    y = int(parts[1])
+                    x, y = map(int, parts)
                     item = Item(x, y)
                     self.item_list.add(item)
-                    nb_items += 1
                 except ValueError:
-                    continue  # Ignore les valeurs non numériques
+                    pass  # Ignore les valeurs non numériques
 
-            self.nb_items_max = nb_items
+        load_csv("items.csv", build_item)
+        self.nb_items_max = len(self.item_list)
 
     def update(self, dt):
         self.player.update(dt, self.map)
