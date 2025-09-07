@@ -33,7 +33,7 @@ class Credits:
             ("   Oink55 - Fantasy UI (Itch.io)", self.resources.subtitle_font),
             ("", self.resources.description_font),
             ("Musique : ", self.resources.title_font),
-            ("   Kevin MacLeod - incompetech.com (Creative Commons)", self.resources.subtitle_font),
+            ("   Kevin MacLeod - Mesmerizing Galaxy (Incompetech.com)", self.resources.subtitle_font),
             ("   RUSTED MUSIC STUDIO Music & Assets - 10 spooky 8bit tracks (Itch.io)",
              self.resources.subtitle_font),
             ("   Eric Fredricksen - sfxr.me", self.resources.subtitle_font),
