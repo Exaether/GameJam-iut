@@ -29,7 +29,8 @@ class Item(pygame.sprite.Sprite):
 
         self.pulse_timer = 0
 
-    def get_pulse_scale(self):
+    @staticmethod
+    def get_pulse_scale():
         t = pygame.time.get_ticks() / 1000.0
         t_cycle = t % PULSATION_CYCLE
 
@@ -50,7 +51,8 @@ class Item(pygame.sprite.Sprite):
 
         return pulsation_scale
 
-    def draw_highlight(self, screen, screen_rect, color=(255, 255, 255, 180), thickness=3,
+    @staticmethod
+    def draw_highlight(screen, screen_rect, color=(255, 255, 255, 180), thickness=3,
                        pulsation_scale=ORIGINAL_SCALE_PERCENT):
         # screen_rect est déjà ajusté à la caméra
         highlight_rect = screen_rect.inflate(thickness * 2, thickness * 2)
@@ -69,11 +71,11 @@ class Item(pygame.sprite.Sprite):
         screen.blit(highlight_surface, highlight_rect.topleft)
 
     def draw(self, screen, camera):
-        pulsation_scale = self.get_pulse_scale()
+        pulsation_scale = Item.get_pulse_scale()
         screen_pos = self.rect.move(camera)
 
         # Dessiner le highlight en pulsation
-        self.draw_highlight(screen, screen_pos, pulsation_scale=pulsation_scale)
+        Item.draw_highlight(screen, screen_pos, pulsation_scale=pulsation_scale)
 
         # Dessiner l'item en pulsation
         self.__draw_item(screen, screen_pos, pulsation_scale)

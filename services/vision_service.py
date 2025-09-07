@@ -111,7 +111,7 @@ class VisionService:
 
     def __create_transparent_surface_los(self, shape: VisionShape, entity_rect: pygame.Rect, direction: Optional[str], dungeon_map):
         diameter = self.__diameter()
-        surface = self.__transparent_surface(diameter)
+        surface = VisionService.__transparent_surface(diameter)
         local_center = (diameter // 2, diameter // 2)
         angles = self.__get_angles_los(shape, direction)
         polygon_points = self.__calculate_points_polygone_los(entity_rect, local_center, angles, dungeon_map)
@@ -129,7 +129,7 @@ class VisionService:
             angles = self.__generate_angles_cone(angle_base, demi_angle)
         return angles
 
-    def __calculate_points_polygone_los(self, entite_rect: pygame.Rect, local_center: tuple, angles, dungeon_map):
+    def __calculate_points_polygone_los(self, entite_rect: pygame.Rect, local_center: tuple[int, int], angles, dungeon_map):
         world_center = (entite_rect.centerx, entite_rect.centery)
         return self.__los_polygon_points(world_center, local_center, angles, dungeon_map)
 
@@ -163,7 +163,7 @@ class VisionService:
         pts = [(cxl, cyl)]
         for a in angles:
             d = self.__cast_ray((cxw, cyw), a, dungeon_map)
-            pts.append((cxl + d * cos(a), cyl + d * sin(a)))
+            pts.append((int(cxl + d * cos(a)), int(cyl + d * sin(a))))
         return pts
 
     def __cast_ray(self, start: Tuple[int, int], angle: float, dungeon_map):
@@ -205,7 +205,8 @@ class VisionService:
 
         return distance_to_obstacle
 
-    def __transparent_surface(self, size: int):
+    @staticmethod
+    def __transparent_surface(size: int):
         surface = pygame.Surface((size, size), pygame.SRCALPHA)
         surface.fill((0, 0, 0, 0))
         return surface

@@ -1,7 +1,5 @@
 from pygame.sprite import spritecollide
 
-from paths import *
-
 from services.resources import Resources
 from services.suspicion_service import SuspicionService
 

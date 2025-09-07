@@ -138,7 +138,8 @@ class IntroGame:
             if self.type_accumulator >= self.DELAY_AFTER_LINE_SECONDS:
                 self.allow_advance = True
 
-    def __wrap_text(self, text, font, max_width):
+    @staticmethod
+    def __wrap_text(text, font, max_width):
         """Découpe le texte en lignes pour qu'il soit visible dans la boîte de dialogue"""
         lines = []
         if text:
@@ -146,24 +147,26 @@ class IntroGame:
             lines, current_line = [], ""
 
             for word in words:
-                if self.__fits_in_line(word, font, max_width, prefix=current_line):
+                if IntroGame.__fits_in_line(word, font, max_width, prefix=current_line):
                     current_line = (current_line + " " + word).strip()
                 else:
                     if current_line:
                         lines.append(current_line)
-                    current_line = self.__break_word(word, font, max_width)
+                    current_line = IntroGame.__break_word(word, font, max_width)
 
             if current_line:
                 lines.append(current_line)
 
         return lines
 
-    def __fits_in_line(self, word, font, max_width, prefix=""):
+    @staticmethod
+    def __fits_in_line(word, font, max_width, prefix=""):
         """Vérifie si un mot peut être ajouté à une ligne de texte sans dépasser de la largeur max"""
         test_line = (prefix + " " + word).strip()
         return font.size(test_line)[0] <= max_width
 
-    def __break_word(self, word, font, max_width):
+    @staticmethod
+    def __break_word(word, font, max_width):
         """Découpe un mot trop long en morceaux valides"""
         parts, part = [], ""
         for ch in word:
@@ -191,7 +194,7 @@ class IntroGame:
 
         if self.font:
             max_text_width = dialog_width - 2 * self.DIALOG_BOX_PADDING
-            lines = self.__wrap_text(self.current_text, self.font, max_text_width)
+            lines = IntroGame.__wrap_text(self.current_text, self.font, max_text_width)
             line_height = self.font.get_linesize()
             text_height = max(line_height, len(lines) * line_height)
             dialog_height = max(self.DIALOG_BOX_MIN_HEIGHT, text_height + 2 * self.DIALOG_BOX_PADDING)

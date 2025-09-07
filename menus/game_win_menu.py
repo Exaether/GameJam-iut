@@ -42,7 +42,9 @@ class GameWinMenu:
         )
 
         # Texte d'encouragement
-        encouragement_message_1, encouragement_message_2, color = GameWinMenu.__get_encouragement_message_and_color(final_score, nb_items_max)
+        encouragement_message_1, encouragement_message_2, color = (
+            GameWinMenu.__get_encouragement_message_and_color(final_score, nb_items_max)
+        )
         self.encouragement_message_text_1 = MedievalText(
             screen_width // 2, 300,
             encouragement_message_1,
@@ -99,12 +101,11 @@ class GameWinMenu:
     @staticmethod
     def __get_encouragement_message_and_color(nb_items_collected: int, nb_items_max: int):
         """Messages d'encouragement"""
-        message_line_1 = ""
-        message_line_2 = ""
         color = Resources.CRIMSON_COLOR
         if nb_items_collected <= 0:
             message_line_1 = "Qu'avez-vous fait ?"
-        elif nb_items_collected <= nb_items_max*0.1:
+            message_line_2 = ""
+        elif nb_items_collected <= nb_items_max * 0.1:
             message_line_1 = "Hélas !"
             message_line_2 = "Les gardes étaient trop vigilants..."
             color = Resources.CRIMSON_COLOR

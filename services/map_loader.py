@@ -4,10 +4,13 @@ from entities.enemy import Enemy
 from entities.item import Item
 from utils.load_csv import load_csv
 
+
 class LevelLoader:
     # Méthode interne pour construire un garde à partir d'une ligne du CSV
+    @staticmethod
     def load_guards():
         guards_list = EnemyGroup()
+
         def build_guard(parts):
             # On ignore les lignes invalides
             if len(parts) >= 7:
@@ -20,8 +23,10 @@ class LevelLoader:
         load_csv("guards.csv", build_guard)
         return guards_list
 
+    @staticmethod
     def load_items():
         items_list = Group()
+
         # Méthode interne pour construire un item à partir d'une ligne du CSV
         def build_item(parts):
             if len(parts) == 2:
