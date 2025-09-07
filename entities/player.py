@@ -63,12 +63,12 @@ class Player(pygame.sprite.Sprite):
             return None
 
     def _get_sprite_rect(self, direction, frame):
-        if self.sprite_sheet is None:
-            return None
-
-        x = self.DIRECTION_ROW.get(direction, self.DIRECTION_ROW["down"])
-        y = frame * self.SPRITE_SIZE
-        return pygame.Rect(x, y, self.SPRITE_SIZE, self.SPRITE_SIZE)
+        sprite_rect = None
+        if self.sprite_sheet is not None:
+            x = self.DIRECTION_ROW.get(direction, self.DIRECTION_ROW["down"])
+            y = frame * self.SPRITE_SIZE
+            sprite_rect = pygame.Rect(x, y, self.SPRITE_SIZE, self.SPRITE_SIZE)
+        return sprite_rect
 
     def _get_current_sprite(self):
         sprite_surface = None
