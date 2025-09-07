@@ -5,7 +5,7 @@ from os import environ
 
 from services.resources import Resources
 
-from core.main_menu import MainMenu
+from menus.main_menu import MainMenu
 from core.settings import Settings
 from core.state_manager import StateManager, GameState 
 from core.event_controller import EventController

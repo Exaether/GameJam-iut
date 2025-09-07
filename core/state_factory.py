@@ -5,8 +5,8 @@ from core.state_manager import GameState
 from core.playing import Playing
 from core.intro_game import IntroGame
 from core.credits import Credits
-from core.game_lose_menu import GameLoseMenu
-from core.game_win_menu import GameWinMenu
+from menus.game_lose_menu import GameLoseMenu
+from menus.game_win_menu import GameWinMenu
 
 # Factory qui permet de créer les différent état du jeu
 class StateFactory:
