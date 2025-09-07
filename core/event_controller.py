@@ -70,7 +70,7 @@ class EventController:
                 self.game.running = False
             elif event.type == pygame.KEYDOWN:
                 self._handle_keydown(event.key, current_state)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self._handle_mousedown(event.pos, current_state)
             elif event.type == pygame.MOUSEMOTION:
                 self._handle_mousemotion(event.pos, current_state)
