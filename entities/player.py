@@ -1,6 +1,6 @@
 import pygame
 
-from os.path import join
+from paths import get_asset_path
 
 from services.resources import Resources
 from services.vision_service import VisionService
@@ -47,14 +47,14 @@ class Player(pygame.sprite.Sprite):
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
 
     def __init_spacebar(self):
-        spacebar_path = join("assets", "other", "spacebar.png")
+        spacebar_path = get_asset_path("other", "spacebar.png")
         self.spacebar = pygame.image.load(spacebar_path)
         self.spacebar_image = pygame.Surface([self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT])
         self.spacebar_image.blit(self.spacebar, (0, 0), (0, 0, self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT))
         self.spacebar_image.set_colorkey([0, 0, 0])
 
     def _load_sprite_sheet(self):
-        sprite_path = join("assets", "entities", "player_sprite.png")
+        sprite_path = get_asset_path("entities", "player_sprite.png")
         try:
             return pygame.image.load(sprite_path).convert_alpha()
         except pygame.error as e:

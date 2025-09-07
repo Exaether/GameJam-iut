@@ -1,7 +1,7 @@
 import pygame
 
-from os.path import join
 from random import randint
+from paths import get_asset_path
 
 from services.resources import Resources
 from services.vision_service import VisionService
@@ -33,8 +33,8 @@ class Enemy(pygame.sprite.Sprite):
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
         self.speed_multiplier = 1.0
 
-    def __init_sprite(self, pattern_type="square", direction="right"):
-        sprite_path = join("assets", "entities", "enemy_sprite.png")
+    def __init_sprite(self, pattern_type="square", direction = "right"):
+        sprite_path = get_asset_path("entities", "enemy_sprite.png")
         self.sprite_sheet = pygame.image.load(sprite_path)
         self.sprite_sheet = pygame.transform.scale(self.sprite_sheet, (self.SPRITE_SIZE * 4, self.SPRITE_SIZE * 2))
         self.image = pygame.Surface([self.SPRITE_SIZE, self.SPRITE_SIZE])
@@ -102,7 +102,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init_alertness(self):
         self.alertness = 0
-        exclamation_path = join("assets", "other", "exclamation_mark.png")
+        exclamation_path = get_asset_path("other", "exclamation_mark.png")
         self.exclamation_mark = pygame.image.load(exclamation_path)
         self.exclamation_mark = pygame.transform.scale(self.exclamation_mark,
                                                        (self.SIZE_EXCLAMATION_MARK, self.SIZE_EXCLAMATION_MARK))
@@ -122,7 +122,6 @@ class Enemy(pygame.sprite.Sprite):
         self.image.set_colorkey([0, 0, 0])
 
     def __get_sprite_y(self):
-        sprite_y = 0
         if self.direction in ("right", "down"):
             sprite_y = 0
         else:
@@ -221,14 +220,13 @@ class Enemy(pygame.sprite.Sprite):
 
     def __patrol_step_finished(self):
         """Signale si le garde a parcouru la distance de son parcours aléatoire"""
-        step = self.__get_current_patrol_step()
         first_flag = False
         second_flag = False
-        if (self.x_range_max > 0):
+        if self.x_range_max > 0:
             first_flag = self.step_progress >= self.patrol_distance_x
-        if (self.y_range_max > 0):
+        if self.y_range_max > 0:
             second_flag = self.step_progress >= self.patrol_distance_y
-        return (first_flag or second_flag)
+        return first_flag or second_flag
 
     def __next_patrol_step(self):
         """Modifie la direction vers l'opposer"""

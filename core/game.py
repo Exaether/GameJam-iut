@@ -2,6 +2,7 @@ import pygame
 
 from sys import exit
 from os import environ
+from paths import get_asset_path
 
 from core.game_lose_menu import GameLoseMenu
 from core.game_win_menu import GameWinMenu
@@ -40,20 +41,20 @@ class Game:
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.intro_scene = IntroGame(self)
         self.state_manager.change_state(GameState.INTRO)
-        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
+        pygame.mixer.music.load(get_asset_path('music','10-8bit10loop.ogg'))
         pygame.mixer.music.play(-1)
 
     def credits(self):
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         self.credits_playing = Credits(self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT)
         self.state_manager.change_state(GameState.CREDITS)
-        pygame.mixer.music.load("./assets/music/Mesmerizing Galaxy Loop.mp3")
+        pygame.mixer.music.load(get_asset_path("music", "Mesmerizing Galaxy Loop.mp3"))
         pygame.mixer.music.play(-1)
 
     def play(self):
         self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.playing = Playing(self, self.event_controller)
-        pygame.mixer.music.load('./assets/music/10-8bit10loop.ogg')
+        pygame.mixer.music.load(get_asset_path('music','10-8bit10loop.ogg'))
         pygame.mixer.music.play(-1)
         self.state_manager.change_state(GameState.PLAYING)
 
@@ -145,7 +146,6 @@ class Game:
                 self.credits_playing.update()
                 finished = self.credits_playing.draw(self.screen)
                 if not finished or event.type == pygame.KEYDOWN:
-                    current_state = GameState.MENU
                     pygame.mixer.music.stop()
                     self.back_to_menu()
             elif current_state == GameState.INTRO:

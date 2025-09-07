@@ -1,7 +1,7 @@
 from pygame.sprite import Group, spritecollide
 from pygame.font import Font
 
-from os.path import join
+from paths import *
 
 from services.resources import Resources
 from services.suspicion_service import SuspicionService
@@ -55,7 +55,7 @@ class Playing:
         Enemy.GUARD_DEFAULT_SPEED = 1.8
 
     def guard_generator(self):
-        with open(join("data", "guards.csv"), "r") as file:
+        with open(get_data_path("guards.csv"), "r") as file:
             for line in file:
                 parts = line.strip().split(",")
 
@@ -78,7 +78,7 @@ class Playing:
                 self.guards_list.add(guard)
 
     def items_generator(self):
-        with open(join("data", "items.csv"), "r") as file:
+        with open(get_data_path("items.csv"), "r") as file:
             nb_items = 0
             for line in file:
                 parts = line.strip().split(",")
@@ -116,17 +116,16 @@ class Playing:
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN
 
-        camera = (-self.player.rect.centerx + self.screen.get_rect().centerx,
-                  -self.player.rect.centery + self.screen.get_rect().centery)
         # Mettre à jour les gardes avec les collisions
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.x - self.player.rect.centerx) < self.settings.GAME_SCREEN_WIDTH / 2 and \
-                    abs(guard.y - self.player.rect.centery) < self.settings.GAME_SCREEN_HEIGHT / 2:
+            if abs(guard.x - self.player.rect.centerx) < (self.settings.GAME_SCREEN_WIDTH / 2 + 100) and\
+                abs(guard.y - self.player.rect.centery) < (self.settings.GAME_SCREEN_HEIGHT / 2 + 100):
+                if self.map.layer == 1:
+                    if guard.is_player_detected(self.player, self.game.clock):
+                        self.game.trigger_game_lose()
+                        self.ressource.defeat_sound.play()
                 guard.update(self.map)
-                if guard.is_player_detected(self.player, self.game.clock):
-                    self.game.trigger_game_lose()
-                    self.ressource.defeat_sound.play()
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:

@@ -63,7 +63,7 @@ class VisionService:
     def draw_vision_cone(self, surface: pygame.Surface, camera: Tuple[int, int], color=(255, 255, 0, 64)):
         """Dessine la zone de vision (LOS si dispo, sinon avec la vision transparente)."""
         src = self.vision_surface_los or self.vision_surface_transparent
-        if (src and self.vision_rect):
+        if src and self.vision_rect:
             if (self.__temp_display_surface is None) or (self.__temp_display_surface.get_size() != src.get_size()):
                 self.__temp_display_surface = pygame.Surface(src.get_size(), pygame.SRCALPHA)
 
@@ -193,7 +193,8 @@ class VisionService:
     def __generate_points_cone(self, center: Tuple[int, int], base_angle: float, fov_deg: int):
         cx, cy = center
         half_angle = radians(fov_deg / 2)
-        n = max(8, min(15, fov_deg // 4))
+        # Détermine le nombre de rayons en fonction de l'angle de vision
+        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, max(20, int(self.vision_angle_degree * 0.5))))
         step = (2 * half_angle) / (n - 1)
         points = [(cx, cy)]
         for i in range(n):
@@ -204,7 +205,8 @@ class VisionService:
         return points
 
     def __generate_angles_cone(self, base_angle: float, half_angle_rad: float):
-        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, int(self.vision_angle_degree)))
+        # Détermine le nombre de rayons en fonction de l'angle de vision
+        n = min(self.MAX_CONE_RAYS, max(self.MIN_CONE_RAYS, max(20, int(self.vision_angle_degree * 0.5))))
         step = (2 * half_angle_rad) / (n - 1) if n > 1 else 0
         angles = []
         for i in range(n):

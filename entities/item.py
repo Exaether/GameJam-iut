@@ -1,11 +1,8 @@
 import pygame
 
-from os.path import join, dirname
 from random import randint
 from math import sin, pi
-
-# Dossier du script courant
-BASE_DIR = dirname(__file__)
+from paths import get_asset_path
 
 PULSATION_DURATION = 0.2
 PAUSE_BETWEEN_PULSATIONS = 0.1
@@ -21,7 +18,7 @@ class Item(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         img_number = randint(1, 12)
-        img_path = join("assets", "items", f"{img_number}.png")
+        img_path = get_asset_path("items", f"{img_number}.png")
 
         self.image = pygame.image.load(img_path).convert_alpha()
         self.pickable = True
@@ -33,7 +30,6 @@ class Item(pygame.sprite.Sprite):
         self.pulse_timer = 0
 
     def get_pulse_scale(self):
-        pulsation_scale = ORIGINAL_SCALE_PERCENT
         t = pygame.time.get_ticks() / 1000.0
         t_cycle = t % PULSATION_CYCLE
 

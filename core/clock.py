@@ -25,9 +25,11 @@ class Clock:
              "enemy_vision_fov": Enemy.VISION_ANGLE, "enemy_speed": 2},
         5: {"player_vision": 205, "enemy_vision_range": 115, "enemy_vision_fov": 60, "enemy_speed": 2},
         5.5: {"player_vision": 210, "enemy_vision_range": 130, "enemy_vision_fov": 65, "enemy_speed": 2.5},
-        6: {"player_vision": 215, "enemy_vision_range": 145, "enemy_vision_fov": 70, "enemy_speed": 3.5},
-        6.5: {"player_vision": 220, "enemy_vision_range": 160, "enemy_vision_fov": 75, "enemy_speed": 5},
-        8: {"player_vision": 220, "enemy_vision_range": 190, "enemy_vision_fov": 160, "enemy_speed": 5}
+        6: {"player_vision": 215, "enemy_vision_range": 145, "enemy_vision_fov": 75, "enemy_speed": 3.5},
+        6.5: {"player_vision": 220, "enemy_vision_range": 160, "enemy_vision_fov": 90, "enemy_speed": 5},
+        7: {"player_vision": 220, "enemy_vision_range": 175, "enemy_vision_fov": 110, "enemy_speed": 6},
+        7.5: {"player_vision": 220, "enemy_vision_range": 190, "enemy_vision_fov": 130, "enemy_speed": 7},
+        8: {"player_vision": 220, "enemy_vision_range": 210, "enemy_vision_fov": 150, "enemy_speed": 8}
     }
 
     def __init__(self, screen_width):
@@ -72,7 +74,7 @@ class Clock:
             player.vision_service.vision_range = self.HOURS_STAT[current_time]["player_vision"]
             for guard in guards_list:
                 guard.vision_service.vision_range = self.HOURS_STAT[current_time]["enemy_vision_range"]
-                guard.vision_service.vision_angle = self.HOURS_STAT[current_time]["enemy_vision_fov"]
+                guard.vision_service.vision_angle_degree = self.HOURS_STAT[current_time]["enemy_vision_fov"]
 
     def draw(self, surface):
         if self.current_hour >= self.START_HOUR or self.current_hour < self.WARNING_TIME_START:
@@ -85,7 +87,7 @@ class Clock:
             color = self.NIGHT_TIME_COLOR
         else:
             color = self.DAY_TIME_COLOR
-        time_str = f"{self.current_hour:02d}:{self.current_minute:02d}"
+        time_str = f"{self.current_hour:02d}h{self.current_minute:02d}"
         text_surface = self.font.render(time_str, True, color)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (self.screen_width // 2, 10)

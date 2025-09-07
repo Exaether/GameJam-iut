@@ -1,11 +1,12 @@
 import pygame
 
 import math
+from paths import get_asset_path
 
 
 class Compass(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        self.arrow = pygame.image.load("./assets/other/arrow.png").convert_alpha()
+        self.arrow = pygame.image.load(get_asset_path('other','arrow.png')).convert_alpha()
         self.image = self.arrow
         self.rect = self.image.get_rect()
         self.angle = 0
@@ -25,7 +26,6 @@ class Compass(pygame.sprite.Sprite):
             rel_pos_x = item.rect.centerx - player_x
             rel_pos_y = item.rect.centery - player_y
             if abs(rel_pos_x) + abs(rel_pos_y) < abs(rel_loot_x) + abs(rel_loot_y):
-                loot = item
                 rel_loot_x = rel_pos_x
                 rel_loot_y = rel_pos_y
 

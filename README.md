@@ -1,13 +1,17 @@
-# Mon Jeu Pygame
+# Le Château sans Portes
 
-Un jeu créer avec Pygame
+Jeu créent avec pygame
+Thème Médieval
+Contrainte Apparition, Disparition
 
 ## Installation
 
 ### Installation automatique (recommandée)
 ```bash
 chmod +x install.sh
+chmod +x create_exe_file.sh
 ./install.sh
+./create_exe_file.sh
 ```
 
 ### Installation manuelle
@@ -21,6 +25,7 @@ chmod +x install.sh
    ```bash
    pip install -r requirements.txt
    ```
+4. Avec pyinstaller créent un executable 
 
 ## Lancement du jeu
 
@@ -31,41 +36,34 @@ python main.py
 deactivate (pour quitter)
 ```
 
+### Executable Installer
+Après installation de l'éxécutable
+```bash
+./{path}/dist/main
+```
+
 ## Structure du projet
 
 ```
 mon_jeu/
 ├── main.py              # Point d'entrée
-├── core/
-│   ├── game.py          # Classe Game principale
-│   ├── input_handler.py # Gestion des entrées
-│   └── settings.py      # Classe qui contient les constantes
-├── entities/
-│   ├── player.py        # Classe Player
-│   ├── enemy.py         # Classe Enemy
-│   └── __init__.py
+├── components/          # Text, boutton et affichage de tout les menus
+├── core/                # Gestion, calcul, il est le moteur du jeu
+├── data/                # list des garde ou items crée on ajoute dans les csv avec separateur ','
+├── entities/            # Gestion des entité en jeu (carte, joueur, enemy)
 ├── assets/
 │   ├── images/          # Sprites et images
 │   ├── sounds/          # Effets sonores
+├── services/            # Gestion de la vision et des fichier musique ou police 
 └── README.md
 ```
-
-## Fonctionnalités actuelles
-
-- Menu principal avec boutons "Jouer" et "Quitter"
-- Seul le bouton "Quitter" est fonctionnel pour le moment
-- Architecture prête pour ajouter le gameplay
-
-## Prochaines étapes
-
-- Implémenter l'écran de jeu
-- Ajouter le joueur et les ennemis
-- Ajouter les collisions et le gameplay
 
 ## Contrôles
 
 ### Menu
-- Clic souris sur les boutons
+- clic souris
 
 ### Jeu (à venir)
-- Flèches directionnelles ou ZQSD pour se déplacer
+- Utilisation du clavier
+   - Espace pour intérargir
+   - ZQSD ou flêche pour les déplacement
