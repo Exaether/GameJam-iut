@@ -1,24 +1,19 @@
-from pygame.sprite import Group, spritecollide
-from pygame.font import Font
+from pygame.sprite import spritecollide
 
 from paths import *
 
 from services.resources import Resources
 from services.suspicion_service import SuspicionService
 
-from entities.compass import Compass
-from entities.dungeon import Dungeon
+from entities.dungeon import Dungeon    
 from entities.player import Player
-from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
-from entities.item import Item
 from entities.item_pickup_effect import ItemPickupEffect
 from entities.exitDoor import ExitDoor
 
-from core.clock import Clock
+from core.hud import HUD
 
-from utils.load_csv import load_csv
-
+from services.map_loader import LevelLoader
 
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
@@ -39,54 +34,24 @@ class Playing:
 
         self.suspicion_service = SuspicionService(self.player)
 
-        self.guards_list = EnemyGroup()
-        self.guard_generator()
+        # Chargement des gardes et des items
+        self.guards_list = LevelLoader.load_guards()
+        self.item_list, self.nb_items_max = LevelLoader.load_items()
 
-        self.item_list = Group()
-        self.items_generator()
         self.suspicion_service.set_total_items_count(self.nb_items_max)
 
-        # Affichage du score et gestionnaire d'effets (#TODO : a voir pour mettre dans une class HUD ou autre ??)
-        self.score_font = Font(None, 36)
+        # Affichage du score et gestionnaire d'effets
+        self.hud = HUD(self.settings, self.player, self.suspicion_service)
         self.pickup_effects = ItemPickupEffect()
-        self.compass = Compass(self.settings.GAME_SCREEN_WIDTH / 2, self.settings.GAME_SCREEN_HEIGHT / 2)
 
-        self.clock = Clock(self.settings.GAME_SCREEN_WIDTH)
+
 
         # Reset les paramètres du garde (pour annuler les changements de stat dû à l'horloge si activé lors de la partie précédente)
         Enemy.GUARD_DEFAULT_SPEED = 1.8
 
-    def guard_generator(self):
-        # Méthode interne pour construire un garde à partir d'une ligne du CSV
-        def build_guard(parts):
-            # On ignore les lignes invalides
-            if len(parts) >= 7:
-                x, y, min_x, max_x, min_y, max_y = map(int, parts[:6])
-                guard_type = parts[6]
-                direction = parts[7] if len(parts) > 7 else None
-                guard = Enemy(x, y, min_x, max_x, min_y, max_y, guard_type, direction)
-                self.guards_list.add(guard)
-
-
-        load_csv("guards.csv", build_guard)
-
-    def items_generator(self):
-        # Méthode interne pour construire un item à partir d'une ligne du CSV
-        def build_item(parts):
-            if len(parts) == 2:
-                try:
-                    x, y = map(int, parts)
-                    item = Item(x, y)
-                    self.item_list.add(item)
-                except ValueError:
-                    pass  # Ignore les valeurs non numériques
-
-        load_csv("items.csv", build_item)
-        self.nb_items_max = len(self.item_list)
-
     def update(self, dt):
         self.player.update(dt, self.map)
-        self.clock.update(self.player, self.guards_list)
+        self.hud.clock.update(self.player, self.guards_list)
 
         if self.map.layer == 1:
             # Vérification des collisions entre le player et les items
@@ -116,7 +81,7 @@ class Playing:
 
         # Mettre a jour la boussole
         if len(self.item_list) > 0:
-            self.compass.update(self.player, self.item_list)
+            self.hud.compass.update(self.player, self.item_list)
 
     def draw(self, screen):
         camera = (-self.player.rect.centerx + screen.get_rect().centerx,
@@ -135,29 +100,5 @@ class Playing:
 
         self.player.draw(screen, camera)
 
-        # Affichage du score en haut à droite (#TODO : a voir pour mettre dans une class HUD ou autre ??)
-        score_text = self.score_font.render(f"Items: {self.player.items_collected}/{self.nb_items_max}", True, (255, 255, 255))
-        score_rect = score_text.get_rect()
-        score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
-        screen.blit(score_text, score_rect)
-
-        # Overlay de vision du joueur (gestion de l'obscurité) # TODO ; a voir si on décalle pas direct dans player car ça appartient au player
-        self.player.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
-
-        self.clock.draw(screen)
-
-        if self.map.layer == 1:
-            # Boussole
-            if len(self.item_list) > 0:
-                self.compass.draw(screen)
-
-        self.suspicion_service.draw_suspicion(screen)
-
-        if self.settings.DEBUG_MODE:
-            self._draw_debug_info(screen)
-
-    def _draw_debug_info(self, screen):
-        """Affiche les informations de débogage à l'écran."""
-        font = Font(None, 24)
-        text = font.render(f"Position: {self.player.get_position()}", True, self.settings.WHITE)
-        screen.blit(text, (10, 10))
+        # Affichage du HUD (en dernier pour être au dessus de tout)
+        self.hud.draw(screen, self.map.layer)
