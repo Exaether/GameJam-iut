@@ -1,19 +1,20 @@
+from core.settings import Settings
 from services.resources import Resources
 
 
 class Credits:
-    # Couleurs
-    BLANC = (255, 255, 255)
-    NOIR = (0, 0, 0)
 
     def __init__(self, screen_width: int, screen_height: int):
-        self.settings = None
+        self.settings = Settings()
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.resources = Resources()
         self.__init_text()
 
     def __init_text(self):
+        # Jaquette du jeu
+        self.game_cover = self.resources.game_cover
+
         # Liste des lignes de crédits
         self.credits = [
             ("Le Château sans Portes", self.resources.game_title_font),
@@ -40,20 +41,27 @@ class Credits:
             ("", self.resources.description_font),
             ("Merci d'avoir joué !", self.resources.title_font),
         ]
-        self.credit_surfaces = [font.render(text, True, self.BLANC) for (text, font) in self.credits]
-        # Position de départ en Y (en dessous de l'écran)
-        self.start_y = 600
+        self.credit_surfaces = [font.render(text, True, self.settings.WHITE) for (text, font) in self.credits]
+        # Position de départ en Y
+        self.start_y = 200
 
     def update(self):
         # Fait défiler vers le haut
         self.start_y -= 1
 
     def draw(self, surface):
-        surface.fill(self.NOIR)
+        surface.fill(self.settings.BLACK)
         y = self.start_y
+
+        # Jaquette du jeu
+        game_cover_surf = self.game_cover.image_surf
+        surface.blit(game_cover_surf, game_cover_surf.get_rect(centerx=self.screen_width // 2, top=y))
+        y += game_cover_surf.get_height() + 100
+
         for line_surface in self.credit_surfaces:
-            x = (self.screen_width - line_surface.get_width()) // 2
-            surface.blit(line_surface, (x, y))
+            x = self.screen_width // 2
+            rect = line_surface.get_rect(centerx=x, top=y)
+            surface.blit(line_surface, rect)
             y += line_surface.get_height() + 20
 
         # Retourne False si les crédits sont terminés

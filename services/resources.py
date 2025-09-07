@@ -28,6 +28,9 @@ class Resources:
             return
         self._initialized = True
 
+        # Jaquette du jeu
+        self.__game_cover = None
+
         # Images pour les panneaux
         self.__wood_panel_image = None
         self.__silver_panel_image = None
@@ -73,6 +76,17 @@ class Resources:
         self.__tutorial_frame_13 = None
         self.__tutorial_frame_14 = None
         self.__tutorial_frame_15 = None
+
+    # ========================= SECTION JAQUETTE =========================
+
+    @property
+    def game_cover(self):
+        if self.__game_cover is None:
+                self.__game_cover = Image(
+                    get_asset_path('other','game_cover.png'),
+                    500, 0
+                )
+        return self.__game_cover
 
     # ========================= SECTION PANNEAUX =========================
 

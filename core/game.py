@@ -4,6 +4,8 @@ from sys import exit
 from os import environ
 from paths import get_asset_path
 
+from services.resources import Resources
+
 from core.game_lose_menu import GameLoseMenu
 from core.game_win_menu import GameWinMenu
 from core.main_menu import MainMenu
@@ -14,6 +16,7 @@ from core.playing import Playing
 from core.credits import Credits
 from core.intro_game import IntroGame
 
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -22,8 +25,10 @@ class Game:
         environ['SDL_VIDEO_CENTERED'] = "true"
 
         self.settings = Settings()
+        self.resources = Resources()
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         pygame.display.set_caption(self.settings.GAME_TITLE)
+        pygame.display.set_icon(self.resources.game_cover.image_surf)
         self.clock = pygame.time.Clock()
 
         self.state_manager = StateManager(initial_state=GameState.MENU)
