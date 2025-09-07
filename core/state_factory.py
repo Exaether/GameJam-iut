@@ -44,6 +44,7 @@ class StateFactory:
                 "music": None,
                 "builder": lambda: GameWinMenu(settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT,
                                                self.game.playing.player.items_collected if self.game.playing else 0,
+                                               self.game.playing.nb_items_max if self.game.playing else 0,
                                                self.game.retry_game, self.game.back_to_menu),
                 "attr": "game_win_menu"
             },

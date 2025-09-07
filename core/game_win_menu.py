@@ -8,11 +8,12 @@ from components.menu import Menu
 
 class GameWinMenu:
 
-    def __init__(self, screen_width: int, screen_height: int, final_score: int,
+    def __init__(self, screen_width: int, screen_height: int, final_score: int, nb_items_max: int,
                  on_retry_action=None, on_menu_action=None):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.final_score = final_score
+        self.nb_items_max = nb_items_max
 
         self.resources = Resources()
 
@@ -41,7 +42,7 @@ class GameWinMenu:
         )
 
         # Texte d'encouragement
-        encouragement_message_1, encouragement_message_2, color = GameWinMenu.__get_encouragement_message_and_color(final_score)
+        encouragement_message_1, encouragement_message_2, color = GameWinMenu.__get_encouragement_message_and_color(final_score, nb_items_max)
         self.encouragement_message_text_1 = MedievalText(
             screen_width // 2, 300,
             encouragement_message_1,
@@ -96,16 +97,34 @@ class GameWinMenu:
         )
 
     @staticmethod
-    def __get_encouragement_message_and_color(score: int) -> (str, str):
-        """Messages d'encouragement dans le style médiéval noble"""
-        if score == 0:
-            return "Hélas !", "Les gardes étaient trop vigilants...", Resources.CRIMSON_COLOR
-        elif score <= 3:
-            return "Quelques pièces d'or...", "Un début prometteur !", Resources.WOOD_COLOR
-        elif score <= 7:
-            return "Belle razzia !", "Tu deviens un habile brigand !", Resources.PURPLE_COLOR
+    def __get_encouragement_message_and_color(nb_items_collected: int, nb_items_max: int):
+        """Messages d'encouragement"""
+        message_line_1 = ""
+        message_line_2 = ""
+        color = Resources.CRIMSON_COLOR
+        if nb_items_collected <= 0:
+            message_line_1 = "Qu'avez-vous fait ?"
+        elif nb_items_collected <= nb_items_max*0.1:
+            message_line_1 = "Hélas !"
+            message_line_2 = "Les gardes étaient trop vigilants..."
+            color = Resources.CRIMSON_COLOR
+        elif nb_items_collected <= nb_items_max * 0.3:
+            message_line_1 = "Quelques pièces d'or..."
+            message_line_2 = "Un début prometteur !"
+            color = Resources.WOOD_COLOR
+        elif nb_items_collected <= nb_items_max * 0.6:
+            message_line_1 = "Jolie butin !"
+            message_line_2 = "Tu as volé plus que prévu !"
+            color = Resources.PURPLE_COLOR
+        elif nb_items_collected <= nb_items_max * 0.8:
+            message_line_1 = "Belle razzia !"
+            message_line_2 = "Tu deviens un habile brigand !"
+            color = Resources.PURPLE_COLOR
         else:
-            return "Magnifique butin !", "Le roi tremble !", Resources.GOLD_COLOR
+            message_line_1 = "Magnifique butin !"
+            message_line_2 = "Le roi tremble !"
+            color = Resources.GOLD_COLOR
+        return message_line_1, message_line_2, color
 
     def draw(self, surface):
         self.menu.draw(surface)
