@@ -5,12 +5,12 @@ class MedievalText:
     SHADOW_COLOR = "#2f1b14"
 
     def __init__(self, center_x: int, center_y: int, text: str,
-                 font: Font, color: str = None, shadow_offset: int = 2):
+                 font: Font, color: str, shadow_offset: int = 2):
         self.center_x = center_x
         self.center_y = center_y
         self.text = text
         self.font = font
-        self.color = color if color else self.ROYAL_GOLD
+        self.color = color
         self.shadow_offset = shadow_offset
 
         self.text_surf = self.font.render(text, True, self.color)
