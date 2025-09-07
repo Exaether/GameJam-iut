@@ -22,6 +22,9 @@ class IntroGame:
 
     MODE_TYPING_NORMAL = "typing_normal"
     MODE_COMPLETED = "completed"
+    PLAYER_SPEED_ANIMATIOn = 220
+    PLAYER_DIRECTION_ANIMATION = "left"
+    PLAYER_IDLE_ANIMATION = "down"
 
     def __init__(self, game):
         self.game = game
@@ -55,8 +58,8 @@ class IntroGame:
 
     def __init_player(self):
         player = Player(self.settings.GAME_SCREEN_WIDTH + 100, self.settings.GAME_SCREEN_HEIGHT // 2)
-        player.direction = "left"
-        player.speed = 220
+        player.direction = self.PLAYER_DIRECTION_ANIMATION
+        player.speed = self.PLAYER_SPEED_ANIMATIOn
         player.is_moving = True
         return player
 
@@ -115,7 +118,7 @@ class IntroGame:
             # pour changer sa position et le mettre idle à la fin de sa course (et le faire une seule fois)
             if self.player.is_moving:
                 self.player.idle()
-                self.player.direction = "down"
+                self.player.direction = self.PLAYER_IDLE_ANIMATION
             self.player.update(dt, None)
 
     def __update_typing(self, dt):
@@ -136,33 +139,44 @@ class IntroGame:
                 self.allow_advance = True
 
     def __wrap_text(self, text, font, max_width):
+        """Découpe le texte en lignes pour qu'il soit visible dans la boîte de dialogue"""
         lines = []
         if text:
-            words = text.split(" ")
-            current_line = ""
+            words = text.split()
+            lines, current_line = [], ""
+
             for word in words:
-                test_line = (current_line + " " + word) if current_line else word
-                if font.size(test_line)[0] <= max_width:
-                    current_line = test_line
+                if self.__fits_in_line(word, font, max_width, prefix=current_line):
+                    current_line = (current_line + " " + word).strip()
                 else:
                     if current_line:
                         lines.append(current_line)
-                    if font.size(word)[0] <= max_width:
-                        current_line = word
-                    else:
-                        part = ""
-                        for ch in word:
-                            test_part = part + ch
-                            if font.size(test_part)[0] <= max_width:
-                                part = test_part
-                            else:
-                                if part:
-                                    lines.append(part)
-                                part = ch
-                        current_line = part
+                    current_line = self.__break_word(word, font, max_width)
+
             if current_line:
                 lines.append(current_line)
+
         return lines
+
+    def __fits_in_line(self, word, font, max_width, prefix=""):
+        """Vérifie si un mot peut être ajouté à une ligne de texte sans dépasser de la largeur max"""
+        test_line = (prefix + " " + word).strip()
+        return font.size(test_line)[0] <= max_width
+
+    def __break_word(self, word, font, max_width):
+        """Découpe un mot trop long en morceaux valides"""
+        parts, part = [], ""
+        for ch in word:
+            test_part = part + ch
+            if font.size(test_part)[0] <= max_width:
+                part = test_part
+            else:
+                if part:
+                    parts.append(part)
+                part = ch
+        if part:
+            parts.append(part)
+        return " ".join(parts)
 
     def update(self, dt):
         # Lance le fade puis l'animation du joueur et du texte
@@ -222,13 +236,13 @@ class IntroGame:
         self.__draw_fade_layers(surface)
 
     def __draw_fade_layers(self, surface):
-        if self.fade_in_alpha > 0:
+        self.__blit_fade(surface, self.fade_in_alpha)
+        if self.is_fading_out:
+            self.__blit_fade(surface, self.fade_out_alpha)
+
+    def __blit_fade(self, surface, alpha):
+        if alpha > 0:
             fade = pygame.Surface(self.screen_rect.size)
             fade.fill((0, 0, 0))
-            fade.set_alpha(self.fade_in_alpha)
-            surface.blit(fade, (0, 0))
-        if self.is_fading_out and self.fade_out_alpha > 0:
-            fade = pygame.Surface(self.screen_rect.size)
-            fade.fill((0, 0, 0))
-            fade.set_alpha(self.fade_out_alpha)
+            fade.set_alpha(alpha)
             surface.blit(fade, (0, 0))
