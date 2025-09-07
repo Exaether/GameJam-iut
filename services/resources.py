@@ -186,31 +186,31 @@ class Resources:
     @property
     def game_title_font(self):
         if self.__game_title_font is None:
-            self.__game_title_font = Font("./assets/font/VPPixel-Standard.ttf", 75)
+            self.__game_title_font = Font("./assets/font/VPPixel-Simplified.ttf", 75)
         return self.__game_title_font
 
     @property
     def title_font(self):
         if self.__title_font is None:
-            self.__title_font = Font("./assets/font/VPPixel-Standard.ttf", 50)
+            self.__title_font = Font("./assets/font/VPPixel-Simplified.ttf", 50)
         return self.__title_font
 
     @property
     def subtitle_font(self):
         if self.__subtitle_font is None:
-            self.__subtitle_font = Font("./assets/font/VPPixel-Standard.ttf", 35)
+            self.__subtitle_font = Font("./assets/font/VPPixel-Simplified.ttf", 35)
         return self.__subtitle_font
 
     @property
     def description_font(self):
         if self.__description_font is None:
-            self.__description_font = Font("./assets/font/VPPixel-Standard.ttf", 25)
+            self.__description_font = Font("./assets/font/VPPixel-Simplified.ttf", 30)
         return self.__description_font
 
     @property
     def button_font(self):
         if self.__buttons_font is None:
-            self.__buttons_font = Font("./assets/font/VPPixel-Standard.ttf", 35)
+            self.__buttons_font = Font("./assets/font/VPPixel-Simplified.ttf", 35)
         return self.__buttons_font
 
     # ========================= SECTION EFFETS SONORES =========================
