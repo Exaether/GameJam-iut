@@ -135,7 +135,7 @@ class Enemy(pygame.sprite.Sprite):
         """Mise à jour de l'emplacement du sprite"""
         self.__get_image(self.__get_sprite_x(), self.__get_sprite_y())
 
-    def __advance_animation(self):
+    def __update_animation(self):
         """Anime suivant le nombre de tick le déplacement du garde"""
         if self.pattern_type == "square":
             self.animation_tick += 1
@@ -144,22 +144,17 @@ class Enemy(pygame.sprite.Sprite):
                 self.animation_tick = 0
                 self.__update_sprite()
 
-    def get_direction(self):
-        """Renvoie la direction du garde"""
-        return self.direction
-
     def set_direction(self, direction="right"):
         """modifie le sprite suivant la direction"""
         if self.direction != direction:
             self.direction = direction
             self.animation_sprite = 3
             self.animation_tick = self.ANIMATION_TICK - 1
-        self.__advance_animation()
+        self.__update_animation()
 
     def apply_vision_scale(self, range_multiplier=1.0, angle_multiplier=1.0):
         self.vision_service.vision_range = int(self.vision_service.vision_range * range_multiplier)
         self.vision_service.vision_angle_degree = int(self.vision_service.vision_angle_degree * angle_multiplier)
-        self.vision_service.clear_cache()
 
     def is_player_in_vision(self, player):
         """Informe si le garde voit le joueur """

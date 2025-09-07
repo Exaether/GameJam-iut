@@ -72,9 +72,14 @@ class Item(pygame.sprite.Sprite):
         pulsation_scale = self.get_pulse_scale()
         screen_pos = self.rect.move(camera)
 
-        # Dessiner le highlight en pulsatio
+        # Dessiner le highlight en pulsation
         self.draw_highlight(screen, screen_pos, pulsation_scale=pulsation_scale)
+
         # Dessiner l'item en pulsation
+        self.__draw_item(screen, screen_pos, pulsation_scale)
+        
+
+    def __draw_item(self, screen, screen_pos, pulsation_scale):
         image = self.image
         if pulsation_scale != ORIGINAL_SCALE_PERCENT:
             new_w = int(self.item_width * pulsation_scale)
@@ -83,5 +88,4 @@ class Item(pygame.sprite.Sprite):
             img_rect = image.get_rect(center=screen_pos.center)
         else:
             img_rect = screen_pos
-
-        screen.blit(image, img_rect)
+        screen.blit(image, img_rect)    
