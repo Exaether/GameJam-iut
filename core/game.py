@@ -2,19 +2,14 @@ import pygame
 
 from sys import exit
 from os import environ
-from paths import get_asset_path
 
 from services.resources import Resources
 
-from core.game_lose_menu import GameLoseMenu
-from core.game_win_menu import GameWinMenu
 from core.main_menu import MainMenu
 from core.settings import Settings
-from core.state_manager import StateManager, GameState
+from core.state_manager import StateManager, GameState 
 from core.event_controller import EventController
-from core.playing import Playing
-from core.credits import Credits
-from core.intro_game import IntroGame
+from core.state_factory import StateFactory
 
 
 class Game:
@@ -29,82 +24,37 @@ class Game:
         self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
         pygame.display.set_caption(self.settings.GAME_TITLE)
         pygame.display.set_icon(self.resources.game_cover.image_surf)
+        
         self.clock = pygame.time.Clock()
-
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
+        
         self.menu = MainMenu(self.settings, self)
-
-        self.playing = Playing(self, self.event_controller)
+        self.playing = None
         self.intro_scene = None
-        self.running = True
-
+        self.credits_playing = None
         self.game_lose_menu = None
         self.game_win_menu = None
 
-    def intro(self):
-        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
-        self.intro_scene = IntroGame(self)
-        self.state_manager.change_state(GameState.INTRO)
-        pygame.mixer.music.load(get_asset_path('music','10-8bit10loop.ogg'))
-        pygame.mixer.music.play(-1)
+        # Factory 
+        self.state_factory = StateFactory(self)
 
-    def credits(self):
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.credits_playing = Credits(self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT)
-        self.state_manager.change_state(GameState.CREDITS)
-        pygame.mixer.music.load(get_asset_path("music", "Mesmerizing Galaxy Loop.mp3"))
-        pygame.mixer.music.play(-1)
+        self.running = True
 
-    def play(self):
-        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
-        self.playing = Playing(self, self.event_controller)
-        pygame.mixer.music.load(get_asset_path('music','10-8bit10loop.ogg'))
-        pygame.mixer.music.play(-1)
-        self.state_manager.change_state(GameState.PLAYING)
+    # Factory qui permet de créer les différent état du jeu
+    def intro(self): self.state_factory.create(GameState.INTRO)
+    def play(self): self.state_factory.create(GameState.PLAYING)
+    def credits(self): self.state_factory.create(GameState.CREDITS)
+    def trigger_game_lose(self): self.state_factory.create(GameState.LOSE)
+    def trigger_game_win(self): self.state_factory.create(GameState.WIN)
+    def back_to_menu(self): self.state_factory.create(GameState.MENU)
 
     def retry_game(self):
         """Relance une nouvelle partie"""
         self.game_lose_menu = None
         self.game_win_menu = None
-        self.screen = pygame.display.set_mode((self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT))
         self.play()
 
-    def back_to_menu(self):
-        """Retourne au menu principal"""
-        self.game_lose_menu = None
-        self.game_win_menu = None
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.state_manager.change_state(GameState.MENU)
-
-    def trigger_game_lose(self):
-        """Déclenche la défaite du jeu"""
-        self.game_lose_menu = GameLoseMenu(
-            self.settings.MENU_SCREEN_WIDTH,
-            self.settings.MENU_SCREEN_HEIGHT,
-            self.retry_game,
-            self.back_to_menu
-        )
-        self.playing = Playing(self, self.event_controller)
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.state_manager.change_state(GameState.LOSE)
-        pygame.mixer.music.stop()
-
-    def trigger_game_win(self):
-        """Déclenche la victoire du jeu"""
-        final_score = self.playing.player.items_collected
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.game_win_menu = GameWinMenu(
-            self.settings.MENU_SCREEN_WIDTH,
-            self.settings.MENU_SCREEN_HEIGHT,
-            final_score,
-            self.retry_game,
-            self.back_to_menu
-        )
-        self.playing = Playing(self, self.event_controller)
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        self.state_manager.change_state(GameState.WIN)
-        pygame.mixer.music.stop()
 
     def exit(self):
         self.running = False
