@@ -18,7 +18,7 @@ class HUD:
         score_text = self.score_font.render(
             f"Items: {self.player.items_collected}/{self.nb_items_max}",
             True,
-            (255, 255, 255)
+            self.settings.WHITE
         )
         score_rect = score_text.get_rect()
         score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
@@ -27,7 +27,7 @@ class HUD:
         self.suspicion_service.draw_suspicion(screen)
 
         # Boussole
-        if self.nb_items_max > 0 and map_layer == 1:
+        if self.nb_items_max > 0 and map_layer == self.settings.LAYER_OF_MAP:
             self.compass.draw(screen)
         self.clock.draw(screen)
 

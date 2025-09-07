@@ -7,6 +7,9 @@ class Settings:
         self.GAME_SCREEN_HEIGHT = 720
         self.FPS = 60
         self.DEBUG_MODE = True
+        self.SPAWN_PLAYER_X = 2538
+        self.SPAWN_PLAYER_Y = 190
+        self.LAYER_OF_MAP = 1
 
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)

@@ -21,7 +21,7 @@ class Credits:
             ("", self.resources.description_font),
             ("Jeu développé par :", self.resources.title_font),
             ("   Kylian Metayer (chef de projet & développement) ", self.resources.subtitle_font),
-            ("   Lukas Faure (Architecte développement)", self.resources.subtitle_font),
+            ("   Lukas Faure (Architecte développement & Qualité)", self.resources.subtitle_font),
             ("   Léo Ducruet (Animation & développement)", self.resources.subtitle_font),
             ("   Joan Le Fol (Développement d'interactions)", self.resources.subtitle_font),
             ("   Valentin Wouters (UI/UX designer & développement)", self.resources.subtitle_font),
