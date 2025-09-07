@@ -15,14 +15,7 @@ class HUD:
 
     def draw(self, screen, map_layer):
         # Score
-        score_text = self.score_font.render(
-            f"Items: {self.player.items_collected}/{self.nb_items_max}",
-            True,
-            self.settings.WHITE
-        )
-        score_rect = score_text.get_rect()
-        score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
-        screen.blit(score_text, score_rect)
+        self._draw_score(screen)
 
         self.suspicion_service.draw_suspicion(screen)
 
@@ -35,6 +28,15 @@ class HUD:
         if self.settings.DEBUG_MODE:
             self._draw_debug_info(screen)
 
+    def _draw_score(self, screen):
+        score_text = self.score_font.render(
+                    f"Items: {self.player.items_collected}/{self.nb_items_max}",
+                    True,
+                    self.settings.WHITE
+        )
+        score_rect = score_text.get_rect()
+        score_rect.topright = (self.settings.GAME_SCREEN_WIDTH - 10, 10)
+        screen.blit(score_text, score_rect)
     def _draw_debug_info(self, screen):
         """Affiche les informations de débogage à l'écran."""
         font = Font(None, 24)
