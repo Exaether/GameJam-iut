@@ -69,7 +69,7 @@ class MainMenu:
         self.text_exit = MedievalText(
             0, 0, "Quitter",
             self.resources.button_font,
-            MedievalText.CRIMSON_RED
+            Resources.CRIMSON_COLOR
         )
         self.button_exit = MedievalButton(
             self.settings.MENU_SCREEN_WIDTH // 2 - 225,

@@ -8,10 +8,12 @@ class Resources:
     __instance = None
 
     # Couleurs
-    MENU_BACKGROUND_COLOR = "#2F1B14"
+    MENU_BACKGROUND_COLOR = "#2f1b14"
     WOOD_COLOR = "#ffc97f"
     SILVER_COLOR = "#e6e6f2"
     GOLD_COLOR = "#ffff73"
+    CRIMSON_COLOR = "#a50034"
+    PURPLE_COLOR = "#6a4c93"
 
     def __new__(cls):
         if cls.__instance is None:

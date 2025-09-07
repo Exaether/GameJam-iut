@@ -3,17 +3,10 @@ from pygame.draw import rect
 
 from components.image import Image
 from components.medieval_text import MedievalText
+from services.resources import Resources
 
 
 class MedievalButton:
-    NOBLE_BROWN = "#7D5B3A"
-    RICH_HOVER = "#A0522D"
-    ROYAL_GOLD = "#D9BF77"
-    CRIMSON_BASE = "#A50034"
-    CRIMSON_HOVER = "#C41E3A"
-    DEEP_NAVY = "#2C3E50"
-    DARK_GOLD = "#B8860B"
-    ROYAL_BLUE = "#4682B4"
     BORDER_WIDTH = 3
 
     def __init__(self, center_x: int, center_y: int, width: int, height: int, text: MedievalText,
@@ -24,8 +17,8 @@ class MedievalButton:
         self.width = width
         self.height = height
         self.text = text
-        self.base_color = base_color if base_color else self.NOBLE_BROWN
-        self.hovering_color = hovering_color if hovering_color else self.RICH_HOVER
+        self.base_color = base_color
+        self.hovering_color = hovering_color
         self.base_image = base_image
         self.hovering_image = hovering_image
         self.on_click_action = on_click_action
@@ -56,7 +49,7 @@ class MedievalButton:
             rect(surface, color, self.rect)
 
             # Bordure
-            rect(surface, self.ROYAL_GOLD, self.rect, self.BORDER_WIDTH)
+            rect(surface, Resources.GOLD_COLOR, self.rect, self.BORDER_WIDTH)
 
             # Bordure intérieure au hover
             if self.is_hovering:
@@ -64,7 +57,7 @@ class MedievalButton:
                     self.rect.x + 3, self.rect.y + 3,
                     self.rect.width - 6, self.rect.height - 6
                 )
-                rect(surface, self.DARK_GOLD, inner_rect, 1)
+                rect(surface, Resources.GOLD_COLOR, inner_rect, 1)
         else:
             # Image selon l'état (hover ou non) et si une image d'hover est définie
             if self.hovering_image and self.is_hovering:

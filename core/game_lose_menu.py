@@ -27,14 +27,14 @@ class GameLoseMenu:
             screen_width // 2, 150,
             "Capturé",
             self.resources.title_font,
-            MedievalText.CRIMSON_RED,
+            Resources.CRIMSON_COLOR,
             shadow_offset=3
         )
         self.title_2 = MedievalText(
             screen_width // 2, 210,
             "par les gardes !",
             self.resources.title_font,
-            MedievalText.CRIMSON_RED,
+            Resources.CRIMSON_COLOR,
             shadow_offset=3
         )
 

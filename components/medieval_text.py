@@ -2,15 +2,7 @@ from pygame.font import Font
 
 
 class MedievalText:
-    ROYAL_GOLD = "#D9BF77"
-    CRIMSON_RED = "#A50034"
-    DEEP_PURPLE = "#6A4C93"
-    ROYAL_BLUE = "#4B8BBE"
-    PARCHMENT = "#F0E3C7"
-    FOREST_GREEN = "#3B5B29"
-    RICH_BROWN = "#7D5B3A"
-    SHADOW_COLOR = "#2F1B14"
-    NOBLE_BRONZE = "#8B4513"
+    SHADOW_COLOR = "#2f1b14"
 
     def __init__(self, center_x: int, center_y: int, text: str,
                  font: Font, color: str = None, shadow_offset: int = 2):

@@ -28,7 +28,7 @@ class GameWinMenu:
             screen_width // 2, 150,
             "Vous avez fui !",
             self.resources.title_font,
-            MedievalText.ROYAL_BLUE,
+            Resources.GOLD_COLOR,
             shadow_offset=3
         )
 
@@ -37,7 +37,7 @@ class GameWinMenu:
             screen_width // 2, 225,
             f"Trésors pillés : {final_score}",
             self.resources.subtitle_font,
-            MedievalText.ROYAL_GOLD
+            Resources.SILVER_COLOR
         )
 
         encouragement_message = GameWinMenu.__get_encouragement_message(final_score)
@@ -45,8 +45,7 @@ class GameWinMenu:
             screen_width // 2, 290,
             encouragement_message,
             self.resources.description_font,
-            MedievalText.NOBLE_BRONZE,
-            shadow_offset=1
+            Resources.PURPLE_COLOR
         )
 
         # Bouton rejouer
