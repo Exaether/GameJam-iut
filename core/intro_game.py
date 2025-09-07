@@ -22,7 +22,7 @@ class IntroGame:
 
     MODE_TYPING_NORMAL = "typing_normal"
     MODE_COMPLETED = "completed"
-    PLAYER_SPEED_ANIMATIOn = 220
+    PLAYER_SPEED_ANIMATION = 220
     PLAYER_DIRECTION_ANIMATION = "left"
     PLAYER_IDLE_ANIMATION = "down"
 
@@ -45,13 +45,13 @@ class IntroGame:
         self.allow_advance = False
         self.mode = self.MODE_TYPING_NORMAL
 
-        self.font = pygame.font.Font(get_asset_path('font','VPPixel-Standard.ttf'), 25) if self.settings else None
+        self.font = pygame.font.Font(get_asset_path('font','VPPixel-Simplified.ttf'), 25) if self.settings else None
 
         self.dialog_lines = [
-            "Ca c'est Georges, Georges est ce qu'on appelle un voleur",
-            "Comme tout voleur, Georges vole",
+            "Ça c'est Georges, Georges est ce qu'on appelle un voleur.",
+            "Comme tout voleur, Georges vole.",
             "Mais contrairement aux autres, Georges a du courage !",
-            "C'est pour ça que Georges va au chateau pour voler le roi et trouver le fameux li...",
+            "C'est pour ça que Georges va au château pour voler le roi.",
         ]
 
         self.__prepare_current_line()
@@ -59,7 +59,7 @@ class IntroGame:
     def __init_player(self):
         player = Player(self.settings.GAME_SCREEN_WIDTH + 100, self.settings.GAME_SCREEN_HEIGHT // 2)
         player.direction = self.PLAYER_DIRECTION_ANIMATION
-        player.speed = self.PLAYER_SPEED_ANIMATIOn
+        player.speed = self.PLAYER_SPEED_ANIMATION
         player.is_moving = True
         return player
 
