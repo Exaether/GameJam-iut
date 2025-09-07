@@ -89,7 +89,7 @@ class Game:
     def __handle_credits(self, events, dt):
         self.credits_playing.update()
         finished = self.credits_playing.draw(self.screen)
-        if not finished or any(e.type == pygame.KEYDOWN for e in events):
+        if not finished or any(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE for event in events):
             pygame.mixer.music.stop()
             self.back_to_menu()
     
