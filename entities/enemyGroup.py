@@ -10,7 +10,6 @@ class EnemyGroup(Group):
                 raise TypeError("Seul le type Enemy peut être ajouté au groupe EnemyGroup.")
         super().add(*sprites)
 
-    # TODO: Voir pour pas avoir besoin de passer le player
     def draw(self, surface, camera, player, bgsurf=None, special_flags=0):
         for enemy in self.sprites():
             if isinstance(enemy, Enemy) and enemy.is_enemy_in_player_vision(player):

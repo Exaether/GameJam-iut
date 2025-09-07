@@ -71,7 +71,7 @@ class Enemy(pygame.sprite.Sprite):
             ]
         else:
             raise ValueError(
-                f"Pattern type {pattern_type} not supported")  # TODO : a rajouter des patterns de déplacement, idle...
+                f"Pattern type {pattern_type} not supported")
 
         match direction:
             case "right":

@@ -148,5 +148,4 @@ class Player(pygame.sprite.Sprite):
         screen.blit(current_sprite, self.rect.move(camera))
 
     def get_position(self):
-        # TODO : A voir si on garde, debug pour l'instant
         return self.rect.x, self.rect.y

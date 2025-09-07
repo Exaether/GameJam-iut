@@ -82,14 +82,6 @@ class EventController:
                     self.is_player_in_trapdoor_animation = True
             elif self.exit_door.rect.colliderect(self.player.rect) and key == pygame.K_SPACE:
                 self.game.trigger_game_win()
-
-        elif state == GameState.MENU:
-            # TODO : à définir
-            pass
-        
-        elif state == GameState.PAUSED:
-            # TODO : à définir
-            pass
     
     def _handle_mousedown(self, pos, state):
         """Gère les clics de souris pour tous les états"""

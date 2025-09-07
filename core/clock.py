@@ -19,7 +19,6 @@ class Clock:
     BIG_WARNING_TIME_COLOR = (255, 165, 0)
     NIGHT_TIME_COLOR = (255, 0, 0)
     # Stat du joueur et des gardes en fonction de l'heure (ex: 5 = à partir de 5h00, 5.5 = à partir de 5h30...)
-    # TODO: Ajoutez plus d'horaires ou pas
     HOURS_STAT = {
         22: {"player_vision": Player.VISION_RANGE, "enemy_vision_range": Enemy.VISION_RANGE,
              "enemy_vision_fov": Enemy.VISION_ANGLE, "enemy_speed": 2},

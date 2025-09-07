@@ -12,7 +12,6 @@ class VisionShape(Enum):
 
 class VisionService:
     """Gestion du champ de vision des entités"""
-    # TODO: a voir si on peut seulement garder les verifs avec la nouvelle version qui utilise les LOS
 
     DEFAULT_CIRCLE_RAYS = 72
     MIN_CONE_RAYS = 20
