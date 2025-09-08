@@ -4,7 +4,7 @@ from components.animated_image import AnimatedImage
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
-from menus.menu import Menu
+from components.menu import Menu
 
 
 class MainMenu:
