@@ -14,6 +14,8 @@ class MainMenu:
         self.game = game
         self.resources = Resources()
 
+        self.buttons = []
+
         # Panneau
         self.panel = MedievalPanel(
             self.resources.wood_panel_image,
@@ -47,6 +49,7 @@ class MainMenu:
             self.resources.wood_button_image_normal,
             self.resources.wood_button_image_pressed
         )
+        self.buttons.append(self.button_play)
 
         # Bouton crédits
         self.text_credits = MedievalText(
@@ -64,6 +67,7 @@ class MainMenu:
             self.resources.wood_button_image_normal,
             self.resources.wood_button_image_pressed
         )
+        self.buttons.append(self.button_credits)
 
         # Bouton quitter
         self.text_exit = MedievalText(
@@ -81,6 +85,7 @@ class MainMenu:
             self.resources.silver_button_image_normal_short,
             self.resources.silver_button_image_pressed_short
         )
+        self.buttons.append(self.button_exit)
 
         # Tutoriel
         self.tutorial = AnimatedImage([
@@ -114,7 +119,7 @@ class MainMenu:
             Resources.MENU_BACKGROUND_COLOR,
             self.panel,
             [self.game_text, self.tutorial_text_or],
-            [self.button_play, self.button_credits, self.button_exit],
+            self.buttons,
             self.tutorial,
             self.settings.MENU_SCREEN_WIDTH // 2 + 150,
             450

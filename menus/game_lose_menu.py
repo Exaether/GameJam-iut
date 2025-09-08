@@ -15,6 +15,8 @@ class GameLoseMenu:
 
         self.resources = Resources()
 
+        self.buttons = []
+
         # Panneau
         self.panel = MedievalPanel(
             self.resources.silver_panel_image,
@@ -52,6 +54,7 @@ class GameLoseMenu:
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )
+        self.buttons.append(self.retry_button)
 
         # Bouton retour menu
         menu_text = MedievalText(
@@ -67,8 +70,7 @@ class GameLoseMenu:
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )
-
-        self.buttons = [self.retry_button, self.menu_button]
+        self.buttons.append(self.menu_button)
 
         # Créer le menu avec le composant générique
         self.menu = Menu(
