@@ -1,5 +1,6 @@
 from pygame import Rect
 from pygame.draw import rect
+from pygame.mouse import get_pos
 
 from components.image import Image
 from components.medieval_text import MedievalText
@@ -37,6 +38,9 @@ class MedievalButton:
 
         self.is_hovering = False
 
+        # Vérifie si le bouton est survolé à sa création (sans aucun évènement)
+        self.check_hover(get_pos())
+
     def draw(self, surface):
         # Si pas d'image
         if not self.base_image:
@@ -57,7 +61,7 @@ class MedievalButton:
                 )
                 rect(surface, Resources.GOLD_COLOR, inner_rect, 1)
         else:
-            # Image selon l'état (hover ou non) et si une image d'hover est définie
+            # Image selon l'état (survolé ou non) et si une image de survol est définie
             if self.hovering_image and self.is_hovering:
                 image = self.hovering_image
                 # Descend le texte pour l'adapter au bouton pressé
