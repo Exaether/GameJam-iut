@@ -60,7 +60,8 @@ class StateFactory:
         config = self._registry[state]
 
         # config de la taille de l'écran
-        self.game.screen = pygame.display.set_mode(config["size"])
+        if pygame.display.get_window_size() != config["size"]:
+            self.game.screen = pygame.display.set_mode(config["size"])
 
         # création ou récupération de l'instance de la classe
         instance = config["builder"]()
