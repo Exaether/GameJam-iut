@@ -1,11 +1,11 @@
 import pygame
 
+from core.settings import Settings
 from paths import get_asset_path
-
 from services.resources import Resources
 from services.vision_service import VisionService
 
-from core.settings import Settings
+
 class Player(pygame.sprite.Sprite):
     SPRITE_SIZE = 16
     SPEED_DEFAULT = 140
@@ -41,7 +41,6 @@ class Player(pygame.sprite.Sprite):
         self.trapdoor_animation_timer = 0
         self.mask = pygame.mask.Mask((self.SPRITE_SIZE, self.SPRITE_SIZE), True)
         self.prev_pos = self.rect.center
-        self.settings = Settings()
 
         self.__init_space_bar()
 
@@ -144,7 +143,7 @@ class Player(pygame.sprite.Sprite):
 
         if show_vision:
             self.vision_service.draw_vision_cone(screen, camera)
-        self.vision_service.draw_darkness_overlay(screen, camera, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)    
+        self.vision_service.draw_darkness_overlay(screen, camera, Settings.GAME_SCREEN_WIDTH, Settings.GAME_SCREEN_HEIGHT)
 
         screen.blit(current_sprite, self.rect.move(camera))
 

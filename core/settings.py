@@ -1,23 +1,23 @@
 class Settings:
-    def __init__(self):
-        self.GAME_TITLE = "Le Château sans Portes"
-        self.MENU_SCREEN_WIDTH = 1280
-        self.MENU_SCREEN_HEIGHT = 720
-        self.GAME_SCREEN_WIDTH = 720
-        self.GAME_SCREEN_HEIGHT = 720
-        self.FPS = 60
-        self.DEBUG_MODE = False
-        self.SPAWN_PLAYER_X = 2538
-        self.SPAWN_PLAYER_Y = 190
-        self.LAYER_OF_MAP = 1
+    GAME_TITLE = "Le Château sans Portes"
+    GAME_FOLDER_NAME = "LeChateauSansPortes"
+    MENU_SCREEN_WIDTH = 1280
+    MENU_SCREEN_HEIGHT = 720
+    GAME_SCREEN_WIDTH = 720
+    GAME_SCREEN_HEIGHT = 720
+    FPS = 60
+    DEBUG_MODE = False
+    SPAWN_PLAYER_X = 2538
+    SPAWN_PLAYER_Y = 190
+    LAYER_OF_MAP = 1
 
-        self.BLACK = (0, 0, 0)
-        self.WHITE = (255, 255, 255)
-        self.GRAY = (128, 128, 128)
-        self.BLUE = (0, 100, 200)
-        self.GREEN = (0, 200, 0)
-        self.RED = (200, 0, 0)
-        self.BACKGROUND_COLOR = (30, 30, 30)
-        self.MENU_FONT_SIZE = 48
-        self.MENU_BUTTON_HEIGHT = 60
-        self.MENU_BUTTON_SPACING = 20
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    GRAY = (128, 128, 128)
+    BLUE = (0, 100, 200)
+    GREEN = (0, 200, 0)
+    RED = (200, 0, 0)
+    BACKGROUND_COLOR = (30, 30, 30)
+    MENU_FONT_SIZE = 48
+    MENU_BUTTON_HEIGHT = 60
+    MENU_BUTTON_SPACING = 20

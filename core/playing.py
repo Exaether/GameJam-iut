@@ -1,17 +1,16 @@
 from pygame.sprite import spritecollide
 
+from core.hud import HUD
+from core.settings import Settings
+from entities.dungeon import Dungeon
+from entities.enemy import Enemy
+from entities.exitDoor import ExitDoor
+from entities.item_pickup_effect import ItemPickupEffect
+from entities.player import Player
+from services.map_loader import LevelLoader
 from services.resources import Resources
 from services.suspicion_service import SuspicionService
 
-from entities.dungeon import Dungeon    
-from entities.player import Player
-from entities.enemy import Enemy
-from entities.item_pickup_effect import ItemPickupEffect
-from entities.exitDoor import ExitDoor
-
-from core.hud import HUD
-
-from services.map_loader import LevelLoader
 
 class Playing:
     """Classe qui gère tout le jeu en cours, le core du jeu"""
@@ -19,11 +18,10 @@ class Playing:
     def __init__(self, game, event_controller):
         self.game = game
         self.screen = game.screen
-        self.settings = game.settings
         self.ressource = Resources()
         self.map = Dungeon()
         self.exit_door = ExitDoor()
-        self.player = Player(self.settings.SPAWN_PLAYER_X, self.settings.SPAWN_PLAYER_Y)
+        self.player = Player(Settings.SPAWN_PLAYER_X, Settings.SPAWN_PLAYER_Y)
         self.nb_items_max = 0
 
         event_controller.set_player(self.player)
@@ -39,7 +37,7 @@ class Playing:
         self.suspicion_service.set_total_items_count(self.nb_items_max)
 
         # Affichage du score et gestionnaire d'effets
-        self.hud = HUD(self.settings, self.player, self.suspicion_service)
+        self.hud = HUD(self.player, self.suspicion_service)
         self.pickup_effects = ItemPickupEffect()
 
         # Reset les paramètres du garde (pour annuler les changements de stat dû à l'horloge si activé lors de la partie précédente)
@@ -49,7 +47,7 @@ class Playing:
         self.player.update(dt, self.map)
         self.hud.clock.update(self.player, self.guards_list)
 
-        if self.map.layer == self.settings.LAYER_OF_MAP:
+        if self.map.layer == Settings.LAYER_OF_MAP:
             self.__handle_items_pickup(dt)
         else:
             self.player.speed = self.player.SPEED_SUBTERRAN
@@ -64,11 +62,11 @@ class Playing:
     def draw(self, screen):
         camera = (-self.player.rect.centerx + screen.get_rect().centerx,
                   -self.player.rect.centery + screen.get_rect().centery)
-        screen.fill(self.settings.BACKGROUND_COLOR)
+        screen.fill(Settings.BACKGROUND_COLOR)
         self.map.draw(screen, camera)
 
         # Affichage des éléments de la map
-        if self.map.layer == self.settings.LAYER_OF_MAP:
+        if self.map.layer == Settings.LAYER_OF_MAP:
             self.exit_door.draw(screen, camera)
             self.guards_list.draw(screen, camera, self.player)
             for item in self.item_list.sprites():
@@ -97,9 +95,9 @@ class Playing:
     def __update_guards(self):
         for guard in self.guards_list.sprites():
             # update seulement les gardes proches
-            if abs(guard.x - self.player.rect.centerx) < (self.settings.GAME_SCREEN_WIDTH / 2 + 100) and\
-                abs(guard.y - self.player.rect.centery) < (self.settings.GAME_SCREEN_HEIGHT / 2 + 100):
-                if self.map.layer == self.settings.LAYER_OF_MAP:
+            if abs(guard.x - self.player.rect.centerx) < (Settings.GAME_SCREEN_WIDTH / 2 + 100) and \
+                    abs(guard.y - self.player.rect.centery) < (Settings.GAME_SCREEN_HEIGHT / 2 + 100):
+                if self.map.layer == Settings.LAYER_OF_MAP:
                     if guard.is_player_detected(self.player, self.game.clock):
                         self.game.trigger_game_lose()
                         self.ressource.defeat_sound.play()

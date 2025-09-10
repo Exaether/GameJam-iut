@@ -180,10 +180,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def is_player_detected(self, player, clock):
         """Si un joueur est détecté, le gard va à la même vitesse que lui grâce à la constante GUARD_SPEED_ON_DETECT"""
-        settings = Settings()
         if self.is_player_in_vision(player):
             self.guard_speed = self.GUARD_SPEED_ON_DETECT * self.speed_multiplier
-            self.alertness += clock.tick(settings.FPS)
+            self.alertness += clock.tick(Settings.FPS)
             if pygame.time.get_ticks() - self.last_detect_sound_time >= 1000:  # 1 seconde
                 Resources().detect_sound.play()
                 self.last_detect_sound_time = pygame.time.get_ticks()

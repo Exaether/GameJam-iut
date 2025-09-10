@@ -5,7 +5,6 @@ from services.resources import Resources
 class Credits:
 
     def __init__(self, screen_width: int, screen_height: int):
-        self.settings = Settings()
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.resources = Resources()
@@ -41,7 +40,7 @@ class Credits:
             ("", self.resources.description_font),
             ("Merci d'avoir joué !", self.resources.title_font)
         ]
-        self.credit_surfaces = [font.render(text, True, self.settings.WHITE) for (text, font) in self.credits]
+        self.credit_surfaces = [font.render(text, True, Settings.WHITE) for (text, font) in self.credits]
         # Position de départ en Y
         self.start_y = 200
 
@@ -50,7 +49,7 @@ class Credits:
         self.start_y -= 1
 
     def draw(self, surface):
-        surface.fill(self.settings.BLACK)
+        surface.fill(Settings.BLACK)
         y = self.start_y
 
         # Jaquette du jeu

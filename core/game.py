@@ -19,17 +19,16 @@ class Game:
         # Centre la fenêtre de jeu sur le bureau
         environ['SDL_VIDEO_CENTERED'] = "true"
 
-        self.settings = Settings()
         self.resources = Resources()
-        self.screen = pygame.display.set_mode((self.settings.MENU_SCREEN_WIDTH, self.settings.MENU_SCREEN_HEIGHT))
-        pygame.display.set_caption(self.settings.GAME_TITLE)
+        self.screen = pygame.display.set_mode((Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT))
+        pygame.display.set_caption(Settings.GAME_TITLE)
         pygame.display.set_icon(self.resources.game_cover.image_surf)
         
         self.clock = pygame.time.Clock()
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
         
-        self.menu = MainMenu(self.settings, self)
+        self.menu = MainMenu(self)
         self.playing = None
         self.intro_scene = None
         self.credits_playing = None
@@ -119,7 +118,7 @@ class Game:
     def run(self):
         while self.running:
             events = pygame.event.get()
-            dt = self.clock.tick(self.settings.FPS) / 1000
+            dt = self.clock.tick(Settings.FPS) / 1000
 
             self.event_controller.handle_events(events, dt)
 

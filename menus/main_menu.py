@@ -1,16 +1,15 @@
-from services.resources import Resources
-
 from components.animated_image import AnimatedImage
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
 from components.menu import Menu
+from core.settings import Settings
+from services.resources import Resources
 
 
 class MainMenu:
 
-    def __init__(self, settings, game):
-        self.settings = settings
+    def __init__(self, game):
         self.game = game
         self.resources = Resources()
 
@@ -19,15 +18,15 @@ class MainMenu:
         # Panneau
         self.panel = MedievalPanel(
             self.resources.wood_panel_image,
-            self.settings.MENU_SCREEN_WIDTH // 2,
-            self.settings.MENU_SCREEN_HEIGHT // 2
+            Settings.MENU_SCREEN_WIDTH // 2,
+            Settings.MENU_SCREEN_HEIGHT // 2
         )
 
         # Titre du jeu
         self.game_text = MedievalText(
-            self.settings.MENU_SCREEN_WIDTH // 2,
+            Settings.MENU_SCREEN_WIDTH // 2,
             175,
-            self.settings.GAME_TITLE,
+            Settings.GAME_TITLE,
             self.resources.title_font,
             Resources.WOOD_COLOR,
             shadow_offset=4
@@ -40,7 +39,7 @@ class MainMenu:
             Resources.WOOD_COLOR
         )
         self.button_play = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
+            Settings.MENU_SCREEN_WIDTH // 2 - 225,
             350, 0, 0,
             self.text_play,
             self.game.intro,
@@ -58,7 +57,7 @@ class MainMenu:
             Resources.WOOD_COLOR
         )
         self.button_credits = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
+            Settings.MENU_SCREEN_WIDTH // 2 - 225,
             450, 0, 0,
             self.text_credits,
             self.game.credits,
@@ -76,7 +75,7 @@ class MainMenu:
             Resources.CRIMSON_COLOR
         )
         self.button_exit = MedievalButton(
-            self.settings.MENU_SCREEN_WIDTH // 2 - 225,
+            Settings.MENU_SCREEN_WIDTH // 2 - 225,
             550, 0, 0,
             self.text_exit,
             self.game.exit,
@@ -107,7 +106,7 @@ class MainMenu:
             self.resources.tutorial_frame_15
         ])
         self.tutorial_text_or = MedievalText(
-            self.settings.MENU_SCREEN_WIDTH // 2 + 150,
+            Settings.MENU_SCREEN_WIDTH // 2 + 150,
             415,
             "OU",
             self.resources.button_font,
@@ -121,7 +120,7 @@ class MainMenu:
             [self.game_text, self.tutorial_text_or],
             self.buttons,
             self.tutorial,
-            self.settings.MENU_SCREEN_WIDTH // 2 + 150,
+            Settings.MENU_SCREEN_WIDTH // 2 + 150,
             450
         )
 

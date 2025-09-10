@@ -1,5 +1,6 @@
 import pygame
 
+from core.settings import Settings
 from paths import get_asset_path
 
 from entities.player import Player
@@ -28,8 +29,7 @@ class IntroGame:
 
     def __init__(self, game):
         self.game = game
-        self.settings = game.settings
-        self.screen_rect = pygame.Rect(0, 0, self.settings.GAME_SCREEN_WIDTH, self.settings.GAME_SCREEN_HEIGHT)
+        self.screen_rect = pygame.Rect(0, 0, Settings.GAME_SCREEN_WIDTH, Settings.GAME_SCREEN_HEIGHT)
 
         self.player = self.__init_player()
         self.target_x = self.screen_rect.centerx - self.player.SPRITE_SIZE // 2
@@ -45,7 +45,7 @@ class IntroGame:
         self.allow_advance = False
         self.mode = self.MODE_TYPING_NORMAL
 
-        self.font = pygame.font.Font(get_asset_path('font','VPPixel-Simplified.ttf'), 25) if self.settings else None
+        self.font = pygame.font.Font(get_asset_path('font','VPPixel-Simplified.ttf'), 25)
 
         self.dialog_lines = [
             "Ça c'est Georges, Georges est ce qu'on appelle un voleur.",
@@ -57,7 +57,7 @@ class IntroGame:
         self.__prepare_current_line()
 
     def __init_player(self):
-        player = Player(self.settings.GAME_SCREEN_WIDTH + 100, self.settings.GAME_SCREEN_HEIGHT // 2)
+        player = Player(Settings.GAME_SCREEN_WIDTH + 100, Settings.GAME_SCREEN_HEIGHT // 2)
         player.direction = self.PLAYER_DIRECTION_ANIMATION
         player.speed = self.PLAYER_SPEED_ANIMATION
         player.is_moving = True
@@ -187,8 +187,8 @@ class IntroGame:
         self.__update_typing(dt)
 
     def __draw_dialog_box(self, surface):
-        dialog_width = int(self.settings.GAME_SCREEN_WIDTH * 0.8)
-        dialog_x = (self.settings.GAME_SCREEN_WIDTH - dialog_width) // 2
+        dialog_width = int(Settings.GAME_SCREEN_WIDTH * 0.8)
+        dialog_x = (Settings.GAME_SCREEN_WIDTH - dialog_width) // 2
 
         if self.font:
             max_text_width = dialog_width - 2 * self.DIALOG_BOX_PADDING
@@ -199,7 +199,7 @@ class IntroGame:
 
             dialog_rect = pygame.Rect(
                 dialog_x,
-                self.settings.GAME_SCREEN_HEIGHT - dialog_height - self.DIALOG_BOX_BOTTOM_MARGIN,
+                Settings.GAME_SCREEN_HEIGHT - dialog_height - self.DIALOG_BOX_BOTTOM_MARGIN,
                 dialog_width,
                 dialog_height,
             )

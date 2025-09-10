@@ -3,6 +3,7 @@ import pygame
 from core.credits import Credits
 from core.intro_game import IntroGame
 from core.playing import Playing
+from core.settings import Settings
 from core.state_manager import GameState
 from menus.game_lose_menu import GameLoseMenu
 from menus.game_win_menu import GameWinMenu
@@ -14,10 +15,10 @@ from paths import get_asset_path
 class StateFactory:
     def __init__(self, game):
         self.game = game
-        settings = game.settings
+
         self._registry = {
             GameState.INTRO: {
-                "size": (settings.GAME_SCREEN_WIDTH, settings.GAME_SCREEN_HEIGHT),
+                "size": (Settings.GAME_SCREEN_WIDTH, Settings.GAME_SCREEN_HEIGHT),
                 "music": "10-8bit10loop.ogg",
                 "builder": lambda: IntroGame(self.game),
                 # lambda permet d'encapsuler la création de l'objet, ce qui ne le crée que quand elle sera appellée
@@ -25,37 +26,38 @@ class StateFactory:
                 # Nom de l'attribut de la classe game dans lequel stocker l'objet créé
             },
             GameState.PLAYING: {
-                "size": (settings.GAME_SCREEN_WIDTH, settings.GAME_SCREEN_HEIGHT),
+                "size": (Settings.GAME_SCREEN_WIDTH, Settings.GAME_SCREEN_HEIGHT),
                 "music": "10-8bit10loop.ogg",
                 "builder": lambda: Playing(self.game, self.game.event_controller),
                 "attr": "playing"
             },
             GameState.CREDITS: {
-                "size": (settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT),
+                "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "music": "Mesmerizing Galaxy Loop.mp3",
-                "builder": lambda: Credits(settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT),
+                "builder": lambda: Credits(Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "attr": "credits_playing"
             },
             GameState.LOSE: {
-                "size": (settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT),
+                "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "music": None,
-                "builder": lambda: GameLoseMenu(settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT,
+                "builder": lambda: GameLoseMenu(Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT,
                                                 self.game.retry_game, self.game.back_to_menu),
                 "attr": "game_lose_menu"
             },
             GameState.WIN: {
-                "size": (settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT),
+                "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "music": None,
-                "builder": lambda: GameWinMenu(settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT,
+                "builder": lambda: GameWinMenu(Settings.MENU_SCREEN_WIDTH,
+                                               Settings.MENU_SCREEN_HEIGHT,
                                                self.game.playing.player.items_collected if self.game.playing else 0,
                                                self.game.playing.nb_items_max if self.game.playing else 0,
                                                self.game.retry_game, self.game.back_to_menu),
                 "attr": "game_win_menu"
             },
             GameState.MENU: {
-                "size": (settings.MENU_SCREEN_WIDTH, settings.MENU_SCREEN_HEIGHT),
+                "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "music": None,
-                "builder": lambda: MainMenu(settings, self.game),
+                "builder": lambda: MainMenu(self.game),
                 "attr": "menu"
             }
         }
