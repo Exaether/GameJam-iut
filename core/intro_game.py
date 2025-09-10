@@ -64,9 +64,7 @@ class IntroGame:
         return player
 
     def __prepare_current_line(self):
-        """Prépare la ligne courante pour affichage
-                on prépare l'animation de base de typing
-        """
+        """Prépare la ligne courante pour affichage avec l'animation de base de typing"""
         raw_line = self.dialog_lines[self.current_line_index]
         self.full_text = raw_line
         self.mode = self.MODE_TYPING_NORMAL
@@ -77,8 +75,8 @@ class IntroGame:
         self.allow_advance = False
 
     def handle_events(self, events):
+        """Permet de passer à la ligne suivante ou skip l'animation et charger la ligne suivante"""
         for event in events:
-            """permet de passer à la ligne suivante ou skip l'animation et charger la ligne suivante"""
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if self.allow_advance and not self.is_fading_out:
                     self.__advance_dialog_or_fade_out()
@@ -86,10 +84,10 @@ class IntroGame:
                     self.__skip_typing_animation()
 
     def __advance_dialog_or_fade_out(self):
-        """permet de charger la ligne suivante et faire lancer le fade out de fin"""
+        """Permet de charger la ligne suivante et faire lancer le fade out de fin"""
         if self.current_line_index < len(self.dialog_lines) - 1:
-            self.current_line_index += 1    
-            self.__prepare_current_line()   
+            self.current_line_index += 1
+            self.__prepare_current_line()
         else:
             self.is_fading_out = True
             self.fade_out_alpha = 0
@@ -102,7 +100,7 @@ class IntroGame:
         self.type_accumulator = 0.0
 
     def __update_fade(self, dt):
-        # Tant qu'on est pas au dernier dialogue on reste sur le fade in qui s'execute lors du chargement de l'intro
+        # Tant qu'on n'est pas au dernier dialogue, on reste sur le fade in qui s'exécute lors du chargement de l'intro.
         if self.fade_in_alpha > 0:
             self.fade_in_alpha = max(0, self.fade_in_alpha - int(255 * dt / self.FADE_IN_DURATION_SECONDS))
         if self.is_fading_out:
@@ -126,7 +124,7 @@ class IntroGame:
             self.__typing_normal(dt)
 
     def __typing_normal(self, dt):
-        """Grâce a la preparation de la ligne on peut déjà commencer à écrire le texte"""
+        """Grâce à la préparation de la ligne, on peut déjà commencer à écrire le texte"""
         if self.chars_shown < len(self.full_text):
             self.type_accumulator += dt * self.TYPING_SPEED_CHAR_PER_SEC
             chars_to_add = int(self.type_accumulator) - self.chars_shown
@@ -185,7 +183,7 @@ class IntroGame:
         # Lance le fade puis l'animation du joueur et du texte
         self.__update_fade(dt)
         self.__update_player_motion(dt)
-        # la premiere ligne de texte étant init avec la classe on peut commencer a écrire
+        # La première ligne de texte étant init avec la classe, on peut commencer à écrire
         self.__update_typing(dt)
 
     def __draw_dialog_box(self, surface):

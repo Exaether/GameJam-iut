@@ -167,7 +167,7 @@ class Enemy(pygame.sprite.Sprite):
         self.vision_service.draw_vision_cone(surface, camera)
 
     def draw_exclamation_mark(self, surface, camera):
-        """Dessine un '!' au-dessus du sprite (souvant utilisé en cas de détection de joueur)"""
+        """Dessine un '!' au-dessus du sprite (souvent utilisé en cas de détection du joueur)"""
         if self.alertness > 0:
             x = self.rect.centerx - self.image_exclamation_mark.get_width() / 2
             y = self.rect.top - self.image_exclamation_mark.get_height()
@@ -210,7 +210,7 @@ class Enemy(pygame.sprite.Sprite):
             self.y += dy * self.guard_speed
 
     def __update_patrol_progress(self):
-        """Agmente la progression du parcours de 1 par pixel parcouru utilisé dans __patrol_step_finished("""
+        """Augmente la progression du parcours de 1 par pixel parcouru utilisé dans __patrol_step_finished("""
         self.step_progress += self.guard_speed
 
     def __patrol_step_finished(self):
@@ -245,7 +245,7 @@ class Enemy(pygame.sprite.Sprite):
             self.step_progress = self.patrol_distance_x
 
     def patrol_distance(self):
-        """Distance de déplacement des choses aléatoirement entre x_minimum et x_maximum ou y """
+        """Distance de déplacement des choses aléatoirement entre x_range_min et x_range_max ou y_range_min et y_range_max"""
         self.x_range_min, self.x_range_max = sorted([self.x_range_min, self.x_range_max])
         self.y_range_min, self.y_range_max = sorted([self.y_range_min, self.y_range_max])
         self.patrol_distance_x = randint(self.x_range_min, self.x_range_max)

@@ -26,7 +26,7 @@ class Compass:
         loot = items.sprites()[0]
         player_x = player.rect.centerx
         player_y = player.rect.centery
-        # coordonées du trésor relatives au joueur
+        # Coordonnées du trésor relatives au joueur
         rel_loot_x = loot.rect.centerx - player_x
         rel_loot_y = loot.rect.centery - player_y
         # recherche du trésor le plus proche

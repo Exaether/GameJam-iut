@@ -126,7 +126,7 @@ class GameWinMenu:
             message_line_2 = "Un début prometteur !"
             color = Resources.WOOD_COLOR
         elif nb_items_collected <= nb_items_max * 0.6:
-            message_line_1 = "Jolie butin !"
+            message_line_1 = "Joli butin !"
             message_line_2 = "Tu as volé plus que prévu !"
             color = Resources.PURPLE_COLOR
         elif nb_items_collected <= nb_items_max * 0.8:

@@ -4,9 +4,9 @@ from typing import List, Dict, Any
 
 
 class SuspicionService:
-    """Gestion de la suspicion des gardes et des efffets associés
-      - 35%: augmente la range et angle de de vision des gardes (multiplicateur)
-      - 65%: augmente la vitesse des gardes (multiplicateur)
+    """Gestion de la suspicion des gardes et des effets associés
+      - 35 % : augmente la range et angle de vision des gardes (multiplicateur)
+      - 65 % : augmente la vitesse des gardes (multiplicateur)
     """
     THRESHOLD_VISION_BOOST = 35.0
     THRESHOLD_SPEED_BOOST = 65.0

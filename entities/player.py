@@ -14,8 +14,8 @@ class Player(pygame.sprite.Sprite):
     ANIMATION_SPEED = 0.2
     VISION_RANGE = 240
     VISION_ANGLE = 90
-    SPACEBAR_WIDTH = 32
-    SPACEBAR_HEIGHT = 16
+    SPACE_BAR_WIDTH = 32
+    SPACE_BAR_HEIGHT = 16
     TRAPDOOR_ANIMATION_DURATION = 0.2
 
     DIRECTION_ROW = {
@@ -43,16 +43,16 @@ class Player(pygame.sprite.Sprite):
         self.prev_pos = self.rect.center
         self.settings = Settings()
 
-        self.__init_spacebar()
+        self.__init_space_bar()
 
         self.vision_service = VisionService(self.VISION_RANGE, self.VISION_ANGLE)
 
-    def __init_spacebar(self):
-        spacebar_path = get_asset_path("other", "spacebar.png")
-        self.spacebar = pygame.image.load(spacebar_path)
-        self.spacebar_image = pygame.Surface([self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT])
-        self.spacebar_image.blit(self.spacebar, (0, 0), (0, 0, self.SPACEBAR_WIDTH, self.SPACEBAR_HEIGHT))
-        self.spacebar_image.set_colorkey([0, 0, 0])
+    def __init_space_bar(self):
+        space_bar_path = get_asset_path("other", "space_bar.png")
+        self.space_bar = pygame.image.load(space_bar_path)
+        self.space_bar_image = pygame.Surface([self.SPACE_BAR_WIDTH, self.SPACE_BAR_HEIGHT])
+        self.space_bar_image.blit(self.space_bar, (0, 0), (0, 0, self.SPACE_BAR_WIDTH, self.SPACE_BAR_HEIGHT))
+        self.space_bar_image.set_colorkey([0, 0, 0])
 
     @staticmethod
     def _load_sprite_sheet():
@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
         return sprite_surface
 
     def move(self, map, dx, dy, dt):
-        if not self.is_traversing_trapdoor: # permet d'empecher les mouvements pendant la traversé de trap
+        if not self.is_traversing_trapdoor: # permet d'empêcher les mouvements pendant la traversée de trap
             self.is_moving = True
 
             self.prev_pos = self.rect.center
@@ -133,11 +133,11 @@ class Player(pygame.sprite.Sprite):
 
         self.vision_service.update_circular_vision(self.rect, dungeon_map)
 
-    def draw_spacebar(self, surface, camera, map, exit_door):
+    def draw_space_bar(self, surface, camera, map, exit_door):
         if map.trapdoor_collide(self) or exit_door.rect.colliderect(self.rect):
-            x = self.rect.centerx - self.spacebar_image.get_width() / 2
-            y = self.rect.top - self.spacebar_image.get_height()
-            surface.blit(self.spacebar_image, (x + camera[0], y + camera[1]))
+            x = self.rect.centerx - self.space_bar_image.get_width() / 2
+            y = self.rect.top - self.space_bar_image.get_height()
+            surface.blit(self.space_bar_image, (x + camera[0], y + camera[1]))
 
     def draw(self, screen, camera, show_vision=False):
         current_sprite = self._get_current_sprite()

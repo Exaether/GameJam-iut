@@ -73,7 +73,7 @@ class VisionService:
         screen_height: int,
         darkness_color=(0, 0, 0, 180),
     ):
-        """Avoir tout l'écran en noir sauf la zone de vision du plauer"""
+        """Avoir tout l'écran en noir sauf la zone de vision du player"""
         if (self.__darkness_surface is None) or (self.__darkness_surface.get_size() != (screen_width, screen_height)):
             self.__darkness_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
 
@@ -157,7 +157,7 @@ class VisionService:
         angles: Iterable[float],
         dungeon_map,
     ):
-        """Points du polygone LOS (raycasts sur chaque angle)."""
+        """Points du polygone LOS (ray casts sur chaque angle)."""
         cxw, cyw = world_center
         cxl, cyl = local_center
         pts = [(cxl, cyl)]
@@ -167,7 +167,7 @@ class VisionService:
         return pts
 
     def __cast_ray(self, start: Tuple[int, int], angle: float, dungeon_map):
-        """Lance un rayon et retourne la distance d'intersection avec un obstacle ou la portée max (aucun obsatcle)"""
+        """Lance un rayon et retourne la distance d'intersection avec un obstacle ou la portée max (aucun obstacle)"""
         distance_to_obstacle = float(self.vision_range)
 
         if dungeon_map:

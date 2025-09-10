@@ -39,7 +39,7 @@ class Dungeon(pygame.sprite.Sprite) :
 
     def move(self, x, y):
         """
-        Déplace le joueur su la carte
+        Déplace le joueur sur la carte
         :param x: déplacement X
         :param y: déplacement Y
         """
@@ -51,7 +51,7 @@ class Dungeon(pygame.sprite.Sprite) :
 
     def switch_map(self):
         """
-        Echange les 2 cartes
+        Échange les 2 cartes
         :return:
         """
         if self.layer == 1:

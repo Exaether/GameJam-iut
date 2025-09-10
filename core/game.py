@@ -16,7 +16,7 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        # Centre la fênetre de jeu sur le bureau
+        # Centre la fenêtre de jeu sur le bureau
         environ['SDL_VIDEO_CENTERED'] = "true"
 
         self.settings = Settings()
@@ -50,7 +50,7 @@ class Game:
             GameState.MENU: self.__handle_menu,
         }
 
-    # Factory qui permet de créer les différent état du jeu
+    # Factory qui permet de créer les différents états du jeu
     def intro(self): self.state_factory.create(GameState.INTRO)
     def play(self): self.state_factory.create(GameState.PLAYING)
     def credits(self): self.state_factory.create(GameState.CREDITS)
@@ -69,9 +69,9 @@ class Game:
     def exit(self):
         self.running = False
 
-    #########################################################
-    # DIFFERENTES HANDLERS POUR CHAQUE ETAT
-    #########################################################
+    ########################################
+    # DIFFÉRENTS HANDLERS POUR CHAQUE ÉTAT #
+    ########################################
     def __handle_intro(self, events, dt):
         if self.intro_scene is None:
             self.intro()
@@ -125,7 +125,7 @@ class Game:
 
             state = self.state_manager.get_current_state()
 
-            # On récupère les actions a effectuer pour l'état courrant
+            # On récupère les actions à effectuer pour l'état courant
             handler = self.handlers.get(state)
             if handler:
                 handler(events, dt)

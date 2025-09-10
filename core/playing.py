@@ -57,7 +57,7 @@ class Playing:
         # Mettre à jour les gardes avec les collisions
         self.__update_guards()
 
-        # Mettre a jour la boussole
+        # Mettre à jour la boussole
         if len(self.item_list) > 0:
             self.hud.compass.update(self.player, self.item_list)
 
@@ -76,9 +76,9 @@ class Playing:
             self.pickup_effects.draw(screen, camera)
 
         self.player.draw(screen, camera)
-        self.player.draw_spacebar(screen, camera, self.map, self.exit_door)
+        self.player.draw_space_bar(screen, camera, self.map, self.exit_door)
 
-        # Affichage du HUD (en dernier pour être au dessus de tout)
+        # Affichage du HUD (en dernier pour être au-dessus de tout)
         self.hud.draw(screen, self.map.layer)
 
     def __handle_items_pickup(self, dt):
