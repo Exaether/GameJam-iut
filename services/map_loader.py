@@ -2,6 +2,7 @@ from pygame.sprite import Group
 from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.item import Item
+from paths import get_data_path
 from utils.load_csv import load_csv
 
 
@@ -20,7 +21,7 @@ class LevelLoader:
                 guard = Enemy(x, y, min_x, max_x, min_y, max_y, guard_type, direction)
                 guards_list.add(guard)
 
-        load_csv("guards.csv", build_guard)
+        load_csv(get_data_path("guards.csv"), build_guard)
         return guards_list
 
     @staticmethod
@@ -37,5 +38,5 @@ class LevelLoader:
                 except ValueError:
                     pass  # Ignore les valeurs non numériques
 
-        load_csv("items.csv", build_item)
+        load_csv(get_data_path("items.csv"), build_item)
         return items_list, len(items_list)
