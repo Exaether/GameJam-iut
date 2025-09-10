@@ -30,11 +30,7 @@ class MedievalButton:
             self.rect = Rect((0, 0, self.width, self.height))
             self.rect.center = (self.center_x, self.center_y)
 
-        self.text.text_rect.center = (self.center_x, self.center_y - 7)
-        self.text.shadow_rect.center = (
-            self.center_x + self.text.shadow_offset,
-            self.center_y + self.text.shadow_offset - 7
-        )
+        self.text.change_position(self.center_x, self.center_y - 7)
 
         self.is_hovering = False
 
@@ -65,19 +61,11 @@ class MedievalButton:
             if self.hovering_image and self.is_hovering:
                 image = self.hovering_image
                 # Descend le texte pour l'adapter au bouton pressé
-                self.text.text_rect.center = (self.center_x, self.center_y - 3)
-                self.text.shadow_rect.center = (
-                    self.center_x + self.text.shadow_offset,
-                    self.center_y + self.text.shadow_offset - 3
-                )
+                self.text.change_position(self.center_x, self.center_y - 3)
             else:
                 image = self.base_image
                 # Remonte le texte pour l'adapter au bouton non pressé
-                self.text.text_rect.center = (self.center_x, self.center_y - 7)
-                self.text.shadow_rect.center = (
-                    self.center_x + self.text.shadow_offset,
-                    self.center_y + self.text.shadow_offset - 7
-                )
+                self.text.change_position(self.center_x, self.center_y - 7)
 
             # Dessin de l'image
             surface.blit(image.image_surf, self.rect)
