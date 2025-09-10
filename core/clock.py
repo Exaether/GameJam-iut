@@ -14,10 +14,10 @@ class Clock:
     DAY_TIME_START = 7
     WARNING_TIME_START = 5
     BIG_WARNING_TIME_START = 6
-    DAY_TIME_COLOR = (255, 255, 255)
+    NIGHT_TIME_COLOR = (255, 255, 255)
     WARNING_TIME_COLOR = (255, 255, 0)
     BIG_WARNING_TIME_COLOR = (255, 165, 0)
-    NIGHT_TIME_COLOR = (255, 0, 0)
+    DAY_TIME_COLOR = (255, 0, 0)
     # Stat du joueur et des gardes en fonction de l'heure (ex : 5 = à partir de 5h00, 5.5 = à partir de 5h30...)
     HOURS_STAT = {
         22: {"player_vision": Player.VISION_RANGE, "enemy_vision_range": Enemy.VISION_RANGE,
@@ -43,6 +43,17 @@ class Clock:
         self.font = SysFont("Arial", 48, bold=True)
 
         self.screen_width = screen_width
+
+    @staticmethod
+    def get_clock_color(current_hour):
+        if Clock.WARNING_TIME_START <= current_hour < Clock.BIG_WARNING_TIME_START:
+            return Clock.WARNING_TIME_COLOR
+        elif Clock.BIG_WARNING_TIME_START <= current_hour < Clock.DAY_TIME_START:
+            return Clock.BIG_WARNING_TIME_COLOR
+        elif Clock.DAY_TIME_START <= current_hour < Clock.START_HOUR:
+            return Clock.DAY_TIME_COLOR
+        else:
+            return Clock.NIGHT_TIME_COLOR
 
     def reset(self):
         self.current_hour = self.START_HOUR
@@ -76,16 +87,7 @@ class Clock:
                 guard.vision_service.vision_angle_degree = self.HOURS_STAT[current_time]["enemy_vision_fov"]
 
     def draw(self, surface):
-        if self.current_hour >= self.START_HOUR or self.current_hour < self.WARNING_TIME_START:
-            color = self.DAY_TIME_COLOR
-        elif self.WARNING_TIME_START <= self.current_hour < self.BIG_WARNING_TIME_START:
-            color = self.WARNING_TIME_COLOR
-        elif self.BIG_WARNING_TIME_START <= self.current_hour < self.DAY_TIME_START:
-            color = self.BIG_WARNING_TIME_COLOR
-        elif self.DAY_TIME_START <= self.current_hour < self.START_HOUR:
-            color = self.NIGHT_TIME_COLOR
-        else:
-            color = self.DAY_TIME_COLOR
+        color = Clock.get_clock_color(self.current_hour)
         time_str = f"{self.current_hour:02d}h{self.current_minute:02d}"
         text_surface = self.font.render(time_str, True, color)
         text_rect = text_surface.get_rect()
