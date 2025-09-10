@@ -13,10 +13,6 @@ class Settings:
 
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
-    GRAY = (128, 128, 128)
-    BLUE = (0, 100, 200)
-    GREEN = (0, 200, 0)
-    RED = (200, 0, 0)
     BACKGROUND_COLOR = (30, 30, 30)
     MENU_FONT_SIZE = 48
     MENU_BUTTON_HEIGHT = 60
