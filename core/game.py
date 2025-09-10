@@ -59,7 +59,6 @@ class Game:
 
     def retry_game(self):
         """Relance une nouvelle partie"""
-        self.event_controller.reset()
         self.game_lose_menu = None
         self.game_win_menu = None
         self.play()
