@@ -47,7 +47,7 @@ class MedievalButton:
             rect(surface, color, self.rect)
 
             # Bordure
-            rect(surface, Resources.GOLD_COLOR, self.rect, self.BORDER_WIDTH)
+            rect(surface, Resources.LIGHT_GOLD_COLOR, self.rect, self.BORDER_WIDTH)
 
             # Bordure intérieure au hover
             if self.is_hovering:
@@ -55,7 +55,7 @@ class MedievalButton:
                     self.rect.x + 3, self.rect.y + 3,
                     self.rect.width - 6, self.rect.height - 6
                 )
-                rect(surface, Resources.GOLD_COLOR, inner_rect, 1)
+                rect(surface, Resources.LIGHT_GOLD_COLOR, inner_rect, 1)
         else:
             # Image selon l'état (survolé ou non) et si une image de survol est définie
             if self.hovering_image and self.is_hovering:

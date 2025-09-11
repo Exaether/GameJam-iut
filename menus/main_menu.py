@@ -28,7 +28,7 @@ class MainMenu:
             175,
             Settings.GAME_TITLE,
             self.resources.title_font,
-            Resources.WOOD_COLOR,
+            Resources.LIGHT_WOOD_COLOR,
             shadow_offset=4
         )
 
@@ -36,7 +36,7 @@ class MainMenu:
         self.text_play = MedievalText(
             0, 0, "Jouer",
             self.resources.button_font,
-            Resources.WOOD_COLOR
+            Resources.LIGHT_WOOD_COLOR
         )
         self.button_play = MedievalButton(
             Settings.MENU_SCREEN_WIDTH // 2 - 225,
@@ -54,7 +54,7 @@ class MainMenu:
         self.text_credits = MedievalText(
             0, 0, "Crédits",
             self.resources.button_font,
-            Resources.WOOD_COLOR
+            Resources.LIGHT_WOOD_COLOR
         )
         self.button_credits = MedievalButton(
             Settings.MENU_SCREEN_WIDTH // 2 - 225,
@@ -110,7 +110,7 @@ class MainMenu:
             415,
             "OU",
             self.resources.button_font,
-            Resources.WOOD_COLOR
+            Resources.LIGHT_WOOD_COLOR
         )
 
         # Créer le menu avec le composant générique

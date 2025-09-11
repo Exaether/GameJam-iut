@@ -11,10 +11,14 @@ class Resources:
 
     # Couleurs
     MENU_BACKGROUND_COLOR = "#2f1b14"
-    WOOD_COLOR = "#ffc97f"
-    SILVER_COLOR = "#e6e6f2"
-    GOLD_COLOR = "#ffff73"
+    WOOD_COLOR = "#b27b59"
+    SILVER_COLOR = "#cdcde1"
+    GOLD_COLOR = "#f7be47"
+    LIGHT_WOOD_COLOR = "#ffc97f"
+    LIGHT_SILVER_COLOR = "#e6e6f2"
+    LIGHT_GOLD_COLOR = "#ffff73"
     CRIMSON_COLOR = "#a50034"
+    BLUE_COLOR = "#0064c8"
     PURPLE_COLOR = "#6a4c93"
 
     def __new__(cls):

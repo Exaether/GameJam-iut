@@ -43,7 +43,7 @@ class GameLoseMenu:
         # Bouton rejouer
         retry_text = MedievalText(
             self.screen_width // 2, 370, "Rejouer",
-            self.resources.button_font, Resources.SILVER_COLOR
+            self.resources.button_font, Resources.LIGHT_SILVER_COLOR
         )
         self.retry_button = MedievalButton(
             screen_width // 2, 370, 0, 0,
@@ -59,7 +59,7 @@ class GameLoseMenu:
         # Bouton retour menu
         menu_text = MedievalText(
             screen_width // 2, 465, "Retour Menu",
-            self.resources.button_font, Resources.SILVER_COLOR
+            self.resources.button_font, Resources.LIGHT_SILVER_COLOR
         )
         self.menu_button = MedievalButton(
             screen_width // 2, 465, 0, 0,

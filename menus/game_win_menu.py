@@ -1,9 +1,9 @@
-from services.resources import Resources
-
 from components.medieval_button import MedievalButton
 from components.medieval_panel import MedievalPanel
 from components.medieval_text import MedievalText
 from components.menu import Menu
+from core.settings import Settings
+from services.resources import Resources
 
 
 class GameWinMenu:
@@ -31,7 +31,7 @@ class GameWinMenu:
             screen_width // 2, 150,
             "Vous avez fui !",
             self.resources.title_font,
-            Resources.GOLD_COLOR,
+            Resources.LIGHT_GOLD_COLOR,
             shadow_offset=3
         )
 
@@ -40,7 +40,7 @@ class GameWinMenu:
             screen_width // 2, 230,
             f"Trésors pillés : {final_score}",
             self.resources.subtitle_font,
-            Resources.SILVER_COLOR
+            Settings.WHITE
         )
 
         # Texte d'encouragement
@@ -73,7 +73,7 @@ class GameWinMenu:
         # Bouton rejouer
         retry_text = MedievalText(
             0, 0, "Rejouer",
-            self.resources.button_font, Resources.GOLD_COLOR
+            self.resources.button_font, Resources.LIGHT_GOLD_COLOR
         )
         self.retry_button = MedievalButton(
             screen_width // 2, 450, 0, 0,
@@ -89,7 +89,7 @@ class GameWinMenu:
         # Bouton retour menu
         menu_text = MedievalText(
             0, 0, "Retour Menu",
-            self.resources.button_font, Resources.GOLD_COLOR
+            self.resources.button_font, Resources.LIGHT_GOLD_COLOR
         )
         self.menu_button = MedievalButton(
             screen_width // 2, 545, 0, 0,
@@ -124,7 +124,7 @@ class GameWinMenu:
         elif nb_items_collected <= nb_items_max * 0.3:
             message_line_1 = "Quelques pièces d'or..."
             message_line_2 = "Un début prometteur !"
-            color = Resources.WOOD_COLOR
+            color = Resources.LIGHT_WOOD_COLOR
         elif nb_items_collected <= nb_items_max * 0.6:
             message_line_1 = "Joli butin !"
             message_line_2 = "Tu as volé plus que prévu !"
@@ -136,7 +136,7 @@ class GameWinMenu:
         else:
             message_line_1 = "Magnifique butin !"
             message_line_2 = "Le roi tremble !"
-            color = Resources.GOLD_COLOR
+            color = Resources.LIGHT_GOLD_COLOR
         return message_line_1, message_line_2, color
 
     def draw(self, surface):
