@@ -52,13 +52,15 @@ class GameWinMenu:
                 screen_width // 2, 305,
                 encouragement_message_1,
                 self.resources.description_font,
-                color
+                color,
+                1
             )
             self.encouragement_message_text_2 = MedievalText(
                 screen_width // 2, 340,
                 encouragement_message_2,
                 self.resources.description_font,
-                color
+                color,
+                1
             )
             texts = [self.title, self.score_text, self.encouragement_message_text_1, self.encouragement_message_text_2]
         else:
@@ -66,7 +68,8 @@ class GameWinMenu:
                 screen_width // 2, 320,
                 encouragement_message_1,
                 self.resources.description_font,
-                color
+                color,
+                1
             )
             texts = [self.title, self.score_text, self.encouragement_message_text_1]
 
@@ -118,7 +121,7 @@ class GameWinMenu:
         elif nb_items_collected <= nb_items_max * 0.1:
             message_line_1 = "Hélas !"
             message_line_2 = "Les gardes étaient trop vigilants..."
-            color = Resources.CRIMSON_COLOR
+            color = Settings.BLACK
         elif nb_items_collected <= nb_items_max * 0.3:
             message_line_1 = "Quelques pièces d'or..."
             message_line_2 = "Un début prometteur !"
@@ -126,7 +129,7 @@ class GameWinMenu:
         elif nb_items_collected <= nb_items_max * 0.6:
             message_line_1 = "Joli butin !"
             message_line_2 = "Tu as volé plus que prévu !"
-            color = Resources.PURPLE_COLOR
+            color = Resources.BLUE_COLOR
         elif nb_items_collected <= nb_items_max * 0.8:
             message_line_1 = "Belle razzia !"
             message_line_2 = "Tu deviens un habile brigand !"
