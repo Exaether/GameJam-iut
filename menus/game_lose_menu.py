@@ -47,10 +47,9 @@ class GameLoseMenu:
         )
         self.retry_button = MedievalButton(
             screen_width // 2, 370, 0, 0,
-            retry_text,
             on_retry_action,
-            None,
-            None,
+            retry_text, None,
+            None, None,
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )
@@ -63,10 +62,9 @@ class GameLoseMenu:
         )
         self.menu_button = MedievalButton(
             screen_width // 2, 465, 0, 0,
-            menu_text,
             on_menu_action,
-            None,
-            None,
+            menu_text, None,
+            None, None,
             self.resources.silver_button_image_normal,
             self.resources.silver_button_image_pressed
         )

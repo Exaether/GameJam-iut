@@ -77,10 +77,9 @@ class GameWinMenu:
         )
         self.retry_button = MedievalButton(
             screen_width // 2, 450, 0, 0,
-            retry_text,
             on_retry_action,
-            None,
-            None,
+            retry_text, None,
+            None, None,
             self.resources.gold_button_image_normal,
             self.resources.gold_button_image_pressed
         )
@@ -93,10 +92,9 @@ class GameWinMenu:
         )
         self.menu_button = MedievalButton(
             screen_width // 2, 545, 0, 0,
-            menu_text,
             on_menu_action,
-            None,
-            None,
+            menu_text, None,
+            None, None,
             self.resources.gold_button_image_normal,
             self.resources.gold_button_image_pressed
         )
