@@ -8,6 +8,7 @@ from core.state_manager import GameState
 from menus.game_lose_menu import GameLoseMenu
 from menus.game_win_menu import GameWinMenu
 from menus.main_menu import MainMenu
+from menus.scoreboard_menu import ScoreboardMenu
 from paths import get_asset_path
 
 
@@ -15,6 +16,15 @@ from paths import get_asset_path
 class StateFactory:
     def __init__(self, game):
         self.game = game
+
+        def win_pre_process():
+            items = self.game.playing.player.items_collected
+            if items > 0:
+                hour = self.game.playing.hud.clock.current_hour
+                minute = self.game.playing.hud.clock.current_minute
+                score = {"items": items, "time": {"hour": hour, "minute": minute}}
+
+                self.game.score_storage.save_score(score)
 
         self._registry = {
             GameState.INTRO: {
@@ -57,13 +67,22 @@ class StateFactory:
                                                self.game.playing.nb_items_max if self.game.playing else 0,
                                                self.game.retry_game, self.game.back_to_menu),
                 "attr": "game_win_menu",
-                "pre_process": None
+                "pre_process": win_pre_process
             },
             GameState.MENU: {
                 "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
                 "music": None,
                 "builder": lambda: MainMenu(self.game),
                 "attr": "menu",
+                "pre_process": None
+            },
+            GameState.SCOREBOARD: {
+                "size": (Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT),
+                "music": None,
+                "builder": lambda: ScoreboardMenu(Settings.MENU_SCREEN_WIDTH, Settings.MENU_SCREEN_HEIGHT,
+                                                  self.game.score_storage.scores,
+                                                  self.game.back_to_menu),
+                "attr": "scoreboard_menu",
                 "pre_process": None
             }
         }

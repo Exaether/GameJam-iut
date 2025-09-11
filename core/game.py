@@ -10,6 +10,7 @@ from core.settings import Settings
 from core.state_manager import StateManager, GameState 
 from core.event_controller import EventController
 from core.state_factory import StateFactory
+from services.score_storage import ScoreStorage
 
 
 class Game:
@@ -27,13 +28,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.state_manager = StateManager(initial_state=GameState.MENU)
         self.event_controller = EventController(self)
-        
+        self.score_storage = ScoreStorage()
         self.menu = MainMenu(self)
         self.playing = None
         self.intro_scene = None
         self.credits_playing = None
         self.game_lose_menu = None
         self.game_win_menu = None
+        self.scoreboard_menu = None
 
         # Factory 
         self.state_factory = StateFactory(self)
@@ -47,11 +49,13 @@ class Game:
             GameState.LOSE: self.__handle_lose,
             GameState.WIN: self.__handle_win,
             GameState.MENU: self.__handle_menu,
+            GameState.SCOREBOARD: self.__handle_scoreboard
         }
 
     # Factory qui permet de créer les différents états du jeu
     def intro(self): self.state_factory.create(GameState.INTRO)
     def play(self): self.state_factory.create(GameState.PLAYING)
+    def scoreboard(self): self.state_factory.create(GameState.SCOREBOARD)
     def credits(self): self.state_factory.create(GameState.CREDITS)
     def trigger_game_lose(self): self.state_factory.create(GameState.LOSE)
     def trigger_game_win(self): self.state_factory.create(GameState.WIN)
@@ -90,7 +94,11 @@ class Game:
         if not finished or any(event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE for event in events):
             pygame.mixer.music.stop()
             self.back_to_menu()
-    
+
+    def __handle_scoreboard(self, events, dt):
+        if self.scoreboard_menu:
+            self.scoreboard_menu.draw(self.screen)
+
     def __handle_lose(self, events, dt):
         if self.game_lose_menu:
             pygame.mixer.music.stop()

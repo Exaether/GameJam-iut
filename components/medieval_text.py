@@ -42,6 +42,11 @@ class MedievalText:
         self.__text_rect.left = left
         self.__shadow_rect.left = left + self.shadow_offset
 
+    def change_right_position(self, right: int):
+        self.__center_x = right - self.__text_rect.width // 2
+        self.__text_rect.right = right
+        self.__shadow_rect.right = right + self.shadow_offset
+
     def draw(self, surface):
         """Dessine d'abord l'ombre puis le texte"""
         surface.blit(self.__shadow_surf, self.__shadow_rect)

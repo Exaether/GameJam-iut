@@ -7,6 +7,7 @@ class GameState(Enum):
     PLAYING = "playing"
     LOSE = "lose"
     WIN = "win"
+    SCOREBOARD = "scoreboard"
     CREDITS = "credits"
 
 class StateManager:

@@ -32,6 +32,8 @@ class EventController:
         buttons = []
         if game_state == GameState.MENU:
             buttons = self.game.menu.buttons
+        elif game_state == GameState.SCOREBOARD:
+            buttons = self.game.scoreboard_menu.buttons
         elif game_state == GameState.LOSE and self.game.game_lose_menu:
             buttons = self.game.game_lose_menu.buttons
         elif game_state == GameState.WIN and self.game.game_win_menu:
@@ -103,10 +105,10 @@ class EventController:
     
     def _handle_mousedown(self, pos, state):
         """Gère les clics de souris pour tous les états"""
-        if state in [GameState.MENU, GameState.LOSE, GameState.WIN]:
+        if state in [GameState.MENU, GameState.SCOREBOARD, GameState.LOSE, GameState.WIN]:
             self._handle_buttons_click(pos, state)
 
     def _handle_mousemotion(self, pos, state):
         """Gère le mouvement de souris pour tous les états"""
-        if state in [GameState.MENU, GameState.LOSE, GameState.WIN]:
+        if state in [GameState.MENU, GameState.SCOREBOARD, GameState.LOSE, GameState.WIN]:
             self._handle_buttons_hover(pos, state)

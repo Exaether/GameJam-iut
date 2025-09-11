@@ -38,6 +38,7 @@ class Resources:
         # Images pour les panneaux
         self.__wood_panel_image = None
         self.__silver_panel_image = None
+        self.__silver_panel_long_image = None
         self.__gold_panel_image = None
 
         # Images pour les boutons
@@ -49,6 +50,11 @@ class Resources:
         self.__silver_button_image_pressed_short = None
         self.__gold_button_image_normal = None
         self.__gold_button_image_pressed = None
+        self.__gold_button_image_normal_square = None
+        self.__gold_button_image_pressed_square = None
+
+        # Icônes pour les boutons
+        self.__gold_left_arrow_image = None
 
         # Polices
         self.__game_title_font = None
@@ -108,16 +114,25 @@ class Resources:
         if self.__silver_panel_image is None:
             self.__silver_panel_image = Image(
                 get_asset_path('ui','panels','silver_panel.png'),
-                600, 0
+                0, 600
             )
         return self.__silver_panel_image
+
+    @property
+    def silver_panel_long_image(self):
+        if self.__silver_panel_long_image is None:
+            self.__silver_panel_long_image = Image(
+                get_asset_path('ui', 'panels', 'silver_panel_long.png'),
+                0, 600
+            )
+        return self.__silver_panel_long_image
 
     @property
     def gold_panel_image(self):
         if self.__gold_panel_image is None:
             self.__gold_panel_image = Image(
                 get_asset_path('ui','panels','gold_panel.png'),
-                600, 0
+                0, 600
             )
         return self.__gold_panel_image
 
@@ -200,6 +215,35 @@ class Resources:
                 0, 80
             )
         return self.__gold_button_image_pressed
+
+    @property
+    def gold_button_image_normal_square(self):
+        if self.__gold_button_image_normal_square is None:
+            self.__gold_button_image_normal_square = Image(
+                get_asset_path('ui', 'buttons', 'gold_button_normal_square.png'),
+                0, 80
+            )
+        return self.__gold_button_image_normal_square
+
+    @property
+    def gold_button_image_pressed_square(self):
+        if self.__gold_button_image_pressed_square is None:
+            self.__gold_button_image_pressed_square = Image(
+                get_asset_path('ui', 'buttons', 'gold_button_pressed_square.png'),
+                0, 80
+            )
+        return self.__gold_button_image_pressed_square
+
+    # ========================= SECTION ICÔNES =========================
+
+    @property
+    def gold_left_arrow_image(self):
+        if self.__gold_left_arrow_image is None:
+            self.__gold_left_arrow_image = Image(
+                get_asset_path('ui','icons','gold_left_arrow.png'),
+                25, 0
+            )
+        return self.__gold_left_arrow_image
 
     # ========================= SECTION POLICES =========================
 

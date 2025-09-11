@@ -25,7 +25,7 @@ class MainMenu:
         # Titre du jeu
         self.game_text = MedievalText(
             Settings.MENU_SCREEN_WIDTH // 2,
-            175,
+            160,
             Settings.GAME_TITLE,
             self.resources.title_font,
             Resources.LIGHT_WOOD_COLOR,
@@ -40,7 +40,7 @@ class MainMenu:
         )
         self.button_play = MedievalButton(
             Settings.MENU_SCREEN_WIDTH // 2 - 225,
-            350, 0, 0,
+            290, 0, 0,
             self.game.intro,
             self.text_play, None,
             None, None,
@@ -48,6 +48,24 @@ class MainMenu:
             self.resources.wood_button_image_pressed
         )
         self.buttons.append(self.button_play)
+
+        # Bouton scores
+        self.text_scores = MedievalText(
+            0, 0, "Scores",
+            self.resources.button_font,
+            Resources.LIGHT_WOOD_COLOR
+        )
+        self.button_scores = MedievalButton(
+            Settings.MENU_SCREEN_WIDTH // 2 - 225,
+            375, 0, 0,
+            self.game.scoreboard,
+            self.text_scores, None,
+            None,
+            None,
+            self.resources.wood_button_image_normal,
+            self.resources.wood_button_image_pressed
+        )
+        self.buttons.append(self.button_scores)
 
         # Bouton crédits
         self.text_credits = MedievalText(
@@ -57,7 +75,7 @@ class MainMenu:
         )
         self.button_credits = MedievalButton(
             Settings.MENU_SCREEN_WIDTH // 2 - 225,
-            450, 0, 0,
+            460, 0, 0,
             self.game.credits,
             self.text_credits, None,
             None, None,
@@ -74,7 +92,7 @@ class MainMenu:
         )
         self.button_exit = MedievalButton(
             Settings.MENU_SCREEN_WIDTH // 2 - 225,
-            550, 0, 0,
+            545, 0, 0,
             self.game.exit,
             self.text_exit, None,
             None, None,
