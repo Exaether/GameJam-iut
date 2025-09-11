@@ -3,7 +3,7 @@ from entities.enemyGroup import EnemyGroup
 from entities.enemy import Enemy
 from entities.item import Item
 from paths import get_data_path
-from utils.load_csv import load_csv
+from utils import load_csv
 
 
 class LevelLoader:
